@@ -15,7 +15,7 @@ def load_modules(miya):
 
     for ext in exts:
         try:
-            miya.load_extensions(ext)
+            miya.load_extension(ext)
         except Exception as e:
             print(f"{e.__class__.__name__}: {e}")
             failed.append(ext)
@@ -28,4 +28,4 @@ if __name__ == "__main__":
         description="미야야 도움을 입력해보세요!",
         )
     load_modules(miya)
-    miya.run("NzQ2OTc5MDgyMDU4NTk2MzYy.X0IMew.2w72kB_sibDkCmIvt5zusl9yiVs")
+    miya.run("Token")
