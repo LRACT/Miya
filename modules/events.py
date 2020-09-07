@@ -31,6 +31,8 @@ class handler(commands.Cog):
 
             embed = discord.Embed(title=chat(ctx.message.content.replace("미야야 ", "")).json()['response']['replies'][0]["text"], description="[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[KoreanBots 하트누르기](https://koreanbots.dev/bots/720724942873821316)")
             await ctx.send(embed = embed)
+        else:
+            await ctx.send(error)
             
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -44,9 +46,9 @@ class handler(commands.Cog):
             else:
                 channel = member.guild.get_channel(int(rows[0][1]))
                 if channel is not None and rows[0][2] != "":
-                    msg = rows[0][2].replace("[유저]", str(member.mention))
-                    msg = msg.replace("[서버]", str(member.guild.name))
-                    msg = msg.replace("[유저수]", str(member.guild.member_count))
+                    msg = rows[0][2].replace("{member}", str(member.mention))
+                    msg = msg.replace("{guild}", str(member.guild.name)) # 저러면 오류남? 걍 string으로 인식할걸걸함 해보고
+                    msg = msg.replace("{count}", str(member.guild.member_count))
                     await channel.send(msg)
     
     @commands.Cog.listener()
@@ -61,53 +63,10 @@ class handler(commands.Cog):
             else:
                 channel = member.guild.get_channel(int(rows[0][1]))
                 if channel is not None and rows[0][3] != "":
-                    msg = rows[0][3].replace("[유저]", str(member))
-                    msg = msg.replace("[서버]", str(member.guild.name))
-                    msg = msg.replace("[유저수]", str(member.guild.member_count))
+                    msg = rows[0][3].replace("{member}", str(member))
+                    msg = msg.replace("{guild}", str(member.guild.name))
+                    msg = msg.replace("{count}", str(member.guild.member_count))
                     await channel.send(msg)
         
-                request = dict() 
-                request["query"] = text
-                data["request"] = request # {"request":{"query":"text"}}
-                return requests.post(url, headers=headers, data=json.dumps(data).encode('utf-8')) # Support utf-8 encode.
-
-            embed = discord.Embed(title=chat(ctx.message.content.replace("미야야 ", "")).text, description="[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[KoreanBots 하트누르기](https://koreanbots.dev/bots/720724942873821316)")
-            await ctx.send(embed = embed)
-            
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        if member.bot == False:
-            o = sqlite3.connect('miya.sqlite')
-            c = o.cursor()
-            c.execute(f"SELECT * FROM memberNoti WHERE guild = {member.guild.id}")
-            rows = c.fetchall()
-            if not rows:
-                return
-            else:
-                channel = member.guild.get_channel(int(rows[0][1]))
-                if channel is not None and rows[0][2] != "":
-                    msg = rows[0][2].replace("[유저]", str(member.mention))
-                    msg = msg.replace("[서버]", str(member.guild.name))
-                    msg = msg.replace("[유저수]", str(member.guild.member_count))
-                    await channel.send(msg)
-    
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        if member.bot == False:
-            o = sqlite3.connect('miya.sqlite')
-            c = o.cursor()
-            c.execute(f"SELECT * FROM memberNoti WHERE guild = {member.guild.id}")
-            rows = c.fetchall()
-            if not rows:
-                return
-            else:
-                channel = member.guild.get_channel(int(rows[0][1]))
-                if channel is not None and rows[0][3] != "":
-                    msg = rows[0][3].replace("[유저]", str(member))
-                    msg = msg.replace("[서버]", str(member.guild.name))
-                    msg = msg.replace("[유저수]", str(member.guild.member_count))
-                    await channel.send(msg)
-        
-
 def setup(miya):
     miya.add_cog(handler(miya))

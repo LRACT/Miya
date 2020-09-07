@@ -25,7 +25,7 @@ def load_modules(miya):
 if __name__ == "__main__":
     miya = commands.Bot(
         command_prefix=commands.when_mentioned_or("미야야 "), 
-        description="미야야 도움을 입력해보세요!",
+        description="미야를 discord.py로! 미야를 국회로!",
         )
     load_modules(miya)
-    miya.run("Token")
+    miya.run("NzQ2OTc5MDgyMDU4NTk2MzYy.X0IMew.2w72kB_sibDkCmIvt5zusl9yiVs")
