@@ -7,7 +7,6 @@ def load_modules(miya):
     exts = [
     "modules.general",
     "modules.events",
-    "modules.sexsex",
     "modules.settings",
     "modules.devs",
     "modules.mods"
