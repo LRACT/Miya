@@ -30,8 +30,8 @@ class General(commands.Cog):
     @commands.command(name="한강")
     async def _hangang(self, ctx):
         async with aiohttp.ClientSession() as cs:
-            async with cs.get('http://hangang.dkserver.wo.tc/') as r: 
-                response = await r.json() 
+            async with cs.get("http://hangang.dkserver.wo.tc") as r:
+                response = await r.json(content_type=None)
                 embed = discord.Embed(description=f'현재 한강의 온도는 `{response["temp"]}`이에요!', color=0x5FE9FF)
                 embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
                 embed.set_footer(text="거 수온이 뜨듯하구먼!")
