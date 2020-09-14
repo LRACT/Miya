@@ -26,8 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-miya.sqlite
-main.py
+lib
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
