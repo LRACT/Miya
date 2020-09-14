@@ -22,7 +22,7 @@ class handler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            url = "https://builder.pingpong.us/api/builder/5e5b4a6ae4b0147906135955/integration/v0.2/custom/a2V5OjY2ZjhhM2Q0MmEyM2Q3NDhjZDUwNDdkMmNmMTI5ZDg1"
+            url = config.PPBRequest
             headers = {
                 "Authorization": config.PPBToken,
                 "Content-Type": "application/json",
@@ -40,7 +40,7 @@ class handler(commands.Cog):
 
             embed = discord.Embed(
                 title=response_msg,
-                description="[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트누르기](https://koreanbots.dev/bots/720724942873821316)",
+                description=f"[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트누르기](https://koreanbots.dev/bots/{self.miya.user.id})",
                 color=0x5FE9FF,
             )
             await ctx.send(embed=embed)
