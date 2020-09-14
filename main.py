@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import sqlite3
+from lib import config
 
 def load_modules(miya):
     failed = []
@@ -28,4 +28,4 @@ if __name__ == "__main__":
         description="미야 discord.py 리라이트 버전",
         )
     load_modules(miya)
-    miya.run("Token")
+    miya.run(config.BotToken)
