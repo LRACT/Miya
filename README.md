@@ -11,5 +11,7 @@
 [Evaluate](https://gist.github.com/nitros12/2c3c265813121492655bc95aa54da6b9)
 ### 외부 링크
 [한국 디스코드 봇 리스트](https://koreanbots.dev/bots/720724942873821316)
+
 [Discord 지원 서버](https://discord.gg/mdgaSjB)
+
 [미야 봇 공식 홈페이지](https://miya.kro.kr)
