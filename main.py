@@ -5,11 +5,11 @@ import sqlite3
 def load_modules(miya):
     failed = []
     exts = [
-    "modules.general",
-    "modules.events",
-    "modules.settings",
-    "modules.devs",
-    "modules.mods"
+        "modules.general",
+        "modules.events",
+        "modules.settings",
+        "modules.devs",
+        "modules.mods"
     ] 
 
     for ext in exts:
@@ -23,8 +23,8 @@ def load_modules(miya):
 
 if __name__ == "__main__":
     miya = commands.Bot(
-        command_prefix=commands.when_mentioned_or("미야야 "), 
-        description="미야를 discord.py로! 미야를 국회로!",
+        command_prefix=commands.when_mentioned_or("청정수 "), 
+        description="미야 discord.py 리라이트 버전",
         )
     load_modules(miya)
     miya.run("NzQ2OTc5MDgyMDU4NTk2MzYy.X0IMew.2w72kB_sibDkCmIvt5zusl9yiVs")
