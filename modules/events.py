@@ -12,7 +12,7 @@ class handler(commands.Cog):
     async def on_ready(self):
         print(self.miya.user)
         print(self.miya.user.id)
-        await self.miya.change_presence(status=discord.Status.online, activity=discord.Game("'미야야 도움' 이라고 말해보세요!"))
+        await self.miya.change_presence(status=discord.Status.online, activity=discord.Game("미야야 도움을 입력 해보세요!"))
         print("READY")
     
     @commands.Cog.listener()
@@ -29,7 +29,7 @@ class handler(commands.Cog):
                 data["request"] = request
                 return requests.post(url, headers=headers, data=json.dumps(data).encode('utf-8'))
 
-            embed = discord.Embed(title=chat(ctx.message.content.replace("미야야 ", "")).json()['response']['replies'][0]["text"], description="[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트누르기](https://koreanbots.dev/bots/720724942873821316)")
+            embed = discord.Embed(title=chat(ctx.message.content.replace("미야야 ", "")).json()['response']['replies'][0]["text"], description="[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
             await ctx.send(embed = embed)
         else:
             await ctx.send(error)
@@ -37,7 +37,7 @@ class handler(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot == False:
-            value = await data.load(member.guild.id, "memberNoti")
+            value = await data.load("memberNoti", 'guild', member.guild.id)
             if value is None:
                 return
             else:

@@ -1,3 +1,4 @@
+pytz
 aiosqlite
 discord.py[voice]
 asyncio
