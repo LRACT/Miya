@@ -3,6 +3,7 @@ from discord.ext import commands
 import json
 import aiohttp
 from utils import data
+from lib import config
 
 
 class handler(commands.Cog):
@@ -14,7 +15,7 @@ class handler(commands.Cog):
         print(self.miya.user)
         print(self.miya.user.id)
         await self.miya.change_presence(
-            status=discord.Status.online, activity=discord.Game("미야야 도움을 입력 해보세요!")
+            status=discord.Status.idle, activity=discord.Game("discord.py 리라이트 중...")
         )
         print("READY")
 
@@ -23,7 +24,7 @@ class handler(commands.Cog):
         if isinstance(error, commands.CommandNotFound):
             url = "https://builder.pingpong.us/api/builder/5e5b4a6ae4b0147906135955/integration/v0.2/custom/a2V5OjY2ZjhhM2Q0MmEyM2Q3NDhjZDUwNDdkMmNmMTI5ZDg1"
             headers = {
-                "Authorization": "Basic a2V5OjY2ZjhhM2Q0MmEyM2Q3NDhjZDUwNDdkMmNmMTI5ZDg1",
+                "Authorization": config.PPBToken,
                 "Content-Type": "application/json",
             }
 
