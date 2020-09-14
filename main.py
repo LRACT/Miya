@@ -28,4 +28,4 @@ if __name__ == "__main__":
         description="미야 discord.py 리라이트 버전",
         )
     load_modules(miya)
-    miya.run("NzQ2OTc5MDgyMDU4NTk2MzYy.X0IMew.2w72kB_sibDkCmIvt5zusl9yiVs")
+    miya.run("Token")
