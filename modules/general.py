@@ -143,15 +143,17 @@ class General(commands.Cog):
             memberCh = f"<#{memberNoti[1]}>"
         if eventLog[1] != 1234:
             logCh = f"<#{eventLog[1]}>"
-        embed.add_field(name="접두사", value="미야야")
+        embed.add_field(name="접두사", value="미야야", inline=False)
         embed.add_field(name="공지 채널", value=announce)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
-        embed.add_field(name="로그 채널 ( 현재 개발 중 )", value=logCh)
-        embed.add_field(name="로그할 이벤트 ( 현재 개발 중 )", value=eventLog[2])
+        embed.add_field(name="로그 채널 ⚒️", value=f"{logCh}")
+        embed.add_field(name="서버 부스트 인원 수", value=f"{len(ctx.guild.premium_subscribers)}명")
+        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}")
         embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
         embed.set_thumbnail(url=self.miya.user.avatar_url_as(static_format="png", size=2048))
+        await ctx.send(ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
     async def _say(self, ctx, *args):
