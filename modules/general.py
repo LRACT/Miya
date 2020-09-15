@@ -22,7 +22,7 @@ class General(commands.Cog):
         """
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
         for command in self.miya.commands:
-            if command.cog.qualified_name != "개발자 전용":
+            if command.cog.qualified_name != "develop":
                 if ctx.author.id not in self.miya.owner_ids:
                     temp = command.help.split("\n")[3:]
                     local = ""
