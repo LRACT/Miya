@@ -19,6 +19,16 @@ class General(commands.Cog):
         """ 
         await ctx.send(f"{ctx.author.mention} Pong! `{round(self.miya.latency * 1000)}ms`")
     
+    @commands.command(name="초대")
+    async def _invite(self, ctx):
+        """
+        미야야 초대
+        
+        미야의 초대 링크를 표시합니다.
+        """
+        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/oauth2/authorize?client_id=720724942873821316&permissions=8&scope=bot)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF)
+        await ctx.send(ctx.author.mention, embed=embed)
+    
     @commands.command(name="봇정보")
     async def _miyainfo(self, ctx):
         """
