@@ -19,7 +19,7 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
-class dev(commands.Cog):
+class dev(commands.Cog, name="develop"):
     def __init__(self, miya):
         self.miya = miya
 
