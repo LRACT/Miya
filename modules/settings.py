@@ -5,8 +5,9 @@ from utils import data
 class settings(commands.Cog):
     def __init__(self, miya):
         self.miya = miya
-    
+
     @commands.command(name="채널설정")
+    @commands.has_permissions(manage_guild=True)
     async def ch_set(self, ctx, *args):
         """
         미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >
@@ -15,7 +16,7 @@ class settings(commands.Cog):
         미야의 공지사항, 입퇴장 메세지를 전송할 채널, 각종 로그를 전송할 채널을 설정합니다.
         """
         if not args:
-            await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 입니다.")
+            await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 에요!")
         else:
             value = None
             table = None
@@ -30,18 +31,19 @@ class settings(commands.Cog):
                 value = "channel"
             if value is not None and table is not None:
                 if not ctx.message.channel_mentions: 
-                    await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 입니다.")
+                    await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 에요!")
                 else:
                     channel = ctx.message.channel_mentions[0]
-                    result = await data.update(table, value, channel.id 'guild', ctx.guild.id)
+                    result = await data.update(table, value, channel.id, 'guild', ctx.guild.id)
                     if result == "SUCCESS":
                         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
                     else:
                         await ctx.send(result)
             else:
-                await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 입니다.")
+                await ctx.send(f"{ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >` 이 올바른 명령어 에요!")
     
     @commands.command(name="메시지설정")
+    @commands.has_permissions(manage_guild=True)
     async def msg_set(self, ctx, *args):
         """
         미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >
@@ -52,7 +54,7 @@ class settings(commands.Cog):
         멘션, 서버이름, 현재인원을 메세지에 출력할 수 있습니다.
         """
         if not args:
-            await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 입니다.")
+            await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 에요!")
         else:
             value = None
             if args[0] == "입장":
@@ -62,16 +64,16 @@ class settings(commands.Cog):
             if value is not None:
                 local = args[1:]
                 if not local:
-                    await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 입니다.")
+                    await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 에요!")
                 else:
                     msg = "".join(local)
-                    result = await data.update("memberNoti", value, local, 'guild', ctx.guild.id)
+                    result = await data.update("memberNoti", value, msg, 'guild', ctx.guild.id)
                     if result == "SUCCESS":
                         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
                     else:
                         await ctx.send(result)
             else:
-                await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 입니다.")
+                await ctx.send(f"{ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어 에요!")
 
 def setup(miya):
     miya.add_cog(settings(miya)) 

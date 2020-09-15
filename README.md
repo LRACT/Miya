@@ -19,5 +19,5 @@
 [미야 봇 공식 홈페이지](https://miya.kro.kr)
 
 
-## License
+## FOSSA 라이선스
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLRACT%2FMiya.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLRACT%2FMiya?ref=badge_large)
