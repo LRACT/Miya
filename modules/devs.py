@@ -22,31 +22,6 @@ def insert_returns(body):
 class dev(commands.Cog):
     def __init__(self, miya):
         self.miya = miya
-    
-    @commands.command(name="도움말", aliases=["도움"])
-    async def _help(self, ctx):
-        """
-        미야야 도움말
-
-
-        미야의 명령어 목록을 보여줍니다.
-        """
-        embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
-        for command in self.miya.commands:
-            if command not in ["전체", "실행", "블랙", "언블랙", "응답"]:
-                if ctx.author.id not in [405714654065721344, 526958314647453706]:
-                    temp = command.help.split("\n")[3:]
-                    local = ""
-                    for arg in temp:
-                        local += f"{arg}\n"
-                    embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-                else:
-                    temp = command.help.split("\n")[3:]
-                    local = ""
-                    for arg in temp:
-                        local += f"{arg}\n"
-                    embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-        await ctx.send(embed=embed)
 
     # Thanks to nitros12
     @commands.command(name="실행")
