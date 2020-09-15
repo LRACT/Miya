@@ -21,7 +21,7 @@ class support(commands.Cog):
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
-        content = "내용 : ".join(ctx.message.content.split(" ")[3:])
+        content = "내용 : ".join(ctx.message.content.split(" ")[2:])
         embed = discord.Embed(title="피드백이 도착했어요!", color=0x95E1F4)
         embed.add_field(name="피드백을 접수한 유저", value=f"{ctx.author} ( {ctx.author.id} )", inline=False)
         embed.add_field(name="피드백이 접수된 서버", value=f"{ctx.guild.name} ( {ctx.guild.id} )", inline=False)

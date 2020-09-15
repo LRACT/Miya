@@ -12,8 +12,14 @@ class General(commands.Cog):
     def __init__(self, miya):
         self.miya = miya
 
-    @commands.command()
+    @commands.command(name="핑")
     async def ping(self, ctx):
+        """
+        미야야 핑
+
+        
+        미야의 지연 시간을 표시합니다.
+        """
         channel = self.miya.get_channel(663806206376149073)
         first_time = datetime.datetime.now()
         m = await channel.send("핑1")
@@ -121,20 +127,57 @@ class General(commands.Cog):
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.set_image(url=user.avatar_url_as(static_format="png", size=2048))
         await ctx.send(embed=embed)
+    
+    @commands.command(name="서버정보")
+    async def _serverinfo(self, ctx):
+        embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
+        guilds = await data.load('guilds', 'guild', ctx.guild.id)
+        memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)
+        eventLog = await data.load('eventLog', 'guild', ctx.guild.id)
+        announce = "설정되어 있지 않아요!"
+        memberCh = "설정되어 있지 않아요!"
+        logCh = "설정되어 있지 않아요!"
+        if guilds[1] != 1234:
+            announce = f"<#{guilds[1]}>"
+        if memberNoti[1] != 1234:
+            memberCh = f"<#{memberNoti[1]}>"
+        if eventLog[1] != 1234:
+            logCh = f"<#{eventLog[1]}>"
+        embed.add_field(name="접두사", value="미야야")
+        embed.add_field(name="공지 채널", value=announce)
+        embed.add_field(name="멤버 알림 채널", value=memberCh)
+        embed.add_field(name="로그 채널 ( 현재 개발 중 )", value=logCh)
+        embed.add_field(name="로그할 이벤트 ( 현재 개발 중 )", value=eventLog[2])
+        embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
+        embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
+        embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
+        embed.set_thumbnail(url=self.miya.user.avatar_url_as(static_format="png", size=2048))
 
     @commands.command(name="말해", aliases=["말해줘"])
     async def _say(self, ctx, *args):
+        """
+        미야야 말해 < 할말 >
+
+
+        미야가 당신이 한 말을 조금 가공해서(?) 따라합니다.
+        """
         if not args:
             await ctx.send(f"{ctx.author.mention} `미야야 말해 < 할말 > ` 이 올바른 명령어에요!")
         else:
             text = " ".join(args)
             embed = discord.Embed(description=text, color=0x5FE9FF)
-            embed.set_author(name=ctx.author.name, icon_url=self.ctx.author.avatar_url_as(static_format="png", size=2048))
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
             await ctx.message.delete() 
             await ctx.send(embed=embed)
     
     @commands.command(name="코로나")        
     async def _corona_info(self, ctx):
+        """
+        미야야 코로나
+
+
+        대한민국의 코로나 현황을 불러옵니다.
+        """
         _corona = await corona.corona()
         embed = discord.Embed(title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF)
         embed.add_field(name="확진자", value=f"{_corona[0].split(')')[1]}명", inline=True)
