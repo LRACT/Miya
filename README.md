@@ -1,4 +1,6 @@
 # 미야
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLRACT%2FMiya.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FLRACT%2FMiya?ref=badge_shield)
+
 다재다능한 관리 봇, 미야를 Discord에서 만나보세요. [초대하기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)
 ## 이 레포는 무엇인가요?
 [전 Node.js 기반 미야](https://github.com/CwhiteKJ/Miya) ( 아카이브됨 )에서 discord.py 로 재작성하고 있습니다.
@@ -15,3 +17,7 @@
 [Discord 지원 서버](https://discord.gg/mdgaSjB)
 
 [미야 봇 공식 홈페이지](https://miya.kro.kr)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLRACT%2FMiya.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLRACT%2FMiya?ref=badge_large)
