@@ -13,7 +13,7 @@ class General(commands.Cog):
     async def _ping(self, ctx):
         """
         미야야 핑
-
+        
         
         현재 미야의 핑을 출력합니다.
         """ 
@@ -24,6 +24,7 @@ class General(commands.Cog):
         """
         미야야 초대
         
+        
         미야의 초대 링크를 표시합니다.
         """
         embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/oauth2/authorize?client_id=720724942873821316&permissions=8&scope=bot)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF)
@@ -33,6 +34,7 @@ class General(commands.Cog):
     async def _miyainfo(self, ctx):
         """
         미야야 봇정보
+        
         
         미야의 정보를 표시합니다.
         """
@@ -59,10 +61,16 @@ class General(commands.Cog):
         """
         async with aiohttp.ClientSession() as cs:
             async with cs.get("http://hangang.dkserver.wo.tc") as r:
-                response = await r.json(content_type=None)
+                response = await r.json(content_type=None) 
                 embed = discord.Embed(description=f'현재 한강의 온도는 `{response["temp"]}`도에요!\n`측정: {(response["time"]).split(" ")[0]}`', color=0x5FE9FF)
-                embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
-                if int(response["temp"].split(".")[0]) > 15: 
+                embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name)
+                temp = None
+                if "." in response["temp"]:
+                    temp = int(response["temp"].split(".")[0])
+                else:
+                    temp = int(response["temp"])
+                    
+                if temp > 15: 
                     embed.set_footer(text="거 수온이 뜨듯하구먼!")
                 else:
                     embed.set_footer(text="거 이거 완전 얼음장이구먼!")
