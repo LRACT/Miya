@@ -4,6 +4,7 @@ import json
 import aiohttp
 from utils import data
 from lib import config
+import datetime
 
 
 class handler(commands.Cog):
@@ -18,16 +19,18 @@ class handler(commands.Cog):
             status=discord.Status.idle, activity=discord.Game("discord.py 리라이트 중...")
         )
         print("READY")
+        uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
+        return uptime_set
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
+            response_msg = None
             url = config.PPBRequest
             headers = {
                 "Authorization": config.PPBToken,
                 "Content-Type": "application/json",
             }
-
             async with aiohttp.ClientSession() as cs:
                 async with cs.post(
                     url,
@@ -36,11 +39,11 @@ class handler(commands.Cog):
                         "request": {"query": ctx.message.content.replace("미야야 ", "")}
                     },
                 ) as r:
-                    response_msg = await r.json()["response"]["replies"][0]["text"]
-
+                    response_msg = await r.json()       
+            msg = response_msg["response"]["replies"][0]["text"]
             embed = discord.Embed(
-                title=response_msg,
-                description=f"[지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트누르기](https://koreanbots.dev/bots/{self.miya.user.id})",
+                title=msg,
+                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/{self.miya.user.id})",
                 color=0x5FE9FF,
             )
             await ctx.send(embed=embed)

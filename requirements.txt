@@ -3,3 +3,4 @@ aiosqlite
 discord.py[voice]
 asyncio
 aiohttp
+bs4

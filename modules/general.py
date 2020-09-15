@@ -2,22 +2,36 @@ import aiohttp
 import discord
 import asyncio
 from discord.ext import commands
-from utils import koreanbots
+from utils import koreanbots, corona
 import random
+from utils import data
+from utils import corona
+import datetime
 
 class General(commands.Cog):
     def __init__(self, miya):
         self.miya = miya
 
-    @commands.command(name="핑")
-    async def _ping(self, ctx):
-        """
-        미야야 핑
-        
-        
-        현재 미야의 핑을 출력합니다.
-        """ 
-        await ctx.send(f"{ctx.author.mention} Pong! `{round(self.miya.latency * 1000)}ms`")
+    @commands.command()
+    async def ping(self, ctx):
+        channel = self.miya.get_channel(663806206376149073)
+        first_time = datetime.datetime.now()
+        m = await channel.send("핑1")
+        await m.edit(content="핑2")
+        last_time = datetime.datetime.now()  
+        await m.delete()
+        ocha = str(last_time - first_time)[6:]
+        row = await data.load('miya', 'botId', self.miya.user.id)
+        record = str(row[1].split(".")[0])
+        start_time = datetime.datetime.strptime(record, '%Y-%m-%d %H:%M:%S')
+        uptime = (datetime.datetime.now() - start_time)
+        embed = discord.Embed(color=0x5FE9FF)
+        embed.add_field(name="API Latency", value=f"{round(self.miya.latency * 1000)}ms", inline=False)
+        embed.add_field(name="Message Latency", value=f"{round(float(ocha) * 1000)}ms", inline=False)
+        embed.add_field(name="Uptime", value=str(uptime).split(".")[0])
+        embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format='png', size=2048))
+        embed.set_author(name="지연 시간", icon_url=self.miya.user.avatar_url)
+        await ctx.send(f":ping_pong: {ctx.author.mention} Pong!", embed=embed) # ㅎㅇ
     
     @commands.command(name="초대")
     async def _invite(self, ctx):
@@ -89,5 +103,47 @@ class General(commands.Cog):
         embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
         await ctx.send(embed=embed)
 
+    @commands.command(name="프로필", aliases=["프사", "프로필사진"])
+    async def _profile(self, ctx, users: commands.Greedy[discord.User]):
+        """ 
+        미야야 프로필 [ 멘션 ]
+        
+        
+        지목한 유저의 프로필을 보여줍니다. 
+        지목이 되지 않았을 경우 자신의 프로필을 보여줍니다.
+        """
+        user = None
+        if not users:
+            user = ctx.author
+        else:
+            user = users[0]
+        embed = discord.Embed(color=0x5FE9FF)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
+        embed.set_image(url=user.avatar_url_as(static_format="png", size=2048))
+        await ctx.send(embed=embed)
+
+    @commands.command(name="말해", aliases=["말해줘"])
+    async def _say(self, ctx, *args):
+        if not args:
+            await ctx.send(f"{ctx.author.mention} `미야야 말해 < 할말 > ` 이 올바른 명령어에요!")
+        else:
+            text = " ".join(args)
+            embed = discord.Embed(description=text, color=0x5FE9FF)
+            embed.set_author(name=ctx.author.name, icon_url=self.ctx.author.avatar_url_as(static_format="png", size=2048))
+            await ctx.message.delete() 
+            await ctx.send(embed=embed)
+    
+    @commands.command(name="코로나")        
+    async def _corona_info(self, ctx):
+        _corona = await corona.corona()
+        embed = discord.Embed(title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF)
+        embed.add_field(name="확진자", value=f"{_corona[0].split(')')[1]}명", inline=True)
+        embed.add_field(name="완치(격리 해제)", value=f"{_corona[1]}명", inline=True)
+        embed.add_field(name="치료 중", value=f"{_corona[2]}명", inline=True)
+        embed.add_field(name="사망", value=f"{_corona[3]}명", inline=True)
+        embed.add_field(name="정보 출처", value="[질병관리청](http://ncov.mohw.go.kr/)", inline=True)
+       # embed.add_field(name="", value="", inline=True)
+        embed.set_footer(text="코로나19 감염이 의심되면 즉시 보건소 및 콜센터(전화1339)로 신고바랍니다.")
+        await ctx.send(embed=embed)
 def setup(miya):
     miya.add_cog(General(miya))

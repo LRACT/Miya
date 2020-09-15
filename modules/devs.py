@@ -93,7 +93,7 @@ class dev(commands.Cog):
 
         지목한 유저를 블랙리스트에서 제거합니다.
         """
-        await data.delete("blacklist", user.id)
+        await data.delete("blacklist", 'user', user.id)
         await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 님을 블랙리스트에서 제거했어요!")
 
 def setup(miya):
