@@ -47,7 +47,7 @@ class support(commands.Cog):
     
     @commands.command(name="응답")
     @commands.is_owner()
-    async def answer(self, ctx, sender: discord.User):
+    async def answer(self, ctx, sender: discord.User, *, response):
         """
         미야야 응답 < 유저 > < 할말 >
 
@@ -57,7 +57,7 @@ class support(commands.Cog):
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
-        content = "내용 : ".join(ctx.message.content.split(" ")[3:])
+        content = "내용 : " + response
         embed = discord.Embed(title="개발자가 답변을 완료했어요!", color=0x95E1F4)
         embed.add_field(name="답변의 내용", value=content, inline=False)
         embed.add_field(name="답변이 완료된 시간", value=time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초"), inline=False)
