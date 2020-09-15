@@ -21,9 +21,7 @@ class support(commands.Cog):
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
-        content = "내용 : "
-        for arg in args:
-            content += f"{arg} "
+        content = "내용 : ".join(ctx.message.content.split(" ")[3:])
         embed = discord.Embed(title="피드백이 도착했어요!", color=0x95E1F4)
         embed.add_field(name="피드백을 접수한 유저", value=f"{ctx.author} ( {ctx.author.id} )", inline=False)
         embed.add_field(name="피드백이 접수된 서버", value=f"{ctx.guild.name} ( {ctx.guild.id} )", inline=False)
@@ -59,9 +57,7 @@ class support(commands.Cog):
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
-        content = ""
-        for arg in ctx.message.content.split(" ")[3:]:
-            content += f"{arg} "
+        content = "내용 : ".join(ctx.message.content.split(" ")[3:])
         embed = discord.Embed(title="개발자가 답변을 완료했어요!", color=0x95E1F4)
         embed.add_field(name="답변의 내용", value=content, inline=False)
         embed.add_field(name="답변이 완료된 시간", value=time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초"), inline=False)
