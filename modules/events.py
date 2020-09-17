@@ -7,7 +7,7 @@ from lib import config
 import datetime
 
 
-class handler(commands.Cog):
+class handler(commands.Cog, name="이벤트 리스너"):
     def __init__(self, miya):
         self.miya = miya
 

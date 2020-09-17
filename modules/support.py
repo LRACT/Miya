@@ -5,7 +5,7 @@ import datetime
 from pytz import timezone, utc
 import asyncio
 
-class support(commands.Cog):
+class support(commands.Cog, name="지원"):
     def __init__(self, miya):
         self.miya = miya
     

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from utils import data
 
-class settings(commands.Cog):
+class settings(commands.Cog, name="설정"):
     def __init__(self, miya):
         self.miya = miya
 

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 
-class Moderation(commands.Cog):
+class Moderation(commands.Cog, name="관리"):
     def __init__(self, bot):
         self.bot = bot
 

@@ -2,13 +2,11 @@ import aiohttp
 import discord
 import asyncio
 from discord.ext import commands
-from utils import koreanbots, corona
+from utils import koreanbots, corona, data, team
 import random
-from utils import data
-from utils import corona
 import datetime
 
-class General(commands.Cog):
+class General(commands.Cog, name="일반"):
     def __init__(self, miya):
         self.miya = miya
         
@@ -22,20 +20,27 @@ class General(commands.Cog):
         """
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
         for command in self.miya.commands:
-            if command.cog.qualified_name != "develop":
-                if ctx.author.id not in self.miya.owner_ids:
+            if command.cog.qualified_name == "개발":
+                app = await self.miya.application_info()
+                owner = await team.get_team(ctx.author.id, app)
+                if owner == True:
                     temp = command.help.split("\n")[3:]
                     local = ""
                     for arg in temp:
                         local += f"{arg}\n"
                     embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-                else:
-                    temp = command.help.split("\n")[3:]
-                    local = ""
-                    for arg in temp:
-                        local += f"{arg}\n"
-                    embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-        await ctx.send(embed=embed)
+            else:
+                temp = command.help.split("\n")[3:]
+                local = ""
+                for arg in temp:
+                    local += f"{arg}\n"
+                embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
+        try:
+            await ctx.author.send(embed=embed)
+        except:
+            await ctx.message.add_reaction("<:cs_no:659355468816187405>")
+        else:
+            await ctx.message.add_reaction("<:cs_sent:659355469684539402>")
         
     @commands.command(name="핑")
     async def ping(self, ctx):
@@ -155,6 +160,12 @@ class General(commands.Cog):
     
     @commands.command(name="서버정보")
     async def _serverinfo(self, ctx):
+        """
+        미야야 서버정보
+
+        
+        명령어를 실행한 서버의 정보와 미야 설정을 불러옵니다.
+        """
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.load('guilds', 'guild', ctx.guild.id)
         memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)

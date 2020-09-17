@@ -19,9 +19,46 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
-class dev(commands.Cog, name="develop"):
+class dev(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
+
+    @commands.command(name="모듈")
+    @commands.is_owner()
+    async def module_management(self, ctx, *args):
+        """
+        미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >
+
+
+        미야에 등록된 모듈을 관리합니다.
+        """
+        if not args:
+            return
+        else:
+            if args[0] == "재시작":
+                try:
+                    self.miya.reload_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 다시 시작 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
+            if args[0] == "활성화":
+                try:
+                    self.miya.load_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 활성화 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
+            if args[0] == "비활성화":
+                try:
+                    self.miya.unload_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 비활성화 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
 
     # Thanks to nitros12
     @commands.command(name="실행")
