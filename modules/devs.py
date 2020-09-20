@@ -136,6 +136,8 @@ class dev(commands.Cog, name="개발"):
                         print(f"Cannot send DM to guild ( {guild.id} ) owner.")
                     else:
                         print(f"Successfully sent DM to guild ( {guild.id} ) owner.")
+            else:
+                print(f"Guild already registered :: {guild.name} ( {guild.id} )")
         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
     
     @commands.command(name="블랙")
@@ -155,8 +157,8 @@ class dev(commands.Cog, name="개발"):
         reason = ""
         for arg in ctx.message.content.split(" ")[3:]:
             reason += f"{arg} "
-        await data.insert('blacklist', 'user, admin, reason, datetime' f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 님을 블랙리스트에 추가했어요!")
+        await data.insert('blacklist', 'user, admin, reason, datetime', f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
+        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user} 님을 블랙리스트에 추가했어요!")
     
     @commands.command(name="언블랙")
     @commands.is_owner()
@@ -168,7 +170,7 @@ class dev(commands.Cog, name="개발"):
         지목한 유저를 블랙리스트에서 제거합니다.
         """
         await data.delete("blacklist", 'user', user.id)
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 님을 블랙리스트에서 제거했어요!")
+        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user} 님을 블랙리스트에서 제거했어요!")
 
 def setup(miya):
     miya.add_cog(dev(miya)) 

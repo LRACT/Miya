@@ -40,14 +40,14 @@ async def on_message(msg):
     if msg.content.startswith("청정수 ") or msg.content.startswith(f"<@{miya.user.id}>") or msg.content.startswith(f"<@!{miya.user.id}>"):
         result = await data.load('blacklist', 'user', msg.author.id)
         if result is not None:
-            print(f"Command Cancelled : {msg.author} ( {msg.author.id} ) - {msg.content}\nGuild Id: {msg.guild.name} ( {msg.guild.id} )\n")
+            print(f"Command Cancelled : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )")
             admin = miya.get_user(int(result[1]))
             await msg.channel.send(f"""
-                :hammer: {msg.author.mention} 죄송합니다. 당신은 봇 이용이 차단되셨습니다.
-                이의제기, 문의는 미야 지원 디스코드에서 하실 수 있습니다. https://discord.gg/mdgaSjB
-                사유 : {result[2]}
-                처리한 관리자 : {admin}
-                차단된 시각 : {result[3]}
+            :hammer: {msg.author.mention} 죄송합니다. 당신은 봇 이용이 차단되셨습니다.
+이의제기, 문의는 미야 지원 디스코드에서 하실 수 있습니다. https://discord.gg/mdgaSjB
+사유 : {result[2]}
+처리한 관리자 : {admin}
+차단된 시각 : {result[3]}
             """)
         else:
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content}")

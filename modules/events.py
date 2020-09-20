@@ -20,7 +20,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         )
         print("READY")
         uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
-        return uptime_set
+        print(f"Uptime Change :: {uptime_set}")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -31,27 +31,30 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 "Authorization": config.PPBToken,
                 "Content-Type": "application/json",
             }
+            query = "".join(ctx.message.content.split(" ")[1:])
             async with aiohttp.ClientSession() as cs:
                 async with cs.post(
                     url,
                     headers=headers,
                     json={
-                        "request": {"query": ctx.message.content.replace("미야야 ", "")}
+                        "request": {"query": query}
                     },
                 ) as r:
-                    response_msg = await r.json()       
+                    response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
+            print(f"Sent {query} to Ping Pong builder and got {msg}")
             embed = discord.Embed(
                 title=msg,
-                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/{self.miya.user.id})",
+                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)",
                 color=0x5FE9FF,
             )
+            embed.set_footer(text="Powered by https://pingpong.us/")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.NotOwner):
             await ctx.send(f"{ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
         else:
-            print(error)
-            await ctx.send(f"{ctx.author.mention} 오류 발생; 이 현상이 계속될 경우 Discord 지원 서버 ( https://discord.gg/mdgaSjB )로 문의해주세요.")
+            print(f"An error occurred : {error}")
+            await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -62,7 +65,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         if row is None:
             result = await data.insert('guilds', "guild, announce, muteRole", f'{guild.id}, 1234, 1234')
             result2 = await data.insert('memberNoti', 'guild, channel, join_msg, remove_msg', f'{guild.id}, 1234, "{default_join_msg}", "{default_quit_msg}"')
-            result3 = await data.insert('eventLog', 'guild, channel, events', f"{guild.id}, 1234, None")
+            result3 = await data.insert('eventLog', 'guild, channel, events', f"{guild.id}, 1234, 'None'")
             if result == "SUCCESS" and result2 == "SUCCESS" and result3 == "SUCCESS":
                 print(f"Guild registered :: {guild.name} ( {guild.id} )")
             else:
@@ -71,6 +74,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 print(f"{guild.id} eventLog Table :: {result3}")
                 try:
                     await guild.owner.send(f"{guild.owner.mention} 서버 등록 도중에 오류가 발생했습니다. 봇을 다시 초대해주세요.\n계속해서 이런 현상이 발생한다면 https://github.com/LRACT/Miya 에 이슈를 남겨주세요.")
+                    await guild.leave()
                 except:
                     print(f"Cannot send DM to guild ( {guild.id} ) owner.")
                 else:
@@ -82,7 +86,6 @@ class handler(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        #result = await data.load('')
         if member.bot == False:
             value = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
             if value is None:
