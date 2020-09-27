@@ -99,10 +99,16 @@ class handler(commands.Cog, name="이벤트 리스너"):
             if ctx.command.name == "블랙":
                 usage = "`미야야 블랙 < 유저 > < 사유 >`"
             if ctx.command.name == "언블랙":
-                usage = "`미야야 언블랙 < 유저 >"
+                usage = "`미야야 언블랙 < 유저 >`"
             if ctx.command.name == "골라":
-                usage = "`미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ..."
+                usage = "`미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...`"
+            if ctx.command.name == "피드백":
+                usage = "`미야야 피드백 < 내용 >`"
+            if ctx.command.name == "응답":
+                usage = "`미야야 응답 < 유저 > < 내용 >`"
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {usage}(이)가 올바른 명령어에요!")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} 정확한 유저를 지정해주세요!")
         else:
             print(f"An error occurred : {error}")
             await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
