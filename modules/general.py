@@ -131,15 +131,18 @@ class General(commands.Cog, name="일반"):
     @commands.command(name="골라", aliases=["골라줘"])
     async def _select(self, ctx, *args):
         """ 
-        미야야 골라 < 단어1 > < 단어2 > [ 단어3 ] ...
+        미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...
         
         
         미야가 단어 중 랜덤하게 하나를 선택해줍니다.
         """
-        select = random.choice(args)
-        embed = discord.Embed(description=select, color=0x5FE9FF)
-        embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
-        await ctx.send(embed=embed)
+        if not args or len(args) <= 1:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...`이 올바른 명령어에요!")
+        else:
+            select = random.choice(args)
+            embed = discord.Embed(description=select, color=0x5FE9FF)
+            embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
+            await ctx.send(embed=embed)
 
     @commands.command(name="프로필", aliases=["프사", "프로필사진"])
     async def _profile(self, ctx, users: commands.Greedy[discord.User]):
