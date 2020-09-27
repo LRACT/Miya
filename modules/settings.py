@@ -74,7 +74,9 @@ class settings(commands.Cog, name="설정"):
                 if not local:
                     await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >` 가 올바른 명령어에요!")
                 else:
-                    msg = "".join(local)
+                    msg = ""
+                    for arg in local:
+                        msg += f"{arg} "
                     result = await data.update("memberNoti", value, msg, 'guild', ctx.guild.id)
                     if result == "SUCCESS":
                         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")

@@ -129,6 +129,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                     msg = msg.replace("{guild}", str(member.guild.name))
                     msg = msg.replace("{count}", str(member.guild.member_count))
                     await channel.send(msg)
+                    
 
 
 def setup(miya):
