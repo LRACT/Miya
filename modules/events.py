@@ -91,6 +91,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
         elif isinstance(error, commands.MissingRequiredArgument):
+            usage = ""
             if ctx.command.name == "차단":
                 usage = "`미야야 차단 < 유저 > [ 사유 ]`"
             if ctx.command.name == "추방":
@@ -99,7 +100,9 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 usage = "`미야야 블랙 < 유저 > < 사유 >`"
             if ctx.command.name == "언블랙":
                 usage = "`미야야 언블랙 < 유저 >"
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {usage}가 올바른 명령어에요!")
+            if ctx.command.name == "골라":
+                usage = "`미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ..."
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {usage}(이)가 올바른 명령어에요!")
         else:
             print(f"An error occurred : {error}")
             await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
