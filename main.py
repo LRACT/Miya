@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from lib import config
-from utils import data
+from utils import data, hook
 
 
 
@@ -41,6 +41,7 @@ async def on_message(msg):
     if msg.content.startswith("미야야 ") or msg.content.startswith(f"<@{miya.user.id}>") or msg.content.startswith(f"<@!{miya.user.id}>"):
         result = await data.load('blacklist', 'user', msg.author.id)
         if result is not None:
+            await hook.send(f"Command Cancelled ( Blacklisted ): {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Command Cancelled ( Blacklisted ): {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )")
             admin = miya.get_user(int(result[1]))
             await msg.channel.send(f"""
@@ -53,9 +54,11 @@ async def on_message(msg):
         else:
             g = await data.load('guilds', 'guild', msg.guild.id)
             if g is not None or msg.content == "미야야 등록":
+                await hook.send(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content}", "미야 Terminal", miya.user.avatar_url)
                 print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content}")
                 await miya.process_commands(msg)
             else:
+                await hook.send(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )")
                 await msg.channel.send(f"<:cs_id:659355469034422282> {msg.author.mention} 아직 미야의 이용약관에 동의하지 않으셨어요. `미야야 등록` 명령어를 사용해 등록해보세요!")
 

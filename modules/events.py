@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import json
 import aiohttp
-from utils import data
+from utils import data, hook
 from lib import config
 import datetime
 
@@ -19,7 +19,9 @@ class handler(commands.Cog, name="이벤트 리스너"):
             status=discord.Status.idle, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
         )
         print("READY")
+        await hook.send(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
         uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
+        await hook.send(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Uptime Change :: {uptime_set}")
 
     @commands.Cog.listener()
@@ -44,6 +46,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 ) as r:
                     response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
+            await hook.send(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"Sent {query} to Ping Pong builder and got {msg}")
             embed = discord.Embed(
                 title=msg,
@@ -110,15 +113,18 @@ class handler(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, commands.BadArgument):
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} 정확한 유저를 지정해주세요!")
         else:
+            await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred : {error}")
             await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
+        await hook.send(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
     
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
+        await hook.send(f"Removed from {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Removed from {guild.name} ( {guild.id} )")
 
     @commands.Cog.listener()
