@@ -7,7 +7,7 @@ from utils import data
 
 
 miya = commands.Bot(
-    command_prefix=commands.when_mentioned_or("청정수 ")
+    command_prefix=commands.when_mentioned_or("미야야 ")
     # description="미야 discord.py 리라이트 버전",
     )
 miya.remove_command('help')
@@ -37,7 +37,7 @@ async def on_message(msg):
     if msg.author.bot:
         return
     
-    if msg.content.startswith("청정수 ") or msg.content.startswith(f"<@{miya.user.id}>") or msg.content.startswith(f"<@!{miya.user.id}>"):
+    if msg.content.startswith("미야야 ") or msg.content.startswith(f"<@{miya.user.id}>") or msg.content.startswith(f"<@!{miya.user.id}>"):
         result = await data.load('blacklist', 'user', msg.author.id)
         if result is not None:
             print(f"Command Cancelled ( Blacklisted ): {msg.author} ( {msg.author.id} ) - {msg.content} / Guild Id: {msg.guild.name} ( {msg.guild.id} )")
