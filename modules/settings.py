@@ -36,7 +36,7 @@ class settings(commands.Cog, name="설정"):
                         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
                 else:
                     if args[0] == "로그":
-                        table = "logger"
+                        table = "eventLog"
                         value = "channel"
                     elif args[0] == "입퇴장":
                         table = "memberNoti"

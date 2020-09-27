@@ -6,6 +6,24 @@ class Moderation(commands.Cog, name="관리"):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(name="슬로우", aliases=["슬로우모드"])
+    @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
+    async def _slowmode(self, ctx, numbers: commands.Greedy[int]):
+        if not numbers:
+            if ctx.message.content.split(" ")[2] != "끄기":
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >`가 올바른 명령어에요!")
+            else:
+                await ctx.channel.edit(slowmode_delay=0)
+                await ctx.send(f":hourglass: {ctx.author.mention} 채널의 메시지 딜레이를 삭제했어요!")
+        else:
+            number = numbers[0]
+            if number > 21600 or number <= 0:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >`가 올바른 명령어에요!")
+            else:
+                await ctx.channel.edit(slowmode_delay=number)
+                await ctx.send(f":hourglass: {ctx.author.mention} 채널의 메시지 딜레이를 {number}초로 설정했어요!\n \n`채널 관리` 혹은 `메시지 관리` 권한을 가진 사람에게는 적용되지 않아요.\n채널의 메시지 딜레이를 삭제하려면 `미야야 슬로우 끄기` 명령어를 사용해주세요.")
+
     @commands.command(name="추방")
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
