@@ -158,7 +158,7 @@ class General(commands.Cog, name="일반"):
         embed = discord.Embed(color=0x5FE9FF)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.set_image(url=user.avatar_url_as(static_format="png", size=2048))
-        await ctx.send(embed=embed)
+        await ctx.send(ctx.author.mention, embed=embed)
     
     @commands.command(name="서버정보")
     async def _serverinfo(self, ctx):

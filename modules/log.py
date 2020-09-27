@@ -22,7 +22,6 @@ class log(commands.Cog, name="로그"):
         else:
             return events
 
-
     @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = await log.get_channel(self, member.guild.id)

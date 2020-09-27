@@ -9,7 +9,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="추방")
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def _kick(self, ctx, member: discord.Member): # 이런식으로?
+    async def _kick(self, ctx, member: discord.Member):
         """
         미야야 추방 < 유저 > [ 사유 ]
         
@@ -21,7 +21,7 @@ class Moderation(commands.Cog, name="관리"):
             await ctx.guild.kick(member, reason=reason)
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>") 
         except discord.Forbidden:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 봇의 권한이 부족해서 명령어를 실행할 수 없어요.") 
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 추방하려는 유저보다 낮아서 추방하지 못했어요.") 
         
     @commands.command(name="차단")
     @commands.has_permissions(ban_members=True)
@@ -38,9 +38,9 @@ class Moderation(commands.Cog, name="관리"):
             await ctx.guild.ban(member, reason=reason)
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         except discord.Forbidden:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 봇의 권한이 부족해서 명령어를 실행할 수 없어요.") 
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 차단하려는 유저보다 낮아서 차단하지 못했어요.") 
             
-    @commands.command(name="청소")
+    @commands.command(name="청소", aliases=["삭제"])
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
     async def _purge(self, ctx, *args):
@@ -55,15 +55,11 @@ class Moderation(commands.Cog, name="관리"):
             if num <= 100:
                 await ctx.message.delete() 
                 deleted = await ctx.channel.purge(limit=num)
-                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제하였습니다!", delete_after=3)
+                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=3)
             else:
-                embed = discord.Embed(description="`미야야 청소 [1~100]`가 올바른 명령어에요!", color=0xFF6060)
-                embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
-                await ctx.send(embed=embed)
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
         else:
-            embed = discord.Embed(description="`미야야 청소 [1~100]`가 올바른 명령어에요!", color=0xFF6060)
-            embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
-            await ctx.send(embed=embed)
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
 
 def setup(miya):
     miya.add_cog(Moderation(miya))

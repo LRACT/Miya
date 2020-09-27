@@ -12,7 +12,7 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
     async def register(self, ctx): 
         result = await data.load('guilds', 'guild', ctx.guild.id)
         if result is None:        
-            embed = discord.Embed(description="미야 이용 약관에 동의 하시겠습니까?\n \n`미야`의 서비스를 해당 서버에서 사용하실려면 약관에 동의해야 해요.\n`동의합니다`를 입력하여 이용약관에 동의하실 수 있어요!\n \n[이용 약관](https://miya.kro.kr/tos)")
+            embed = discord.Embed(description="미야 이용 약관에 동의하시겠어요?\n \n`미야`의 서비스를 해당 서버에서 사용하시려면 약관에 동의해야 해요.\n`동의합니다`를 입력하여 이용 약관에 동의하실 수 있어요!\n \n[이용 약관](https://miya.kro.kr/tos)")
             register_msg = await ctx.send(f"{ctx.author.mention}", embed=embed) 
             def check(msg): 
                 return msg.channel == ctx.channel and msg.author == ctx.author and msg.content == "동의합니다"
