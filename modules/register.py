@@ -9,6 +9,7 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
     
     @commands.command(name="등록")
     @commands.has_permissions(manage_guild=True)
+    @commands.bot_has_permissions(manage_messages=True)
     async def register(self, ctx): 
         result = await data.load('guilds', 'guild', ctx.guild.id)
         if result is None:        
@@ -17,11 +18,12 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
             def check(msg): 
                 return msg.channel == ctx.channel and msg.author == ctx.author and msg.content == "동의합니다"
             try: 
-                await self.miya.wait_for('message', timeout=180, check=check)
+                msg = await self.miya.wait_for('message', timeout=180, check=check)
             except asyncio.TimeoutError:
                 fail_embed = discord.Embed(description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었습니다.", color=0xFF0000)
                 await register_msg.edit(embed=fail_embed)
             else:
+                await msg.delete()
                 await register_msg.delete()
                 uploading = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
                 g_result = await data.insert('guilds', 'guild, muteRole', f'{ctx.guild.id}, 1234')

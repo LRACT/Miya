@@ -20,7 +20,8 @@ def load_modules(miya):
         "modules.settings",
         "modules.devs",
         "modules.mods",
-        'modules.support'
+        'modules.support',
+        'modules.register'
     ] 
 
     for ext in exts:
