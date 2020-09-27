@@ -90,6 +90,16 @@ class handler(commands.Cog, name="이벤트 리스너"):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            if ctx.command.name == "차단":
+                usage = "`미야야 차단 < 유저 > [ 사유 ]`"
+            if ctx.command.name == "추방":
+                usage = "`미야야 추방 < 유저 > [ 사유 ]`"
+            if ctx.command.name == "블랙":
+                usage = "`미야야 블랙 < 유저 > < 사유 >`"
+            if ctx.command.name == "언블랙":
+                usage = "`미야야 언블랙 < 유저 >"
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {usage}가 올바른 명령어에요!")
         else:
             print(f"An error occurred : {error}")
             await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
