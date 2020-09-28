@@ -10,7 +10,7 @@ class Moderation(commands.Cog, name="관리"):
 
     @commands.command(name="뮤트")
     @commands.has_permissions(manage_roles=True)
-    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     async def _mute(self, ctx, member: discord.Member):
         """
         미야야 뮤트 < @유저 >
@@ -31,7 +31,7 @@ class Moderation(commands.Cog, name="관리"):
     
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
-    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     async def _unmute(self, ctx, member: discord.Member):
         """
         미야야 뮤트 < @유저 >
