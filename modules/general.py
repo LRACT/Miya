@@ -173,20 +173,31 @@ class General(commands.Cog, name="일반"):
         """
         msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
+        guilds = await data.load('guilds', 'guild', ctx.guild.id)
         memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)
         eventLog = await data.load('eventLog', 'guild', ctx.guild.id)
+        muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
+        if guilds[1] != 1234:
+            role = ctx.guild.get_role(int(guilds[1]))
+            if role is not None:
+                muteRole = role.mention
         if memberNoti[1] != 1234:
-            memberCh = f"<#{memberNoti[1]}>"
+            channel = ctx.guild.get_channel(int(memberNoti[1]))
+            if channel is not None:
+                memberCh = channel.mention
         if eventLog[1] != 1234:
-            logCh = f"<#{eventLog[1]}>"
+            channel = ctx.guild.get_channel(int(memberNoti[1]))
+            if channel is not None:
+                logCh = channel.mention
         embed.add_field(name="접두사", value="미야야", inline=False)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
+        embed.add_field(name="뮤트 역할", value=muteRole)
+        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}", inline=False)
         embed.add_field(name="서버 부스트 인원 수", value=f"{len(ctx.guild.premium_subscribers)}명")
-        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}")
         embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
