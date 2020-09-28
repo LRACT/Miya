@@ -21,8 +21,13 @@ class Moderation(commands.Cog, name="관리"):
         result = await data.load('guilds', 'guild', ctx.guild.id)
         role = ctx.guild.get_role(int(result[1]))
         if role is not None:
-            await member.add_roles(role)
+            try:
+                await member.add_roles(role)
+            except discord.Forbidden:
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+        else:
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정`을 사용해주세요.")
     
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
@@ -37,8 +42,13 @@ class Moderation(commands.Cog, name="관리"):
         result = await data.load('guilds', 'guild', ctx.guild.id)
         role = ctx.guild.get_role(int(result[1]))
         if role is not None:
-            await member.remove_roles(role)
+            try:
+                await member.remove_roles(role)
+            except discord.Forbidden:
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+        else:
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정`을 사용해주세요.")
 
     @commands.command(name="슬로우", aliases=["슬로우모드"])
     @commands.has_permissions(manage_channels=True)
