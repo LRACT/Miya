@@ -29,7 +29,7 @@ class settings(commands.Cog, name="설정"):
                     perms = channel.overwrites_for(role)
                     perms.send_messages = False
                     perms.send_tts_messages = False
-                    perms.add_reaction = False
+                    perms.add_reactions = False
                     await channel.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
                 for channel in ctx.guild.voice_channels:
                     perms = channel.overwrites_for(role)
@@ -40,7 +40,7 @@ class settings(commands.Cog, name="설정"):
                     perms = category.overwrites_for(role)
                     perms.send_messages = False
                     perms.send_tts_messages = False
-                    perms.add_reaction = False
+                    perms.add_reactions = False
                     perms.speak = False
                     perms.stream = False
                     await category.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
