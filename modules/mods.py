@@ -10,6 +10,12 @@ class Moderation(commands.Cog, name="관리"):
     @commands.has_permissions(manage_channels=True)
     @commands.has_permissions(manage_channels=True)
     async def _slowmode(self, ctx, numbers: commands.Greedy[int]):
+        """
+        미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >
+
+
+        실행한 채널의 메시지 딜레이를 설정합니다.
+        """
         if not numbers:
             if ctx.message.content.split(" ")[2] != "끄기":
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >`가 올바른 명령어에요!")

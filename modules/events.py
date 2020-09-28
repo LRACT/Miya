@@ -26,6 +26,18 @@ class handler(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        perms = {
+            "administrator": "관리자",
+            "manage_guild": "서버 관리하기",
+            "manage_roles": "역할 관리하기",
+            "manage_permissions": "권한 관리하기",
+            "manage_channels": "채널 관리하기",
+            "kick_members": "멤버 추방하기",
+            "ban_members": "멤버 차단하기",
+            "manage_nicknames": "별명 관리하기",
+            "manage_webhooks": "웹훅 관리하기",
+            "manage_messages": "메시지 관리하기"
+        }
         if isinstance(error, commands.CommandNotFound):
             response_msg = None
             url = config.PPBRequest
@@ -59,59 +71,17 @@ class handler(commands.Cog, name="이벤트 리스너"):
             await ctx.send(f"{ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
         elif isinstance(error, commands.MissingPermissions):
             mp = error.missing_perms
-            p = ""
-            if mp[0] == "administrator":
-                p = "관리자"
-            if mp[0] == "manage_guild":
-                p = "서버 관리하기"
-            if mp[0] == "kick_members":
-                p = "멤버 추방하기"
-            if mp[0] == "ban_members":
-                p = "멤버 차단하기"
-            if mp[0] == "manage_channels":
-                p = "채널 관리하기"
-            if mp[0] == "manage_roles":
-                p = "역할 관리하기"
-            if mp[0] == "manage_messages":
-                p = "메시지 관리"
+            p = perms[mp[0]]
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`")
         elif isinstance(error, commands.BotMissingPermissions):
             mp = error.missing_perms
-            p = ""
-            if mp[0] == "manage_webhooks":
-                p = "웹후크 관리하기"
-            if mp[0] == "kick_members":
-                p = "멤버 추방하기"
-            if mp[0] == "ban_members":
-                p = "멤버 차단하기"
-            if mp[0] == "manage_channels":
-                p = "채널 관리하기"
-            if mp[0] == "manage_roles":
-                p = "역할 관리하기"
-            if mp[0] == "manage_messages":
-                p = "메시지 관리"
+            p = perms[mp[0]]
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
-        elif isinstance(error, commands.MissingRequiredArgument):
-            usage = ""
-            if ctx.command.name == "차단":
-                usage = "`미야야 차단 < 유저 > [ 사유 ]`"
-            if ctx.command.name == "추방":
-                usage = "`미야야 추방 < 유저 > [ 사유 ]`"
-            if ctx.command.name == "블랙":
-                usage = "`미야야 블랙 < 유저 > < 사유 >`"
-            if ctx.command.name == "언블랙":
-                usage = "`미야야 언블랙 < 유저 >`"
-            if ctx.command.name == "골라":
-                usage = "`미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...`"
-            if ctx.command.name == "피드백":
-                usage = "`미야야 피드백 < 내용 >`"
-            if ctx.command.name == "응답":
-                usage = "`미야야 응답 < 유저 > < 내용 >`"
+        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+            usage = ctx.command.help.split("\n")[0]
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {usage}(이)가 올바른 명령어에요!")
-        elif isinstance(error, commands.BadArgument):
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} 정확한 유저를 지정해주세요!")
         else:
             await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred : {error}")
