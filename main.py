@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
+import koreanbots
 from lib import config
 from utils import data, hook
-import koreanbots
 
 
 
