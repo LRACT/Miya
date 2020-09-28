@@ -1,10 +1,32 @@
 import discord
 from discord.ext import commands
 import asyncio
+import typing
+from utils import data
 
 class Moderation(commands.Cog, name="관리"):
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(name="뮤트")
+    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
+    async def _mute(self, ctx, member: discord.Member):
+        result = await data.load('guilds', 'guild', ctx.guild.id)
+        role = ctx.guild.get_role(int(result[1]))
+        if role is not None:
+            await member.add_roles(role)
+            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+    
+    @commands.command(name="언뮤트")
+    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
+    async def _unmute(self, ctx, member: discord.Member):
+        result = await data.load('guilds', 'guild', ctx.guild.id)
+        role = ctx.guild.get_role(int(result[1]))
+        if role is not None:
+            await member.remove_roles(role)
+            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
 
     @commands.command(name="슬로우", aliases=["슬로우모드"])
     @commands.has_permissions(manage_channels=True)

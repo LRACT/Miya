@@ -7,6 +7,49 @@ class settings(commands.Cog, name="설정"):
     def __init__(self, miya):
         self.miya = miya
 
+    @commands.command(name="역할설정")
+    @commands.has_permissions(administrator=True)
+    @commands.bot_has_permissions(manage_channels=True, manage_roles=True, manage_permissions=True)
+    async def role_set(self, ctx, role: discord.Role):
+        """
+        미야야 역할설정 < @역할 >
+
+
+        미야의 뮤트 명령어를 사용 시 적용할 역할을 설정합니다.
+        """
+        try:
+            await ctx.guild.me.add_roles(role)
+        except:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높아요. 역할을 봇의 최상위 역할보다 낮춰주세요.")
+        else:
+            await ctx.guild.me.remove_roles(role)
+            result = await data.update('guilds', 'muteRole', role.id, 'guild', ctx.guild.id)
+            if result == "SUCCESS":
+                for channel in ctx.guild.text_channels:
+                    perms = channel.overwrites_for(role)
+                    perms.send_messages = False
+                    perms.send_tts_messages = False
+                    perms.add_reaction = False
+                    await channel.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
+                for channel in ctx.guild.voice_channels:
+                    perms = channel.overwrites_for(role)
+                    perms.speak = False
+                    perms.stream = False
+                    await channel.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
+                for category in ctx.guild.categories:
+                    perms = category.overwrites_for(role)
+                    perms.send_messages = False
+                    perms.send_tts_messages = False
+                    perms.add_reaction = False
+                    perms.speak = False
+                    perms.stream = False
+                    await category.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
+                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+            else:
+                await hook.send(f"Channel set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                print(f"Mute role update failed. guilds Result :: {result}")
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 설정 변경 도중에 오류가 발생했습니다.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
+
     @commands.command(name="채널설정")
     @commands.has_permissions(manage_guild=True)
     @commands.bot_has_permissions(manage_webhooks=True)
