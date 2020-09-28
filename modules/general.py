@@ -2,13 +2,11 @@ import aiohttp
 import discord
 import asyncio
 from discord.ext import commands
-from utils import koreanbots, corona
+from utils import koreanbots, corona, data, team
 import random
-from utils import data
-from utils import corona
 import datetime
 
-class General(commands.Cog):
+class General(commands.Cog, name="일반"):
     def __init__(self, miya):
         self.miya = miya
         
@@ -22,20 +20,27 @@ class General(commands.Cog):
         """
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
         for command in self.miya.commands:
-            if command.cog.qualified_name != "develop":
-                if ctx.author.id not in self.miya.owner_ids:
+            if command.cog.qualified_name == "개발" or command.cog.qualified_name == "서버 데이터 관리":
+                app = await self.miya.application_info()
+                owner = await team.get_team(ctx.author.id, app)
+                if owner == True:
                     temp = command.help.split("\n")[3:]
                     local = ""
                     for arg in temp:
                         local += f"{arg}\n"
                     embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-                else:
-                    temp = command.help.split("\n")[3:]
-                    local = ""
-                    for arg in temp:
-                        local += f"{arg}\n"
-                    embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
-        await ctx.send(embed=embed)
+            else:
+                temp = command.help.split("\n")[3:]
+                local = ""
+                for arg in temp:
+                    local += f"{arg}\n"
+                embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
+        try:
+            await ctx.author.send(embed=embed)
+        except:
+            await ctx.message.add_reaction("<:cs_no:659355468816187405>")
+        else:
+            await ctx.message.add_reaction("<:cs_sent:659355469684539402>")
         
     @commands.command(name="핑")
     async def ping(self, ctx):
@@ -83,9 +88,10 @@ class General(commands.Cog):
         
         미야의 정보를 표시합니다.
         """
+        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         heart = await koreanbots.get_rank()
         e = discord.Embed(title="미야 서버(봇) 정보", description=f"""
-                <:koreanbots:752354740314177568> 봇 순위 : {heart}위
+                <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
                 <:cs_settings:659355468992610304> CPU : Xeon E3-1280 v6
                 <:rem:727570626407301241> Memory : DDR4 16GB (삼성 8기가 2개)
                 <:ssd:727570626092728474> Storage : SAMSUNG 860 EVO (500GB)
@@ -94,7 +100,7 @@ class General(commands.Cog):
                 <:cs_leave:659355468803866624> 서버 갯수 : {len(self.miya.guilds)}개""", 
             color=0x5FE9FF
         )
-        await ctx.send(ctx.author.mention, embed=e)
+        await msg.edit(content=ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
     async def _hangang(self, ctx):
@@ -104,6 +110,7 @@ class General(commands.Cog):
 
         현재 한강의 수온을 출력합니다.
         """
+        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         async with aiohttp.ClientSession() as cs:
             async with cs.get("http://hangang.dkserver.wo.tc") as r:
                 response = await r.json(content_type=None) 
@@ -119,20 +126,23 @@ class General(commands.Cog):
                     embed.set_footer(text="거 수온이 뜨듯하구먼!")
                 else:
                     embed.set_footer(text="거 이거 완전 얼음장이구먼!")
-                await ctx.send(ctx.author.mention, embed=embed)
+                await msg.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="골라", aliases=["골라줘"])
     async def _select(self, ctx, *args):
         """ 
-        미야야 골라 < 단어1 > < 단어2 > [ 단어3 ] ...
+        미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...
         
         
         미야가 단어 중 랜덤하게 하나를 선택해줍니다.
         """
-        select = random.choice(args)
-        embed = discord.Embed(description=select, color=0x5FE9FF)
-        embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
-        await ctx.send(embed=embed)
+        if not args or len(args) <= 1:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...`이 올바른 명령어에요!")
+        else:
+            select = random.choice(args)
+            embed = discord.Embed(description=select, color=0x5FE9FF)
+            embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name) 
+            await ctx.send(embed=embed)
 
     @commands.command(name="프로필", aliases=["프사", "프로필사진"])
     async def _profile(self, ctx, users: commands.Greedy[discord.User]):
@@ -151,34 +161,48 @@ class General(commands.Cog):
         embed = discord.Embed(color=0x5FE9FF)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.set_image(url=user.avatar_url_as(static_format="png", size=2048))
-        await ctx.send(embed=embed)
+        await ctx.send(ctx.author.mention, embed=embed)
     
     @commands.command(name="서버정보")
     async def _serverinfo(self, ctx):
+        """
+        미야야 서버정보
+
+        
+        명령어를 실행한 서버의 정보와 미야 설정을 불러옵니다.
+        """
+        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.load('guilds', 'guild', ctx.guild.id)
         memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)
         eventLog = await data.load('eventLog', 'guild', ctx.guild.id)
-        announce = "설정되어 있지 않아요!"
+        muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
         if guilds[1] != 1234:
-            announce = f"<#{guilds[1]}>"
+            role = ctx.guild.get_role(int(guilds[1]))
+            if role is not None:
+                muteRole = role.mention
         if memberNoti[1] != 1234:
-            memberCh = f"<#{memberNoti[1]}>"
+            channel = ctx.guild.get_channel(int(memberNoti[1]))
+            if channel is not None:
+                memberCh = channel.mention
         if eventLog[1] != 1234:
-            logCh = f"<#{eventLog[1]}>"
+            channel = ctx.guild.get_channel(int(memberNoti[1]))
+            if channel is not None:
+                logCh = channel.mention
         embed.add_field(name="접두사", value="미야야", inline=False)
-        embed.add_field(name="공지 채널", value=announce)
+        embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
-        embed.add_field(name="로그 채널 ⚒️", value=f"{logCh}")
+        embed.add_field(name="로그 채널 ⚒️", value=logCh)
+        embed.add_field(name="뮤트 역할", value=muteRole)
+        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}", inline=False)
         embed.add_field(name="서버 부스트 인원 수", value=f"{len(ctx.guild.premium_subscribers)}명")
-        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}")
         embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
         embed.set_thumbnail(url=self.miya.user.avatar_url_as(static_format="png", size=2048))
-        await ctx.send(ctx.author.mention, embed=embed)
+        await msg.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
     async def _say(self, ctx, *args):
@@ -206,6 +230,7 @@ class General(commands.Cog):
         대한민국의 코로나 현황을 불러옵니다.
         """
         _corona = await corona.corona()
+        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         embed = discord.Embed(title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF)
         embed.add_field(name="확진자", value=f"{_corona[0].split(')')[1]}명", inline=True)
         embed.add_field(name="완치(격리 해제)", value=f"{_corona[1]}명", inline=True)
@@ -214,6 +239,6 @@ class General(commands.Cog):
         embed.add_field(name="정보 출처", value="[질병관리청](http://ncov.mohw.go.kr/)", inline=True)
        # embed.add_field(name="", value="", inline=True)
         embed.set_footer(text="코로나19 감염이 의심되면 즉시 보건소 및 콜센터(전화1339)로 신고바랍니다.")
-        await ctx.send(embed=embed)
+        await msg.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
 def setup(miya):
     miya.add_cog(General(miya))

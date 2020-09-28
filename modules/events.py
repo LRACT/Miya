@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 import json
 import aiohttp
-from utils import data
+from utils import data, hook
 from lib import config
 import datetime
 
 
-class handler(commands.Cog):
+class handler(commands.Cog, name="이벤트 리스너"):
     def __init__(self, miya):
         self.miya = miya
 
@@ -19,11 +19,25 @@ class handler(commands.Cog):
             status=discord.Status.idle, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
         )
         print("READY")
+        await hook.send(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
         uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
-        return uptime_set
+        await hook.send(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
+        print(f"Uptime Change :: {uptime_set}")
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        perms = {
+            "administrator": "관리자",
+            "manage_guild": "서버 관리하기",
+            "manage_roles": "역할 관리하기",
+            "manage_permissions": "권한 관리하기",
+            "manage_channels": "채널 관리하기",
+            "kick_members": "멤버 추방하기",
+            "ban_members": "멤버 차단하기",
+            "manage_nicknames": "별명 관리하기",
+            "manage_webhooks": "웹훅 관리하기",
+            "manage_messages": "메시지 관리하기"
+        }
         if isinstance(error, commands.CommandNotFound):
             response_msg = None
             url = config.PPBRequest
@@ -31,58 +45,60 @@ class handler(commands.Cog):
                 "Authorization": config.PPBToken,
                 "Content-Type": "application/json",
             }
+            query = ""
+            for q in ctx.message.content.split(" ")[1:]:
+                query += f"{q} "
             async with aiohttp.ClientSession() as cs:
                 async with cs.post(
                     url,
                     headers=headers,
                     json={
-                        "request": {"query": ctx.message.content.replace("미야야 ", "")}
+                        "request": {"query": query}
                     },
                 ) as r:
-                    response_msg = await r.json()       
+                    response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
+            await hook.send(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
+            print(f"Sent {query} to Ping Pong builder and got {msg}")
             embed = discord.Embed(
                 title=msg,
-                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/{self.miya.user.id})",
+                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)",
                 color=0x5FE9FF,
             )
+            embed.set_footer(text="Powered by https://pingpong.us/")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.NotOwner):
             await ctx.send(f"{ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
+        elif isinstance(error, commands.MissingPermissions):
+            mp = error.missing_perms
+            p = perms[mp[0]]
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`")
+        elif isinstance(error, commands.BotMissingPermissions):
+            mp = error.missing_perms
+            p = perms[mp[0]]
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
+        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+            usage = ctx.command.help.split("\n")[0]
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         else:
-            print(error)
-            await ctx.send(f"{ctx.author.mention} 오류 발생; 이 현상이 계속될 경우 Discord 지원 서버 ( https://discord.gg/mdgaSjB )로 문의해주세요.")
+            await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
+            print(f"An error occurred : {error}")
+            await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        print(f"Added to {guild.id}")
-        default_join_msg = "{member}님 {guild}에 오신 것을 환영해요! 현재 인원 : {count}"
-        default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}"
-        row = await data.load('guilds', 'guild', guild.id)
-        if row is None:
-            result = await data.insert('guilds', "guild, announce, muteRole", f'{guild.id}, 1234, 1234')
-            result2 = await data.insert('memberNoti', 'guild, channel, join_msg, remove_msg', f'{guild.id}, 1234, "{default_join_msg}", "{default_quit_msg}"')
-            result3 = await data.insert('eventLog', 'guild, channel, events', f"{guild.id}, 1234, None")
-            if result == "SUCCESS" and result2 == "SUCCESS" and result3 == "SUCCESS":
-                print(f"Guild registered :: {guild.name} ( {guild.id} )")
-            else:
-                print(f"{guild.id} guild Table :: {result}")
-                print(f"{guild.id} memberNoti Table :: {result2}")
-                print(f"{guild.id} eventLog Table :: {result3}")
-                try:
-                    await guild.owner.send(f"{guild.owner.mention} 서버 등록 도중에 오류가 발생했습니다. 봇을 다시 초대해주세요.\n계속해서 이런 현상이 발생한다면 https://github.com/LRACT/Miya 에 이슈를 남겨주세요.")
-                except:
-                    print(f"Cannot send DM to guild ( {guild.id} ) owner.")
-                else:
-                    print(f"Successfully sent error msg to guild ( {guild.id} ) owner.")
+        await hook.send(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+        print(f"Added to {guild.name} ( {guild.id} )")
     
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
+        await hook.send(f"Removed from {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Removed from {guild.name} ( {guild.id} )")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        #result = await data.load('')
         if member.bot == False:
             value = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
             if value is None:
@@ -108,6 +124,7 @@ class handler(commands.Cog):
                     msg = msg.replace("{guild}", str(member.guild.name))
                     msg = msg.replace("{count}", str(member.guild.member_count))
                     await channel.send(msg)
+                    
 
 
 def setup(miya):

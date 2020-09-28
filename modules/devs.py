@@ -19,9 +19,46 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
-class dev(commands.Cog, name="develop"):
+class dev(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
+
+    @commands.command(name="모듈")
+    @commands.is_owner()
+    async def module_management(self, ctx, *args):
+        """
+        미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >
+
+
+        미야에 등록된 모듈을 관리합니다.
+        """
+        if not args:
+            return
+        else:
+            if args[0] == "재시작":
+                try:
+                    self.miya.reload_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 다시 시작 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
+            if args[0] == "활성화":
+                try:
+                    self.miya.load_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 활성화 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
+            if args[0] == "비활성화":
+                try:
+                    self.miya.unload_extension(f'modules.{args[1]}')
+                except Exception as e:
+                    await ctx.send(f"{ctx.author.mention} 모듈 비활성화 실패.\n{e}")
+                else:
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+
 
     # Thanks to nitros12
     @commands.command(name="실행")
@@ -99,6 +136,8 @@ class dev(commands.Cog, name="develop"):
                         print(f"Cannot send DM to guild ( {guild.id} ) owner.")
                     else:
                         print(f"Successfully sent DM to guild ( {guild.id} ) owner.")
+            else:
+                print(f"Guild already registered :: {guild.name} ( {guild.id} )")
         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
     
     @commands.command(name="블랙")
@@ -118,8 +157,8 @@ class dev(commands.Cog, name="develop"):
         reason = ""
         for arg in ctx.message.content.split(" ")[3:]:
             reason += f"{arg} "
-        await data.insert('blacklist', 'user, admin, reason, datetime' f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 님을 블랙리스트에 추가했어요!")
+        await data.insert('blacklist', 'user, admin, reason, datetime', f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
+        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user} 님을 블랙리스트에 추가했어요!")
     
     @commands.command(name="언블랙")
     @commands.is_owner()
@@ -131,7 +170,7 @@ class dev(commands.Cog, name="develop"):
         지목한 유저를 블랙리스트에서 제거합니다.
         """
         await data.delete("blacklist", 'user', user.id)
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 님을 블랙리스트에서 제거했어요!")
+        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user} 님을 블랙리스트에서 제거했어요!")
 
 def setup(miya):
     miya.add_cog(dev(miya)) 
