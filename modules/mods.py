@@ -52,7 +52,7 @@ class Moderation(commands.Cog, name="관리"):
 
     @commands.command(name="슬로우", aliases=["슬로우모드"])
     @commands.has_permissions(manage_channels=True)
-    @commands.has_permissions(manage_channels=True)
+    @commands.bot_has_permissions(manage_channels=True)
     async def _slowmode(self, ctx, numbers: commands.Greedy[int]):
         """
         미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >
