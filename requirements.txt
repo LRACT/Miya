@@ -5,3 +5,4 @@ asyncio
 aiohttp
 bs4
 lxml
+koreanbots

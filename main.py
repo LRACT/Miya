@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from lib import config
 from utils import data, hook
+import koreanbots
 
 
 
@@ -10,6 +11,7 @@ miya = commands.Bot(
     command_prefix=commands.when_mentioned_or("미야야 ")
     # description="미야 discord.py 리라이트 버전",
     )
+Bot = koreanbots.Client(miya, config.DBKRToken)
 miya.remove_command('help')
 
 def load_modules(miya):
