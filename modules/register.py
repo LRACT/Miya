@@ -32,7 +32,7 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
                 await msg.delete()
                 await register_msg.delete()
                 uploading = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
-                g_result = await data.insert('guilds', 'guild, muteRole', f'{ctx.guild.id}, 1234')
+                g_result = await data.insert('guilds', 'guild, muteRole, linkFiltering', f'{ctx.guild.id}, 1234, "false"')
                 e_result = await data.insert('eventLog', 'guild, channel, events', f'{ctx.guild.id}, 1234, "None"')
                 default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
                 default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}명"

@@ -88,6 +88,16 @@ class handler(commands.Cog, name="이벤트 리스너"):
             await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
+    async def on_message(self, msg):
+        if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
+            result = await data.load('guilds', 'guild', msg.guild.id)
+            if result is not None:
+                if result[2] == 'true':
+                    if msg.channel.topic is None or '=무시' not in msg.channel.topic:
+                        await msg.delete()
+                        await msg.channel.send(f"<:cs_trash:659355468631769101> {msg.author.mention} 죄송합니다. 서버 설정에 따라 이 채널에는 Discord 초대 링크를 포스트하실 수 없습니다.")
+
+    @commands.Cog.listener()
     async def on_guild_join(self, guild):
         await hook.send(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
