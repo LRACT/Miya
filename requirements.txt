@@ -1,7 +1,6 @@
 pytz
 aiosqlite
 discord.py[voice]
-asyncio
 aiohttp
 bs4
 lxml
