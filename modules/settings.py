@@ -110,9 +110,9 @@ class settings(commands.Cog, name="설정"):
         else:
             result = None
             if args[0] == "켜기":
-                result = await data.update('guilds', 'linkFiltering', "'true'", 'guild', ctx.guild.id)
+                result = await data.update('guilds', 'linkFiltering', "true", 'guild', ctx.guild.id)
             elif args[0] == "끄기":
-                result = await data.update('guilds', 'linkFiltering', "'false'", 'guild', ctx.guild.id)
+                result = await data.update('guilds', 'linkFiltering', "false", 'guild', ctx.guild.id)
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
             if result == "SUCCESS":
