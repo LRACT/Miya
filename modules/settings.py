@@ -103,6 +103,7 @@ class settings(commands.Cog, name="설정"):
 
 
         서버 내에서 Discord 초대 링크를 승인할 지 삭제할 지 설정합니다.
+        *채널 주제에 `=무시`라는 단어를 넣어 해당 채널만 무시할 수 있습니다.*
         """
         if not args:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
