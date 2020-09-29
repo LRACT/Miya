@@ -108,19 +108,25 @@ class settings(commands.Cog, name="설정"):
         if not args:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
         else:
-            result = None
             if args[0] == "켜기":
                 result = await data.update('guilds', 'linkFiltering', "true", 'guild', ctx.guild.id)
+                if result == "SUCCESS":
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                else:
+                    await hook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                    print(f"Filtering set failed. guilds Result :: {result}")
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 설정 변경 도중에 오류가 발생했습니다.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
             elif args[0] == "끄기":
                 result = await data.update('guilds', 'linkFiltering', "false", 'guild', ctx.guild.id)
+                if result == "SUCCESS":
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                else:
+                    await hook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                    print(f"Filtering set failed. guilds Result :: {result}")
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 설정 변경 도중에 오류가 발생했습니다.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
-            if result == "SUCCESS":
-                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
-            else:
-                await hook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Filtering set failed. guilds Result :: {result}")
-                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 설정 변경 도중에 오류가 발생했습니다.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
+            
     
     @commands.command(name="메시지설정")
     @commands.has_permissions(manage_guild=True)
