@@ -164,35 +164,6 @@ class settings(commands.Cog, name="설정"):
                         await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
-    
-    @commands.command(name="이벤트설정")
-    @commands.is_owner()
-    @commands.has_permissions(manage_guild=True)
-    async def event_set(self, ctx, *args):
-        """
-        미야야 이벤트설정 < 이벤트 이름 > < 켜기 / 끄기 >
-
-
-        미야가 로깅할 이벤트를 설정합니다. `목록` 을 입력해 전체 이벤트 목록을 볼 수 있습니다.
-        """
-        if not args:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 이벤트설정 < 목록 / 이벤트 이름 > [ 켜기 / 끄기 ]`(이)가 올바른 명령어에요!\n`미야야 이벤트설정 목록`을 사용해 전체 이벤트 목록을 볼 수 있어요.")
-        else:
-            if args[0] == "목록":
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} 현재 사용 가능한 이벤트 목록\n```멤버 입장, 멤버 퇴장, 메시지 삭제, 메시지 수정```")
-            else:
-                enable = None
-                if args[2] == "켜기":
-                    enable = True
-                if args[2] == "끄기":
-                    enable = False
-                if enable is not None:
-                    if args[0] == "멤버":
-                        if args[1] == "입장":
-                            result = await data.load('eventLog', 'guild', ctx.guild.id)
-                            if enable == True:
-                                if "멤버 입장" in result[2]:
-                                    await data.update() 
 
 def setup(miya):
     miya.add_cog(settings(miya)) 
