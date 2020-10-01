@@ -80,15 +80,27 @@ class handler(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
-            usage = ctx.command.help.split("\n")[0]
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
+            if isinstance(error, commands.MemberNotFound) or isinstance(commands.UserNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!")
+            elif isinstance(error, commands.ChannelNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!")
+            elif isinstance(error, commands.ChannelNotReadable):
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널의 메시지를 읽을 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!")
+            elif isinstance(error, commands.RoleNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!")
+            else:
+                usage = ctx.command.help.split("\n")[0]
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")    
         else:
             await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred : {error}")
-            await ctx.send(f"{ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+            await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
+        if msg.author.bot:
+            return
+
         if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
             result = await data.load('guilds', 'guild', msg.guild.id)
             if result is not None:

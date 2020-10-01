@@ -205,6 +205,7 @@ class General(commands.Cog, name="일반"):
         await msg.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
+    @commands.bot_has_permissions(manage_messages=True)
     async def _say(self, ctx, *args):
         """
         미야야 말해 < 할말 >

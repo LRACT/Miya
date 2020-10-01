@@ -9,19 +9,25 @@ class log(commands.Cog, name="로그"):
     
     async def get_channel(self, guild_id):
         result = await data.load('eventLog', 'guild', guild_id)
-        channel = self.miya.get_channel(int(result[1]))
-        if channel is not None:
-            return channel
+        if result is not None:
+            channel = self.miya.get_channel(int(result[1]))
+            if channel is not None:
+                return channel
+            else:
+                return None
         else:
             return None
     
     async def get_events(self, guild_id):
         result = await data.load('eventLog', 'guild', guild_id)
-        events = result[2]
-        if events == "None" or events == None:
-            return None
+        if result is not None:
+            events = result[2]
+            if events == "None" or events == None:
+                return None
+            else:
+                return events
         else:
-            return events
+            return None
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -63,24 +69,48 @@ class log(commands.Cog, name="로그"):
                 if payload.cached_message is not None:
                     msg = payload.cached_message
                     embed = discord.Embed(title="메시지가 삭제되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
-                    embed.add_field(name="메시지 주인", value=f"{msg.author.mention} ( {msg.author.id} )")
-                    embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )")
+                    embed.add_field(name="메시지 주인", value=f"{msg.author.mention} ( {msg.author.id} )", inline=False)
+                    embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
                     if msg.content == "" and msg.attachments:
-                        embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*")
-                        embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.")
+                        embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False)
+                        embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                         await channel.send(embed=embed)
                         await channel.send(files=msg.attachments)
                     elif msg.content != "" and msg.attachments:
-                        embed.add_field(name="메시지 내용", value=msg.content)
-                        embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.")
+                        embed.add_field(name="메시지 내용", value=msg.content, inline=False)
+                        embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                         await channel.send(embed=embed)
                         await channel.send(files=msg.attachments)
                     else:
-                        embed.add_field(name="메시지 내용", value=msg.content)
-                        embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*")
+                        embed.add_field(name="메시지 내용", value=msg.content, inline=False)
+                        embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*", inline=False)
                         await channel.send(embed=embed)
                 else:
                     embed = discord.Embed(title="메시지가 삭제되었습니다.", description="메시지가 캐싱되지 않아 내용 및 파일을 불러오지 못했습니다.", timestamp=datetime.datetime.now())
-                    embed.add_field(name="메시지가 삭제된 채널", value=f"<#{payload.channel_id}> ( {payload.channel_id} )")
+                    embed.add_field(name="메시지가 삭제된 채널", value=f"<#{payload.channel_id}> ( {payload.channel_id} )", inline=False)
                     await channel.send(embed=embed)
+    
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        channel = await log.get_channel(self, before.guild.id)
+        event = await log.get_events(self, before.guild.id)
+        if channel is not None and event is not None:
+            if "메시지 수정" not in event:
+                return
+            else:
+                embed = discord.Embed(title="메시지가 수정되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
+                embed.add_field(name="메시지 주인", value=f"{after.author.mention} ( {after.author.id} )", inline=False)
+                embed.add_field(name="메시지가 수정된 채널", value=f"{after.channel.mention} ( {after.channel.id} )", inline=False)
+                embed.add_field(name="메시지로 이동하기", value=f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id}", inline=False)
+                embed.add_field(name="메시지 수정 전 내용", value=before.content, inline=False)
+                embed.add_field(name="메시지 수정 후 내용", value=after.content, inline=False)
+                if before.pinned == True and after.pinned == False:
+                    embed.add_field(name="변경된 사항", value="메시지 고정이 해제됨")
+                elif before.pinned == False and after.pinned == True:
+                    embed.add_field(name="변경된 사항", value="메시지가 고정됨")
+                elif len(before.embeds) != len(after.embeds):
+                    embed.add_field(name="변경된 사항", value="임베드가 변경됨")
+                await channel.send(embed=embed)
 
+def setup(miya):
+    miya.add_cog(log(miya))
