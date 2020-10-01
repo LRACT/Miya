@@ -5,10 +5,11 @@ async def load(table, find_column, find_value):
     async with aiosqlite.connect("lib/miya.sqlite") as o:
         async with o.execute(f"SELECT * FROM {table} WHERE {find_column} = {find_value}") as c:
             rows = await c.fetchall()
-            if rows and len(rows) == 1:
-                row = rows[0]
-            else:
-                row = rows
+            if rows:
+                if len(rows) == 1:
+                    row = rows[0]
+                else:
+                    row = rows
     return row
 
 async def update(table, column, value, find_column, find_value):
