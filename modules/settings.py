@@ -79,12 +79,12 @@ class settings(commands.Cog, name="설정"):
                         await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
                 else:
                     if args[0] == "로그":
-                        table = "eventLog"
-                        value = "channel"
+                        table = "guilds"
+                        value = "eventLog"
                     elif args[0] == "입퇴장":
                         table = "memberNoti"
                         value = "channel"
-                    if value is not None and table is not None and args[0] != "공지":
+                    if value is not None and table is not None:
                         result = await data.update(table, value, channel.id, 'guild', ctx.guild.id)
                         if result == "SUCCESS":
                             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")

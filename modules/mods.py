@@ -44,7 +44,7 @@ class Moderation(commands.Cog, name="관리"):
         지정된 뮤트 역할을 유저에게 적용합니다. 역할 설정이 필요합니다.
         """
         result = await data.load('guilds', 'guild', ctx.guild.id)
-        role = ctx.guild.get_role(int(result[1]))
+        role = ctx.guild.get_role(int(result[2]))
         if role is not None:
             try:
                 await member.add_roles(role, reason=reason)
@@ -68,7 +68,7 @@ class Moderation(commands.Cog, name="관리"):
         유저의 뮤트 상태를 해제합니다. 역할 설정이 필요합니다.
         """
         result = await data.load('guilds', 'guild', ctx.guild.id)
-        role = ctx.guild.get_role(int(result[1]))
+        role = ctx.guild.get_role(int(result[2]))
         if role is not None:
             try:
                 await member.remove_roles(role, reason=reason)

@@ -104,7 +104,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
             result = await data.load('guilds', 'guild', msg.guild.id)
             if result is not None:
-                if result[2] == 'true':
+                if result[3] == 'true':
                     if msg.channel.topic is None or '=무시' not in msg.channel.topic:
                         await msg.delete()
                         await msg.channel.send(f"<:cs_trash:659355468631769101> {msg.author.mention} 죄송합니다. 서버 설정에 따라 이 채널에는 Discord 초대 링크를 포스트하실 수 없습니다.")
