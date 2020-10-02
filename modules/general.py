@@ -298,6 +298,12 @@ class General(commands.Cog, name="일반"):
 
     @commands.command(name="하트")
     async def _vote(self, ctx, user: typing.Optional[discord.User] = None):
+        """
+        미야야 하트 [ @유저 ]
+
+
+        한국 디스코드 봇 리스트의 미야 페이지를 하트했는지 확인합니다.
+        """
         if user is None:
             user = ctx.author
         working = await ctx.send(
