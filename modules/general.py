@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from utils import corona, data, team
 import random
+import typing
 import datetime
 
 
@@ -295,13 +296,15 @@ class General(commands.Cog, name="일반"):
         )
         await working.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
 
-    @commands.command(name="투표")
-    async def _vote(self, ctx):
-        response = await self.miya.koreanbots.getVote(ctx.author.id)
+    @commands.command(name="하트")
+    async def _vote(self, ctx, user: typing.Optional[discord.User] = None):
+        if user is None:
+            user = ctx.author
+        response = await self.miya.koreanbots.getVote(user.id)
         if response.voted:
-            print("투표됨")
+            await ctx.send(f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
         else:
-            print("투표안됨")
+            await ctx.send(f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
 
 
 def setup(miya):
