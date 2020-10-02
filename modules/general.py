@@ -114,7 +114,7 @@ class General(commands.Cog, name="일반"):
         working = await ctx.send(
             f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!"
         )
-        heart = await koreanbots.get_rank()
+        heart = await self.miya.koreanbots.get_rank()
         e = discord.Embed(
             title="미야 서버(봇) 정보",
             description=f"""

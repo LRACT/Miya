@@ -10,6 +10,17 @@ class Miya(commands.Bot):
         super().__init__(*args, **kwargs)
         self.koreanbots = koreanbots.Client(self, config.DBKRToken)
 
+    async def get_rank(self):
+        num = 0
+        while True:
+            num += 1
+            response = self.koreanbots.getBots(num)
+            data = [x["name"] for x in response["data"]]
+            if "미야" in data:
+                index = data.index("미야")
+                result = 9 * (num - 1) + (index + 1)
+                return result
+
 
 miya = Miya(
     command_prefix=commands.when_mentioned_or("미야야 "),
