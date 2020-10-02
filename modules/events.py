@@ -39,7 +39,6 @@ class handler(commands.Cog, name="이벤트 리스너"):
             "manage_messages": "메시지 관리하기"
         }
         if isinstance(error, commands.CommandNotFound):
-            working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
             response_msg = None
             url = config.PPBRequest
             headers = {
@@ -67,7 +66,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 color=0x5FE9FF,
             )
             embed.set_footer(text="이 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
-            await working.edit(content=ctx.author.mention, embed=embed)
+            await ctx.send(ctx.author.mention, embed=embed)
         elif isinstance(error, commands.NotOwner):
             await ctx.send(f":tools: {ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
         elif isinstance(error, commands.MissingPermissions):
@@ -148,7 +147,5 @@ class handler(commands.Cog, name="이벤트 리스너"):
                     msg = msg.replace("{count}", str(member.guild.member_count))
                     await channel.send(msg)
                     
-
-
 def setup(miya):
     miya.add_cog(handler(miya))
