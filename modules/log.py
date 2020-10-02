@@ -8,7 +8,7 @@ class log(commands.Cog, name="로그"):
         self.miya = miya
     
     async def get_channel(self, guild_id):
-        result = await data.load('eventLog', 'guild', guild_id)
+        result = await data.load('guilds', 'guild', guild_id)
         if result is not None:
             channel = self.miya.get_channel(int(result[1]))
             if channel is not None:
@@ -45,6 +45,9 @@ class log(commands.Cog, name="로그"):
         if channel is not None:
             if payload.cached_message is not None:
                 msg = payload.cached_message
+                if msg.author.bot:
+                    return
+
                 embed = discord.Embed(title="메시지가 삭제되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
                 embed.add_field(name="메시지 주인", value=f"{msg.author.mention} ( {msg.author.id} )", inline=False)
                 embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
@@ -71,14 +74,17 @@ class log(commands.Cog, name="로그"):
     
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if before.author.bot and after.author.bot:
+            return
+
         channel = await log.get_channel(self, before.guild.id)
         if channel is not None:
             embed = discord.Embed(title="메시지가 수정되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
             embed.add_field(name="메시지 주인", value=f"{after.author.mention} ( {after.author.id} )", inline=False)
             embed.add_field(name="메시지가 수정된 채널", value=f"{after.channel.mention} ( {after.channel.id} )", inline=False)
-            embed.add_field(name="메시지로 이동하기", value=f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id}", inline=False)
-            embed.add_field(name="메시지 수정 전 내용", value=before.content, inline=False)
-            embed.add_field(name="메시지 수정 후 내용", value=after.content, inline=False)
+            embed.add_field(name="메시지로 이동하기", value=f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id})", inline=False)
+            embed.add_field(name="메시지 수정 전 내용", value=f"내용 : {before.content}", inline=False)
+            embed.add_field(name="메시지 수정 후 내용", value=f"내용 : {after.content}", inline=False)
             embed.set_thumbnail(url=after.author.avatar_url_as(static_format="png", size=2048))
             embed.set_footer(text="메시지 수정 이벤트")
             if before.pinned == True and after.pinned == False:

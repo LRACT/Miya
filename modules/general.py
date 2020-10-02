@@ -67,7 +67,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="Uptime", value=str(uptime).split(".")[0])
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format='png', size=2048))
         embed.set_author(name="지연 시간", icon_url=self.miya.user.avatar_url)
-        await ctx.send(f":ping_pong: {ctx.author.mention} Pong!", embed=embed) # ㅎㅇ
+        await ctx.send(f":ping_pong: {ctx.author.mention} Pong!", embed=embed)
     
     @commands.command(name="초대")
     async def _invite(self, ctx):
@@ -88,7 +88,7 @@ class General(commands.Cog, name="일반"):
         
         미야의 정보를 표시합니다.
         """
-        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
+        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         heart = await koreanbots.get_rank()
         e = discord.Embed(title="미야 서버(봇) 정보", description=f"""
                 <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
@@ -100,7 +100,7 @@ class General(commands.Cog, name="일반"):
                 <:cs_leave:659355468803866624> 서버 갯수 : {len(self.miya.guilds)}개""", 
             color=0x5FE9FF
         )
-        await msg.edit(content=ctx.author.mention, embed=e)
+        await working.edit(content=ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
     async def _hangang(self, ctx):
@@ -110,7 +110,7 @@ class General(commands.Cog, name="일반"):
 
         현재 한강의 수온을 출력합니다.
         """
-        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
+        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         async with aiohttp.ClientSession() as cs:
             async with cs.get("http://hangang.dkserver.wo.tc") as r:
                 response = await r.json(content_type=None) 
@@ -126,7 +126,7 @@ class General(commands.Cog, name="일반"):
                     embed.set_footer(text="거 수온이 뜨듯하구먼!")
                 else:
                     embed.set_footer(text="거 이거 완전 얼음장이구먼!")
-                await msg.edit(content=ctx.author.mention, embed=embed)
+                await working.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="골라", aliases=["골라줘"])
     async def _select(self, ctx, *args):
@@ -171,7 +171,7 @@ class General(commands.Cog, name="일반"):
         
         명령어를 실행한 서버의 정보와 미야 설정을 불러옵니다.
         """
-        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
+        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.load('guilds', 'guild', ctx.guild.id)
         memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)
@@ -202,7 +202,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
         embed.set_thumbnail(url=self.miya.user.avatar_url_as(static_format="png", size=2048))
-        await msg.edit(content=ctx.author.mention, embed=embed)
+        await working.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
     @commands.bot_has_permissions(manage_messages=True)
@@ -230,8 +230,8 @@ class General(commands.Cog, name="일반"):
 
         대한민국의 코로나 현황을 불러옵니다.
         """
+        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         _corona = await corona.corona()
-        msg = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 불러오는 중이에요... 잠시만 기다려주세요!")
         embed = discord.Embed(title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF)
         embed.add_field(name="확진자", value=f"{_corona[0].split(')')[1]}명", inline=True)
         embed.add_field(name="완치(격리 해제)", value=f"{_corona[1]}명", inline=True)
@@ -240,6 +240,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="정보 출처", value="[질병관리청](http://ncov.mohw.go.kr/)", inline=True)
        # embed.add_field(name="", value="", inline=True)
         embed.set_footer(text="코로나19 감염이 의심되면 즉시 보건소 및 콜센터(전화1339)로 신고바랍니다.")
-        await msg.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
+        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/746786600037384203/761404488023408640/unknown.png")
+        await working.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
 def setup(miya):
     miya.add_cog(General(miya))

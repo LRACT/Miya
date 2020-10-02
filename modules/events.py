@@ -16,7 +16,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         print(self.miya.user)
         print(self.miya.user.id)
         await self.miya.change_presence(
-            status=discord.Status.idle, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
+            status=discord.Status.online, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
         )
         print("READY")
         await hook.send(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
@@ -39,6 +39,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
             "manage_messages": "메시지 관리하기"
         }
         if isinstance(error, commands.CommandNotFound):
+            working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
             response_msg = None
             url = config.PPBRequest
             headers = {
@@ -65,10 +66,10 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)",
                 color=0x5FE9FF,
             )
-            embed.set_footer(text="Powered by https://pingpong.us/")
-            await ctx.send(embed=embed)
+            embed.set_footer(text="이 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+            await working.edit(content=ctx.author.mention, embed=embed)
         elif isinstance(error, commands.NotOwner):
-            await ctx.send(f"{ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
+            await ctx.send(f":tools: {ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
         elif isinstance(error, commands.MissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
@@ -85,16 +86,16 @@ class handler(commands.Cog, name="이벤트 리스너"):
             elif isinstance(error, commands.ChannelNotFound):
                 await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!")
             elif isinstance(error, commands.ChannelNotReadable):
-                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널의 메시지를 읽을 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!")
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널에 미야가 접근할 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!")
             elif isinstance(error, commands.RoleNotFound):
                 await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!")
             else:
                 usage = ctx.command.help.split("\n")[0]
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")    
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         else:
             await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred : {error}")
-            await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+            await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
