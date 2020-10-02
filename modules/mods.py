@@ -115,31 +115,39 @@ class Moderation(commands.Cog, name="관리"):
         
         서버에서 유저를 추방합니다.
         """
-        try:
+        if member.guild_permissions < ctx.guild.me.permissions:
+            try:
+                await member.send(f"<a:ban_cat:761149577444720640> **{ctx.guild.name}** 서버에서 추방당하셨어요.\n추방한 관리자 : {ctx.author}\n사유 : {reason}")
+            except discord.Forbidden:
+                print("Kick DM Failed.")
             await ctx.guild.kick(member, reason=reason)
             if reason is None:
-                reason = "사유 없음."
+                reason = "사유 없음."     
             await ctx.send(f"<a:ban_cat:761149577444720640> {ctx.author.mention} **{member}**님을 서버에서 추방했어요!\n사유 : {reason}")
-        except discord.Forbidden:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 추방하려는 유저보다 낮아서 추방하지 못했어요.") 
+        else:
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 추방하려는 유저보다 권한이 낮아 추방하지 못했어요.")
         
     @commands.command(name="차단")
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def _ban(self, ctx, user: discord.User, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = None):
+    async def _ban(self, ctx, user: discord.Member, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = None):
         """
         미야야 차단 < 유저 > [ 메시지 삭제 일 수 ( ~7일까지 ) ] [ 사유 ]
         
         
         서버에서 유저를 차단합니다.
         """
-        try:
+        if user.guild_permissions < ctx.guild.me.permissions:
+            try:
+                await user.send(f"<a:ban_guy:761149578216603668> {ctx.author.mention} **{ctx.guild.name} 서버에서 영구적으로 차단당하셨어요.\n차단한 관리자 : {ctx.author}\n사유 : {reason}")
+            except discord.Forbidden:
+                print("Ban DM Failed.")
             await ctx.guild.ban(user, delete_message_days=delete, reason=reason)
             if reason is None:
                 reason = "사유 없음."
             await ctx.send(f"<a:ban_guy:761149578216603668> {ctx.author.mention} **{user}**님을 서버에서 차단했어요!\n메시지 삭제 일 수 : {delete}일\n사유 : {reason}")
-        except discord.Forbidden:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 차단하려는 유저보다 낮아서 차단하지 못했어요.") 
+        else:
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 차단하려는 유저보다 권한이 낮아 차단하지 못했어요.") 
             
     @commands.command(name="청소", aliases=["삭제"])
     @commands.has_permissions(manage_messages=True)
