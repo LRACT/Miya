@@ -81,7 +81,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
-            if isinstance(error, commands.MemberNotFound) or isinstance(commands.UserNotFound):
+            if isinstance(error, commands.MemberNotFound) or isinstance(error, commands.UserNotFound):
                 await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!")
             elif isinstance(error, commands.ChannelNotFound):
                 await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!")
@@ -95,7 +95,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
         else:
             await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred : {error}")
-            await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+            await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
