@@ -43,9 +43,9 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
                 else:
                     await hook.send(f"Guild register failed :: {ctx.guild.name} ( {ctx.guild.id} )\n{ctx.guild.id} guild Table :: {g_result}\n{ctx.guild.id} memberNoti Table :: {m_result}", "미야 Terminal", self.miya.user.avatar_url)
                     print(f"Guild register failed :: {ctx.guild.name} ( {ctx.guild.id} )\n{ctx.guild.id} guild Table :: {g_result}\n{ctx.guild.id} memberNoti Table :: {m_result}")
-                    await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 서버 등록 도중에 오류가 발생했습니다. 등록을 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
+                    await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 서버 등록 도중에 오류가 발생했어요. 등록을 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
         else:
-            await ctx.send(f"<:cs_id:659355469034422282> {ctx.author.mention} 서버가 이미 등록되어 있는 것으로 확인되었습니다.\n등록되지 않았는데 이 문구가 뜬다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
+            await ctx.send(f"<:cs_id:659355469034422282> {ctx.author.mention} 서버가 이미 등록되어 있는 것 같아요.\n등록되지 않았는데 이 문구가 뜬다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
 
 def setup(miya):
     miya.add_cog(Liszt(miya))

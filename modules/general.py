@@ -18,7 +18,7 @@ class General(commands.Cog, name="일반"):
 
         미야의 명령어 목록을 보여줍니다.
         """
-        embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
+        embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택해야 합니다..\n**< > 혹은 [ ]를 명령어에 넣을 경우 작동하지 않을 수 있습니다!**", color=0x5FE9FF)
         for command in self.miya.commands:
             if command.cog.qualified_name == "개발" or command.cog.qualified_name == "서버 데이터 관리":
                 app = await self.miya.application_info()
@@ -175,20 +175,19 @@ class General(commands.Cog, name="일반"):
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.load('guilds', 'guild', ctx.guild.id)
         memberNoti = await data.load('memberNoti', 'guild', ctx.guild.id)
-        eventLog = await data.load('eventLog', 'guild', ctx.guild.id)
         muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
-        if guilds[1] != 1234:
-            role = ctx.guild.get_role(int(guilds[1]))
+        if guilds[2] != 1234:
+            role = ctx.guild.get_role(int(guilds[2]))
             if role is not None:
                 muteRole = role.mention
         if memberNoti[1] != 1234:
             channel = ctx.guild.get_channel(int(memberNoti[1]))
             if channel is not None:
                 memberCh = channel.mention
-        if eventLog[1] != 1234:
-            channel = ctx.guild.get_channel(int(memberNoti[1]))
+        if guilds[1] != 1234:
+            channel = ctx.guild.get_channel(int(guilds[1]))
             if channel is not None:
                 logCh = channel.mention
         embed.add_field(name="접두사", value="미야야", inline=False)
@@ -196,7 +195,6 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
         embed.add_field(name="뮤트 역할", value=muteRole)
-        embed.add_field(name="로그할 이벤트 ⚒️", value=f"{eventLog[2]}", inline=False)
         embed.add_field(name="서버 부스트 인원 수", value=f"{len(ctx.guild.premium_subscribers)}명")
         embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
