@@ -45,7 +45,7 @@ class settings(commands.Cog, name="설정"):
                     perms.speak = False
                     perms.stream = False
                     await category.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
-                await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} `{role.name}` 역할로 뮤트를 설정했습니다.\n \n*관리자에게는 뮤트가 적용되지 않으며, 특정 유저의 메시지 보내기 권한을 승인할 경우 해당 유저도 뮤트가 적용되지 않습니다.*")
+                await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} `{role.name}` 역할로 뮤트를 설정했어요.\n \n*관리자 및 권한 설정을 통해 메시지 보내기 권한을 승인된 유저는 뮤트가 적용되지 않아요.*")
             else:
                 await hook.send(f"Channel set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                 print(f"Mute role update failed. guilds Result :: {result}")
@@ -78,7 +78,7 @@ class settings(commands.Cog, name="설정"):
                     except discord.Forbidden:
                         await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요.")
                     else:
-                        await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면, 서버의 연동 설정에서 팔로우를 취소해주세요!*")
+                        await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면 서버의 연동 설정에서 팔로우를 취소해주세요!*")
                 else:
                     if args[0] == "로그":
                         table = "guilds"
@@ -165,7 +165,7 @@ class settings(commands.Cog, name="설정"):
                         a = msg.replace("{member}", ctx.author.mention)
                         a = a.replace("{guild}", ctx.guild.name)
                         a = a.replace("{count}", ctx.guild.member_count)
-                        await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {args[0]} 메시지를 성공적으로 변경했어요!\n이제 유저가 {args[0]} 시 채널에 이렇게 표시합니다. : \n{a}")
+                        await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {args[0]} 메시지를 성공적으로 변경했어요!\n이제 유저가 {args[0]} 시 채널에 이렇게 표시될 거에요. : \n{a}")
                     else:
                         await hook.send(f"Message set failed. Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                         print(f"Message set failed. Result :: {result}")
