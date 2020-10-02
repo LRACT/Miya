@@ -11,7 +11,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="경고")
     @commands.is_owner()
     @commands.has_permissions(manage_messages=True)
-    async def _warnings(self, ctx, what, member: discord.Member, *, reason):
+    async def _warnings(self, ctx, what, member: discord.Member, *, reason: typing.Optional[str] = None):
         """
         미야야 경고 < 추가 / 삭제 / 초기화 / 추방 / 목록 > < @유저 > [ 사유 ]
 
@@ -36,7 +36,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _mute(self, ctx, member: discord.Member, *, reason):
+    async def _mute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
         """
         미야야 뮤트 < @유저 > [ 사유 ]
 
@@ -60,7 +60,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _unmute(self, ctx, member: discord.Member, *, reason):
+    async def _unmute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
         """
         미야야 언뮤트 < @유저 > [ 사유 ]
 
@@ -108,14 +108,13 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="추방")
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def _kick(self, ctx, member: discord.Member, *, reason):
+    async def _kick(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
         """
         미야야 추방 < 유저 > [ 사유 ]
         
         
         서버에서 유저를 추방합니다.
         """
-        reason = "".join(ctx.message.content.split(" ")[3:])
         try:
             await ctx.guild.kick(member, reason=reason)
             if reason is None:
@@ -127,7 +126,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="차단")
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def _ban(self, ctx, user: discord.User, delete: typing.Optional[int] = 0, *, reason):
+    async def _ban(self, ctx, user: discord.User, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = None):
         """
         미야야 차단 < 유저 > [ 메시지 삭제 일 수 ( ~7일까지 ) ] [ 사유 ]
         
