@@ -7,7 +7,7 @@ import aiohttp
 import ast
 import asyncio
 from pytz import utc, timezone
-from utils import data
+from utils import data, hook
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):
@@ -89,16 +89,17 @@ class dev(commands.Cog, name="개발"):
             'aiohttp': aiohttp,
             'os': os
         }
+        evaluating = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         try:
             exec(compile(parsed, filename="<ast>", mode="exec"), env)
             result = (await eval(f"{fn_name}()", env))    
         except Exception as error:
-            await ctx.send(f"<:cs_protect:659355468891947008> {ctx.author.mention} - 구문 실행 실패;\n```{error}```")
+            await evaluating.edit(content=f"<:cs_protect:659355468891947008> {ctx.author.mention} - 구문 실행 실패;\n```{error}```")
         else:
             if result is not None:
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} - 구문 실행을 성공적으로 마쳤어요.\n```{result}```")
+                await evaluating.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} - 구문 실행을 성공적으로 마쳤어요.\n```{result}```")
             else:
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} - 구문 실행을 성공적으로 마쳤지만, 반환된 값이 없어요.")
+                await evaluating.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} - 구문 실행을 성공적으로 마쳤지만, 반환된 값이 없어요.")
 
     @commands.command(name="블랙")
     @commands.is_owner()
@@ -110,12 +111,14 @@ class dev(commands.Cog, name="개발"):
         지목한 유저를 블랙리스트에 추가합니다.
         블랙리스트에 추가되면 미야를 사용할 수 없습니다.
         """
+        await ctx.message.delete()
+        uploading = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
         times = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
         await data.insert('blacklist', 'user, admin, reason, datetime', f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에 추가했어요!")
+        await uploading.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에 추가했어요!")
     
     @commands.command(name="언블랙")
     @commands.is_owner()
@@ -126,8 +129,29 @@ class dev(commands.Cog, name="개발"):
 
         지목한 유저를 블랙리스트에서 제거합니다.
         """
+        await ctx.message.delete()
+        uploading = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
         await data.delete("blacklist", 'user', user.id)
-        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에서 제거했어요!")
+        await uploading.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에서 제거했어요!")
+    
+    @commands.command(name="강제등록")
+    @commands.is_owner()
+    async def force_register(self, ctx, *args):
+        guild = self.miya.get_guild(int(args[0]))
+        if guild is not None:
+            uploading = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
+            g_result = await data.insert('guilds', 'guild, eventLog, muteRole, linkFiltering, warn_kick', f'{guild.id}, 1234, 1234, "false", 0')
+            default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
+            default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}명"
+            m_result = await data.insert('memberNoti', 'guild, channel, join_msg, remove_msg', f'{guild.id}, 1234, "{default_join_msg}", "{default_quit_msg}"')
+            if g_result == "SUCCESS" and m_result == "SUCCESS":
+                await hook.send(f"Guild registered :: {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+                print(f"Guild registered :: {guild.name} ( {guild.id} )")
+                await uploading.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {guild.name}, 등록이 완료되었습니다.")
+            else:
+                await hook.send(f"Guild register failed :: {guild.name} ( {guild.id} )\n{guild.id} guild Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}", "미야 Terminal", self.miya.user.avatar_url)
+                print(f"Guild register failed :: {guild.name} ( {guild.id} )\n{guild.id} guild Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}")
+                await uploading.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 서버 등록 도중에 오류가 발생했습니다.")
 
 def setup(miya):
     miya.add_cog(dev(miya)) 
