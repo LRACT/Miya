@@ -5,7 +5,7 @@ from utils import corona, data, team
 import random
 import typing
 import datetime
-import korenabots
+import koreanbots
 
 
 class General(commands.Cog, name="일반"):
@@ -312,7 +312,7 @@ class General(commands.Cog, name="일반"):
         )
         try:
             response = await self.miya.koreanbots.getVote(user.id)
-        except:
+        except koreanbots.NotFound:
             await working.edit(
                 content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316"
             )
