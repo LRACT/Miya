@@ -17,6 +17,7 @@ async def update(table, column, value, find_column, find_value):
         try:
             await o.execute(f"UPDATE {table} SET {column} = '{value}' WHERE {find_column} = {find_value}")
             await o.commit()
+            await o.close()
         except Exception as e:
             return e
         else:
@@ -27,6 +28,7 @@ async def insert(table, columns, values):
         try:
             await o.execute(f"INSERT INTO {table}({columns}) VALUES({values})")
             await o.commit()
+            await o.close()
         except Exception as e:
             return e
         else:
@@ -37,6 +39,7 @@ async def delete(table, find_column, find_value):
         try:
             await o.execute(f"DELETE FROM {table} WHERE {find_column} = {find_value}")
             await o.commit()
+            await o.close()
         except Exception as e:
             return e
         else:
