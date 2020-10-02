@@ -300,11 +300,14 @@ class General(commands.Cog, name="일반"):
     async def _vote(self, ctx, user: typing.Optional[discord.User] = None):
         if user is None:
             user = ctx.author
+        working = await ctx.send(
+            f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!"
+        )
         response = await self.miya.koreanbots.getVote(user.id)
         if response.voted:
-            await ctx.send(f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
+            await working.edit(content=f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
         else:
-            await ctx.send(f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
+            await working.edit(content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
 
 
 def setup(miya):
