@@ -8,9 +8,11 @@ from utils import data, hook
 
 
 miya = commands.Bot(
-    command_prefix=commands.when_mentioned_or("미야야 ")
-    # description="미야 discord.py 리라이트 버전",
-    )
+    command_prefix=commands.when_mentioned_or("미야야 "),
+    description="미야 discord.py 리라이트 버전",
+    fetch_offline_members=True,
+    intents=discord.Intents.all()
+)
 Bot = koreanbots.Client(miya, config.DBKRToken)
 miya.remove_command('help')
 
