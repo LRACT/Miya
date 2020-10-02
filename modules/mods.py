@@ -115,7 +115,7 @@ class Moderation(commands.Cog, name="관리"):
         
         서버에서 유저를 추방합니다.
         """
-        if member.guild_permissions < ctx.guild.me.permissions:
+        if member.guild_permissions < ctx.guild.me.guild_permissions:
             try:
                 await member.send(f"<a:ban_cat:761149577444720640> **{ctx.guild.name}** 서버에서 추방당하셨어요.\n추방한 관리자 : {ctx.author}\n사유 : {reason}")
             except discord.Forbidden:
@@ -137,7 +137,7 @@ class Moderation(commands.Cog, name="관리"):
         
         서버에서 유저를 차단합니다.
         """
-        if user.guild_permissions < ctx.guild.me.permissions:
+        if user.guild_permissions < ctx.guild.me.guild_permissions:
             try:
                 await user.send(f"<a:ban_guy:761149578216603668> {ctx.author.mention} **{ctx.guild.name} 서버에서 영구적으로 차단당하셨어요.\n차단한 관리자 : {ctx.author}\n사유 : {reason}")
             except discord.Forbidden:
