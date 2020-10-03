@@ -146,7 +146,7 @@ class settings(commands.Cog, name="설정"):
         if not args:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
         else:
-            if "'" in ctx.message.content or '"' in ctx.message.content:
+            if "'" not in ctx.message.content or '"' not in ctx.message.content:
                 value = None
                 if args[0] == "입장":
                     value = 'join_msg'
@@ -170,11 +170,11 @@ class settings(commands.Cog, name="설정"):
                         else:
                             await hook.send(f"Message set failed. Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                             print(f"Message set failed. Result :: {result}")
-                            await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                            await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")            
                 else:
-                    await ctx.send(f"""<:cs_console:659355468786958356> {ctx.author.mention} 데이터베이스 오류 방지를 위해 `'` 및 `"`의 사용을 금지합니다.""")
+                    await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
             else:
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
+                    await ctx.send(f"""<:cs_console:659355468786958356> {ctx.author.mention} 데이터베이스 오류 방지를 위해 `'` 및 `"`의 사용을 금지합니다.""")
 
 def setup(miya):
     miya.add_cog(settings(miya)) 
