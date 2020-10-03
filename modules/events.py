@@ -38,7 +38,11 @@ class handler(commands.Cog, name="이벤트 리스너"):
             "manage_webhooks": "웹훅 관리하기",
             "manage_messages": "메시지 관리하기"
         }
-        if isinstance(error, commands.CommandNotFound):
+        if isinstance(error, discord.NotFound):
+            return
+        elif isinstance(error, discord.Forbidden):
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요...")
+        elif isinstance(error, commands.CommandNotFound):
             response_msg = None
             url = config.PPBRequest
             headers = {
@@ -92,8 +96,8 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         else:
-            await hook.send(f"An error occurred : {error}", "미야 Terminal", self.miya.user.avatar_url)
-            print(f"An error occurred : {error}")
+            await hook.send(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
+            print(f"An error occurred while running command {ctx.command.name} : {error}")
             await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
     @commands.Cog.listener()
@@ -107,7 +111,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 if result[3] == 'true':
                     if msg.channel.topic is None or '=무시' not in msg.channel.topic:
                         await msg.delete()
-                        await msg.channel.send(f"<:cs_trash:659355468631769101> {msg.author.mention} 죄송합니다. 서버 설정에 따라 이 채널에는 Discord 초대 링크를 포스트하실 수 없습니다.")
+                        await msg.channel.send(f"<:cs_trash:659355468631769101> {msg.author.mention} 서버 설정에 따라 이 채널에는 Discord 초대 링크를 포스트하실 수 없어요.")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):

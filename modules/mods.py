@@ -118,7 +118,7 @@ class Moderation(commands.Cog, name="관리"):
         if member.guild_permissions < ctx.guild.me.guild_permissions:
             try:
                 await member.send(f"<a:ban_cat:761149577444720640> **{ctx.guild.name}** 서버에서 추방당하셨어요.\n추방한 관리자 : {ctx.author}\n사유 : {reason}")
-            except discord.Forbidden:
+            except:
                 print("Kick DM Failed.")
             await ctx.guild.kick(member, reason=reason)
             if reason is None:
@@ -140,7 +140,7 @@ class Moderation(commands.Cog, name="관리"):
         if user.guild_permissions < ctx.guild.me.guild_permissions:
             try:
                 await user.send(f"<a:ban_guy:761149578216603668> {ctx.author.mention} **{ctx.guild.name} 서버에서 영구적으로 차단당하셨어요.\n차단한 관리자 : {ctx.author}\n사유 : {reason}")
-            except discord.Forbidden:
+            except:
                 print("Ban DM Failed.")
             await ctx.guild.ban(user, delete_message_days=delete, reason=reason)
             if reason is None:
@@ -152,6 +152,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="청소", aliases=["삭제"])
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
+    @commands.cooldown(rate=1, per=5, type=commands.BucketType.channel)
     async def _purge(self, ctx, *args):
         """
         미야야 청소 < 1 ~ 100 사이의 정수 >
@@ -162,12 +163,9 @@ class Moderation(commands.Cog, name="관리"):
         if args and args[0].isdecimal() == True:
             num = int(args[0])
             if num <= 100:
-                await ctx.message.delete() 
+                await ctx.message.delete()
                 deleted = await ctx.channel.purge(limit=num)
-                try:
-                    await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=3)
-                except discord.NotFound:
-                    return
+                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=3)
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
         else:

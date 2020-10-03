@@ -121,9 +121,7 @@ class General(commands.Cog, name="일반"):
             title="미야 서버(봇) 정보",
             description=f"""
                 <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
-                <:cs_settings:659355468992610304> CPU : Xeon E3-1280 v6
-                <:rem:727570626407301241> Memory : DDR4 16GB (삼성 8기가 2개)
-                <:ssd:727570626092728474> Storage : SAMSUNG 860 EVO (500GB)
+                <:cs_settings:659355468992610304> 호스트 : DisCloud [보러 가기](https://discloudbot.com)
                 <:cs_id:659355469034422282> 프로필 출처 : [보러 가기](https://pixiv.net/artworks/82178761)
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
                 <:cs_leave:659355468803866624> 서버 갯수 : {len(self.miya.guilds)}개""",
