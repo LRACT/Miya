@@ -146,7 +146,7 @@ class settings(commands.Cog, name="설정"):
         if not args:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
         else:
-            if "'" not in ctx.message.content or '"' not in ctx.message.content:
+            if "'" not in ctx.message.content and '"' not in ctx.message.content:
                 value = None
                 if args[0] == "입장":
                     value = 'join_msg'
@@ -174,7 +174,7 @@ class settings(commands.Cog, name="설정"):
                 else:
                     await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
             else:
-                    await ctx.send(f"""<:cs_console:659355468786958356> {ctx.author.mention} 데이터베이스 오류 방지를 위해 `'` 및 `"`의 사용을 금지합니다.""")
+                await ctx.send(f"""<:cs_console:659355468786958356> {ctx.author.mention} 데이터베이스 오류 방지를 위해 `'` 및 `"`의 사용을 금지합니다.""")
 
 def setup(miya):
     miya.add_cog(settings(miya)) 
