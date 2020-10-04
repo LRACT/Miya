@@ -60,7 +60,7 @@ async def on_message(msg):
         return
 
     if msg.content.startswith("미야야 ") or msg.content.startswith(f"<@{miya.user.id}>") or msg.content.startswith(f"<@!{miya.user.id}>"):
-        if "'" not in msg.content and '"' not in msg.content and "\\" not in msg.content:
+        if "'" not in msg.content and '"' not in msg.content and "\\" not in msg.content and msg.content.split(" ")[1] != "실행":
             result = await data.load("blacklist", "user", msg.author.id)
             if result is not None:
                 await webhook.terminal(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
@@ -80,7 +80,7 @@ async def on_message(msg):
         else:
             await webhook.terminal(f"Command Cancelled ( Banned Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Command Cancelled ( Banned Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-            await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시(\\)의 사용을 금지합니다.""")
+            await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시의 사용을 금지합니다.""")
 
 
 load_modules(miya)
