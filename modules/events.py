@@ -7,8 +7,7 @@ from utils import data, webhook
 from lib import config
 import datetime
 
-
-class handler(commands.Cog, name="이벤트 리스너"):
+class Listeners(commands.Cog, name="이벤트 리스너"):
     def __init__(self, miya):
         self.miya = miya
 
@@ -159,4 +158,4 @@ class handler(commands.Cog, name="이벤트 리스너"):
                     await channel.send(msg)
                     
 def setup(miya):
-    miya.add_cog(handler(miya))
+    miya.add_cog(Listeners(miya))

@@ -2,11 +2,13 @@ import aiohttp
 import discord
 from discord.ext import commands
 from utils import get, data
+from lib import config
 import random
 import typing
 import datetime
 import koreanbots
-
+import asyncio
+from pytz import timezone, utc
 
 class General(commands.Cog, name="일반"):
     def __init__(self, miya):
@@ -82,6 +84,41 @@ class General(commands.Cog, name="일반"):
         """
         embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF)
         await ctx.send(ctx.author.mention, embed=embed)
+    
+    @commands.command(name="피드백", aliases=["문의", "지원"])
+    async def request(self, ctx, *, message):
+        """
+        미야야 피드백 < 할말 >
+
+
+        개발자들 에게 피드백 메세지를 전송합니다.
+        """
+        channel = self.miya.get_channel(config.Newsfeed)
+        KST = timezone('Asia/Seoul')
+        now = datetime.datetime.utcnow()
+        time = utc.localize(now).astimezone(KST)
+        embed = discord.Embed(title="피드백이 도착했어요!", color=0x95E1F4)
+        embed.add_field(name="피드백을 접수한 유저", value=f"{ctx.author} ( {ctx.author.id} )", inline=False)
+        embed.add_field(name="피드백이 접수된 서버", value=f"{ctx.guild.name} ( {ctx.guild.id} )", inline=False)
+        embed.add_field(name="피드백이 접수된 채널", value=f"{ctx.channel.name} ( {ctx.channel.id} )", inline=False)
+        embed.add_field(name="피드백 내용", value=message, inline=False)
+        embed.add_field(name="피드백 접수 완료 시간", value=time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초"), inline=False)
+        embed.set_author(name="문의 및 답변", icon_url=self.miya.user.avatar_url)
+        msg = await ctx.send(f"{ctx.author.mention} 이렇게 전송하는 게 맞나요?\n```{message}```")
+        await msg.add_reaction("<:cs_yes:659355468715786262>")
+        await msg.add_reaction("<:cs_no:659355468816187405>")
+        def check(reaction, user):
+            return reaction.message.id == msg.id and user == ctx.author
+        try:
+            reaction, user = await self.miya.wait_for('reaction_add', timeout=60, check=check)
+        except asyncio.TimeoutError:
+            await msg.delete()
+        else:
+            if str(reaction.emoji) == "<:cs_yes:659355468715786262>":
+                await msg.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} 개발자에게 전송했어요! 피드백 명령어를 용도에 맞게 사용하지 않거나 이유 없이 사용하시면 봇 사용이 제한될 수 있어요.", embed=None, supress=True, delete_after=10)
+                await channel.send("@everyone", embed=embed)
+            else:
+                await msg.delete()
 
     @commands.command(name="봇정보")
     async def _miyainfo(self, ctx):
@@ -259,7 +296,6 @@ class General(commands.Cog, name="일반"):
                 await working.edit(content=f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
             else:
                 await working.edit(content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
-
 
 def setup(miya):
     miya.add_cog(General(miya))

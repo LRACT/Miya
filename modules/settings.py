@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import data, webhook
 from lib import config
 
-class settings(commands.Cog, name="설정"):
+class Settings(commands.Cog, name="설정"):
     def __init__(self, miya):
         self.miya = miya
 
@@ -174,4 +174,4 @@ class settings(commands.Cog, name="설정"):
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
 
 def setup(miya):
-    miya.add_cog(settings(miya)) 
+    miya.add_cog(Settings(miya)) 

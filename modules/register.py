@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import data, webhook
 import asyncio
 
-class Liszt(commands.Cog, name="서버 데이터 관리"): 
+class DataManagement(commands.Cog, name="서버 데이터 관리"): 
     def __init__(self, miya):
         self.miya = miya
     
@@ -48,4 +48,4 @@ class Liszt(commands.Cog, name="서버 데이터 관리"):
             await ctx.send(f"<:cs_id:659355469034422282> {ctx.author.mention} 서버가 이미 등록되어 있는 것 같아요.\n등록되지 않았는데 이 문구가 뜬다면 https://discord.gg/mdgaSjB 로 문의해주세요.")
 
 def setup(miya):
-    miya.add_cog(Liszt(miya))
+    miya.add_cog(DataManagement(miya))

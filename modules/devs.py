@@ -20,7 +20,7 @@ def insert_returns(body):
     if isinstance(body[-1], ast.With):
         insert_returns(body[-1].body)
 
-class dev(commands.Cog, name="개발"):
+class Development(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
@@ -33,8 +33,8 @@ class dev(commands.Cog, name="개발"):
 
         미야에 등록된 모듈을 관리합니다.
         """
-        if not args:
-            return
+        if not args or len(args) < 2:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >`(이)가 올바른 명령어에요!")
         else:
             if args[0] == "재시작":
                 try:
@@ -221,4 +221,4 @@ class dev(commands.Cog, name="개발"):
                 await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
 def setup(miya):
-    miya.add_cog(dev(miya)) 
+    miya.add_cog(Development(miya)) 
