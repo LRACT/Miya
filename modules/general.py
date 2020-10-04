@@ -99,7 +99,7 @@ class General(commands.Cog, name="일반"):
                 <:cs_settings:659355468992610304> 호스트 : DisCloud [보러 가기](https://discloudbot.com)
                 <:cs_id:659355469034422282> 프로필 출처 : [보러 가기](https://pixiv.net/artworks/82178761)
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
-                <:cs_leave:659355468803866624> 서버 갯수 : {len(self.miya.guilds)}개""", color=0x5FE9FF)
+                <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF)
         await working.edit(content=ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
