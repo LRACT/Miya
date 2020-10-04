@@ -8,31 +8,6 @@ class Moderation(commands.Cog, name="관리"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="경고")
-    @commands.is_owner()
-    @commands.has_permissions(manage_messages=True)
-    async def _warnings(self, ctx, what, member: discord.Member, *, reason: typing.Optional[str] = None):
-        """
-        미야야 경고 < 추가 / 삭제 / 초기화 / 추방 / 목록 > < @유저 > [ 사유 ]
-
-
-        유저의 경고를 관리합니다.
-        """
-        if what == "추가":
-            result = await data.insert('warns', "guild, user, reason", f"{ctx.guild.id}, {member.id}, '{reason}'")
-            if result == "SUCCESS":
-                await ctx.send(f":warning: {ctx.author.mention} {member.mention}님의 경고를 1회 추가했어요.\n사유 : {reason}")
-            else:
-                print(f"Warn give failed. warns Result : {result}")
-                await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
-        elif what == "삭제":
-            result = await data.delete('warns', "guild, user, reason", f"{ctx.guild.id}, {member.id}, '{reason}'")
-            if result == "SUCCESS":
-                await ctx.send(f":warning: {ctx.author.mention} {member.mention}님의 경고를 1회 추가했어요.\n사유 : {reason}")
-            else:
-                print(f"Warn give failed. warns Result : {result}")
-                await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
-
     @commands.command(name="뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)

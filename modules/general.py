@@ -26,10 +26,8 @@ class General(commands.Cog, name="일반"):
             color=0x5FE9FF,
         )
         for command in self.miya.commands:
-            if (
-                command.cog.qualified_name == "개발"
-                or command.cog.qualified_name == "서버 데이터 관리"
-            ):
+            private = ["개발", "서버 데이터 관리", "PRIVATE"]
+            if command.cog.qualified_name in private:
                 app = await self.miya.application_info()
                 owner = await team.get_team(ctx.author.id, app)
                 if owner == True:

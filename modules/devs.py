@@ -8,6 +8,7 @@ import ast
 import asyncio
 from pytz import utc, timezone
 from utils import data, hook
+import typing
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):
@@ -155,6 +156,69 @@ class dev(commands.Cog, name="개발"):
             await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {guild.name} 서버를 DB에 등록 시도한 결과,\nguilds 테이블에서 `{g_result}` 결과를 제출했고,\nmemberNoti 테이블에서 `{m_result}` 결과를 제출했습니다.")
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 강제등록 < 서버 ID >`(이)가 올바른 명령어에요!")
+    
+    @commands.command(name="응답")
+    @commands.is_owner()
+    async def answer(self, ctx, sender: discord.User, *, response):
+        """
+        미야야 응답 < 유저 > < 할말 >
+
+
+        해당 유저에게 피드백에 대한 응답을 회신합니다.
+        """
+        KST = timezone('Asia/Seoul')
+        now = datetime.datetime.utcnow()
+        time = utc.localize(now).astimezone(KST)
+        content = "내용 : " + response
+        embed = discord.Embed(title="개발자가 답변을 완료했어요!", color=0x95E1F4)
+        embed.add_field(name="답변의 내용", value=content, inline=False)
+        embed.add_field(name="답변이 완료된 시간", value=time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초"), inline=False)
+        embed.set_author(name="문의 및 답변", icon_url=self.miya.user.avatar_url)
+        embed.set_footer(text="원하신다면 미야야 피드백 명령어로 계속해서 문의하실 수 있어요!")
+        msg = await ctx.send(f"{ctx.author.mention} 이렇게 전송하는 게 맞나요?", embed=embed)
+        await msg.add_reaction("<:cs_yes:659355468715786262>")
+        await msg.add_reaction("<:cs_no:659355468816187405>")
+        def check(reaction, user):
+            return reaction.message.id == msg.id and user == ctx.author
+        try:
+            reaction, user = await self.miya.wait_for('reaction_add', timeout=60, check=check)
+        except asyncio.TimeoutError:
+            await msg.delete()
+        else:
+            if str(reaction.emoji) == "<:cs_yes:659355468715786262>":
+                try:
+                    await msg.delete()
+                    await sender.send(sender.mention, embed=embed)
+                    await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                except:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 해당 유저가 DM을 막아놓은 것 같아요. 전송에 실패했어요.")
+            else:
+                await msg.delete() 
+    
+    @commands.command(name="경고")
+    @commands.is_owner()
+    @commands.has_permissions(manage_messages=True)
+    async def _warnings(self, ctx, what, member: discord.Member, *, reason: typing.Optional[str] = None):
+        """
+        미야야 경고 < 추가 / 삭제 / 초기화 / 목록 > < @유저 > [ 사유 ]
+
+
+        유저의 경고를 관리합니다.
+        """
+        if what == "추가":
+            result = await data.insert('warns', "guild, user, reason", f"{ctx.guild.id}, {member.id}, '{reason}'")
+            if result == "SUCCESS":
+                await ctx.send(f":warning: {ctx.author.mention} {member.mention}님의 경고를 1회 추가했어요.\n사유 : {reason}")
+            else:
+                print(f"Warn give failed. warns Result : {result}")
+                await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+        elif what == "삭제":
+            result = await data.delete('warns', "guild, user, reason", f"{ctx.guild.id}, {member.id}, '{reason}'")
+            if result == "SUCCESS":
+                await ctx.send(f":warning: {ctx.author.mention} {member.mention}님의 경고를 1회 추가했어요.\n사유 : {reason}")
+            else:
+                print(f"Warn give failed. warns Result : {result}")
+                await ctx.send(f":warning: {ctx.author.mention} 오류 발생; 이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
 def setup(miya):
     miya.add_cog(dev(miya)) 
