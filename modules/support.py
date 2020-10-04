@@ -4,6 +4,7 @@ from utils import data
 import datetime
 from pytz import timezone, utc
 import asyncio
+from lib import config
 
 class support(commands.Cog, name="지원"):
     def __init__(self, miya):
@@ -17,7 +18,7 @@ class support(commands.Cog, name="지원"):
 
         개발자들 에게 피드백 메세지를 전송합니다.
         """
-        channel = self.miya.get_channel(754946639474720859)
+        channel = self.miya.get_channel(config.Newsfeed)
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)

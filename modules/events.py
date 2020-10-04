@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import json
 import aiohttp
+import asyncio
 from utils import data, webhook
 from lib import config
 import datetime
@@ -14,15 +15,16 @@ class handler(commands.Cog, name="이벤트 리스너"):
     @commands.Cog.listener()
     async def on_ready(self):
         print(self.miya.user)
-        print(self.miya.user.id)
-        await self.miya.change_presence(
-            status=discord.Status.online, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
-        )
+        print(self.miya.user.id)        
         print("READY")
         await webhook.terminal(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
         uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
         await webhook.terminal(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Uptime Change :: {uptime_set}")
+        while True:
+            for status in config.StatusMessages:
+                await self.miya.change_presence(status=discord.Status.online, activity=discord.Game(status.format(len(self.miya.users), len(self.miya.guilds))))
+                await asyncio.sleep(5)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
