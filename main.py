@@ -66,7 +66,7 @@ async def on_message(msg):
     ):
         result = await data.load("blacklist", "user", msg.author.id)
         if result is not None:
-            await webhook.send(
+            await webhook.terminal(
                 f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )",
                 "미야 Terminal",
                 miya.user.avatar_url,
@@ -87,7 +87,7 @@ async def on_message(msg):
         else:
             g = await data.load("guilds", "guild", msg.guild.id)
             if g is not None or msg.content == "미야야 등록":
-                await webhook.send(
+                await webhook.terminal(
                     f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )",
                     "미야 Terminal",
                     miya.user.avatar_url,
@@ -97,7 +97,7 @@ async def on_message(msg):
                 )
                 await miya.process_commands(msg)
             else:
-                await webhook.send(
+                await webhook.terminal(
                     f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )",
                     "미야 Terminal",
                     miya.user.avatar_url,

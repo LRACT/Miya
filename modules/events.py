@@ -19,9 +19,9 @@ class handler(commands.Cog, name="이벤트 리스너"):
             status=discord.Status.online, activity=discord.Game("'미야야 도움'이라고 말해보세요!")
         )
         print("READY")
-        await webhook.send(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
+        await webhook.terminal(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
         uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
-        await webhook.send(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
+        await webhook.terminal(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Uptime Change :: {uptime_set}")
 
     @commands.Cog.listener()
@@ -62,7 +62,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 ) as r:
                     response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
-            await webhook.send(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
+            await webhook.terminal(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"Sent {query} to Ping Pong builder and got {msg}")
             embed = discord.Embed(
                 title=msg,
@@ -96,7 +96,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         else:
-            await webhook.send(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
+            await webhook.terminal(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred while running command {ctx.command.name} : {error}")
             await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
@@ -115,12 +115,12 @@ class handler(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await webhook.send(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+        await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
     
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        await webhook.send(f"Removed from {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+        await webhook.terminal(f"Removed from {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Removed from {guild.name} ( {guild.id} )")
 
     @commands.Cog.listener()

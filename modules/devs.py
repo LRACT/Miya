@@ -151,7 +151,7 @@ class dev(commands.Cog, name="개발"):
             default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
             default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}명"
             m_result = await data.insert('memberNoti', 'guild, channel, join_msg, remove_msg', f'{guild.id}, 1234, "{default_join_msg}", "{default_quit_msg}"')
-            await webhook.send(f"Force guild register :: {guild.name} ( {guild.id} )\n{guild.id} guilds Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}", "미야 Terminal", self.miya.user.avatar_url)
+            await webhook.terminal(f"Force guild register :: {guild.name} ( {guild.id} )\n{guild.id} guilds Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"Force guild register :: {guild.name} ( {guild.id} )\n{guild.id} guilds Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}")
             await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {guild.name} 서버를 DB에 등록 시도한 결과,\nguilds 테이블에서 `{g_result}` 결과를 제출했고,\nmemberNoti 테이블에서 `{m_result}` 결과를 제출했습니다.")
         else:
