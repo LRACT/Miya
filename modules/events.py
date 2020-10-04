@@ -64,11 +64,7 @@ class handler(commands.Cog, name="이벤트 리스너"):
             msg = response_msg["response"]["replies"][0]["text"]
             await webhook.terminal(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"Sent {query} to Ping Pong builder and got {msg}")
-            embed = discord.Embed(
-                title=msg,
-                description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)",
-                color=0x5FE9FF,
-            )
+            embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)", color=0x5FE9FF)
             embed.set_footer(text="이 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
             await ctx.send(ctx.author.mention, embed=embed)
         elif isinstance(error, commands.NotOwner):
