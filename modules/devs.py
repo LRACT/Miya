@@ -40,21 +40,21 @@ class dev(commands.Cog, name="개발"):
                 try:
                     self.miya.reload_extension(f'modules.{args[1]}')
                 except Exception as e:
-                    await ctx.send(f"<:cs_reboot:659355468791283723> {ctx.author.mention} {args[1]} 모듈을 다시 시작할 수 없었습니다.\n{e}")
+                    await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {args[1]} 모듈을 다시 시작할 수 없었습니다.\n`{e}``")
                 else:
                     await ctx.message.add_reaction("<:cs_reboot:659355468791283723>")
             elif args[0] == "활성화":
                 try:
                     self.miya.load_extension(f'modules.{args[1]}')
                 except Exception as e:
-                    await ctx.send(f"<:cs_on:659355468682231810> {ctx.author.mention} {args[1]} 모듈을 활성화할 수 없었습니다.\n{e}")
+                    await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {args[1]} 모듈을 활성화할 수 없었습니다.\n`{e}``")
                 else:
                     await ctx.message.add_reaction("<:cs_on:659355468682231810>")
             elif args[0] == "비활성화":
                 try:
                     self.miya.unload_extension(f'modules.{args[1]}')
                 except Exception as e:
-                    await ctx.send(f"<:cs_off:659355468887490560> {ctx.author.mention} {args[1]} 모듈을 비활성화할 수 없었습니다.\n{e}")
+                    await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {args[1]} 모듈을 비활성화할 수 없었습니다.\n`{e}``")
                 else:
                     await ctx.message.add_reaction("<:cs_off:659355468887490560>")
             else:
