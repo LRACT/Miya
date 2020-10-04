@@ -1,7 +1,7 @@
 import aiohttp
 import discord
 from discord.ext import commands
-from utils import corona, data, team
+from utils import get, data
 import random
 import typing
 import datetime
@@ -29,7 +29,7 @@ class General(commands.Cog, name="일반"):
             private = ["개발", "서버 데이터 관리", "PRIVATE"]
             if command.cog.qualified_name in private:
                 app = await self.miya.application_info()
-                owner = await team.get_team(ctx.author.id, app)
+                owner = await get.team(ctx.author.id, app)
                 if owner == True:
                     temp = command.help.split("\n")[3:]
                     local = ""
@@ -275,7 +275,7 @@ class General(commands.Cog, name="일반"):
         working = await ctx.send(
             f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!"
         )
-        _corona = await corona.corona()
+        _corona = await get.corona()
         embed = discord.Embed(
             title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF
         )

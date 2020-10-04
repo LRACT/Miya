@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import data, hook
+from utils import data, webhook
 from lib import config
 
 class settings(commands.Cog, name="설정"):
@@ -47,7 +47,7 @@ class settings(commands.Cog, name="설정"):
                     await category.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
                 await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} `{role.name}` 역할로 뮤트를 설정했어요.\n \n*관리자 및 권한 설정을 통해 메시지 보내기 권한을 승인된 유저는 뮤트가 적용되지 않아요.*")
             else:
-                await hook.send(f"Channel set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                await webhook.send(f"Channel set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                 print(f"Mute role update failed. guilds Result :: {result}")
                 await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
 
@@ -91,7 +91,7 @@ class settings(commands.Cog, name="설정"):
                         if result == "SUCCESS":
                             await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {args[0]} 채널을 {channel.mention} 채널로 설정했어요.")
                         else:
-                            await hook.send(f"Channel set failed. {table} Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                            await webhook.send(f"Channel set failed. {table} Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                             print(f"Channel set failed. {table} Result :: {result}")
                             await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
                     else:
@@ -116,7 +116,7 @@ class settings(commands.Cog, name="설정"):
                 if result == "SUCCESS":
                     await working.edit(content=f"<:cs_on:659355468682231810> {ctx.author.mention} 링크 차단 기능을 활성화했어요!")
                 else:
-                    await hook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                    await webhook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                     print(f"Filtering set failed. guilds Result :: {result}")
                     await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
             elif args[0] == "끄기":
@@ -125,7 +125,7 @@ class settings(commands.Cog, name="설정"):
                 if result == "SUCCESS":
                     await working.edit(content=f"<:cs_off:659355468887490560> {ctx.author.mention} 링크 차단 기능을 비활성화했어요!")
                 else:
-                    await hook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                    await webhook.send(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                     print(f"Filtering set failed. guilds Result :: {result}")
                     await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
             else:
@@ -168,7 +168,7 @@ class settings(commands.Cog, name="설정"):
                             a = a.replace("{count}", str(ctx.guild.member_count))
                             await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {args[0]} 메시지를 성공적으로 변경했어요!\n이제 유저가 {args[0]} 시 채널에 이렇게 표시될 거에요. : \n{a}")
                         else:
-                            await hook.send(f"Message set failed. Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
+                            await webhook.send(f"Message set failed. Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
                             print(f"Message set failed. Result :: {result}")
                             await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")            
                 else:
