@@ -226,7 +226,6 @@ class General(commands.Cog, name="일반"):
             channel = ctx.guild.get_channel(int(guilds[1]))
             if channel is not None:
                 logCh = channel.mention
-        embed.add_field(name="접두사", value="미야야", inline=False)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
