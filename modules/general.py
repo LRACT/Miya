@@ -244,15 +244,15 @@ class General(commands.Cog, name="일반"):
             "russia": "러시아",
             "singapore": "싱가포르",
             "southafrica": "남아프리카",
-            "south_korea": "대한민국",
+            "south-korea": "대한민국",
             "sydney": "호주 - 시드니",
-            "us_central": "미국 - 중부",
-            "us_east": "미국 - 동부",
-            "us_south": "미국 - 남부",
-            "us_west": "미국 - 서부",
-            "vip_amsterdam": "<:vip:762569445427511307> 네덜란드 - 암스테르담",
-            "vip_us_east": "<:vip:762569445427511307> 미국 - 동부",
-            "vip_us_west": "<:vip:762569445427511307> 미국 - 서부"
+            "us-central": "미국 - 중부",
+            "us-east": "미국 - 동부",
+            "us-south": "미국 - 남부",
+            "us-west": "미국 - 서부",
+            "vip-amsterdam": "<:vip:762569445427511307> 네덜란드 - 암스테르담",
+            "vip-us-east": "<:vip:762569445427511307> 미국 - 동부",
+            "vip-us-west": "<:vip:762569445427511307> 미국 - 서부"
         }
         verification = {
             discord.VerificationLevel.none: "**없음**\n제한 없음",
