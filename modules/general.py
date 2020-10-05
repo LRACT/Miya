@@ -23,6 +23,7 @@ class General(commands.Cog, name="일반"):
         미야의 명령어 목록을 보여줍니다.
         """
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF)
+        embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
             private = ["개발", "서버 데이터 관리", "PRIVATE"]
             if command.cog.qualified_name in private:
@@ -67,9 +68,9 @@ class General(commands.Cog, name="일반"):
         start_time = datetime.datetime.strptime(record, "%Y-%m-%d %H:%M:%S")
         uptime = datetime.datetime.now() - start_time
         embed = discord.Embed(color=0x5FE9FF)
-        embed.add_field(name="API Latency", value=f"{round(self.miya.latency * 1000)}ms", inline=False)
-        embed.add_field(name="Message Latency", value=f"{round(float(ocha) * 1000)}ms", inline=False)
-        embed.add_field(name="Uptime", value=str(uptime).split(".")[0])
+        embed.add_field(name="API 지연 시간", value=f"{round(self.miya.latency * 1000)}ms", inline=False)
+        embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000)}ms", inline=False)
+        embed.add_field(name="구동 시간", value=str(uptime).split(".")[0])
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.set_author(name="지연 시간", icon_url=self.miya.user.avatar_url)
         await ctx.send(f":ping_pong: {ctx.author.mention} Pong!", embed=embed)
@@ -137,6 +138,8 @@ class General(commands.Cog, name="일반"):
                 <:cs_id:659355469034422282> 프로필 출처 : [보러 가기](https://pixiv.net/artworks/82178761)
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
                 <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF)
+        e.set_thumbnail(url=self.miya.user.avatar_url_as(static_format='png', size=2048))
+        e.set_author(name="정보", icon_url=self.miya.user.avatar_url)
         await working.edit(content=ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
@@ -152,7 +155,7 @@ class General(commands.Cog, name="일반"):
             async with cs.get("http://hangang.dkserver.wo.tc") as r:
                 response = await r.json(content_type=None)
                 embed = discord.Embed(description=f'현재 한강의 온도는 `{response["temp"]}`도에요!\n`측정: {(response["time"]).split(" ")[0]}`', color=0x5FE9FF)
-                embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name)
+                embed.set_author(name="지금 한강은", icon_url=self.miya.user.avatar_url)
                 temp = None
                 if "." in response["temp"]:
                     temp = int(response["temp"].split(".")[0])
@@ -178,7 +181,7 @@ class General(commands.Cog, name="일반"):
         else:
             select = random.choice(args)
             embed = discord.Embed(description=select, color=0x5FE9FF)
-            embed.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name)
+            embed.set_author(name="미야의 선택은...", icon_url=self.miya.user.avatar_url)
             await ctx.send(embed=embed)
 
     @commands.command(name="프로필", aliases=["프사", "프로필사진"])
@@ -193,7 +196,7 @@ class General(commands.Cog, name="일반"):
         if user is None:
             user = ctx.author
         embed = discord.Embed(color=0x5FE9FF)
-        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
+        embed.set_author(name=f"{user.name}님의 프로필 사진", icon_url=self.miya.user.avatar_url)
         embed.set_image(url=user.avatar_url_as(static_format="png", size=2048))
         await ctx.send(ctx.author.mention, embed=embed)
 
@@ -226,6 +229,41 @@ class General(commands.Cog, name="일반"):
             channel = ctx.guild.get_channel(int(guilds[1]))
             if channel is not None:
                 logCh = channel.mention
+        location = {
+            "amsterdam": "네덜란드 - 암스테르담",
+            "brazil": "브라질",
+            "dubai": "아랍에미리트 - 두바이",
+            "eu_central": "유럽 - 중부",
+            "eu_west": "유럽 - 서부",
+            "europe": "유럽",
+            "frankfurt": "독일 - 프랑크푸르트",
+            "hongkong": "홍콩",
+            "india": "인도",
+            "japan": "일본",
+            "london": "영국 - 런던",
+            "russia": "러시아",
+            "singapore": "싱가포르",
+            "southafrica": "남아프리카",
+            "south_korea": "대한민국",
+            "sydney": "호주 - 시드니",
+            "us_central": "미국 - 중부",
+            "us_east": "미국 - 동부",
+            "us_south": "미국 - 남부",
+            "us_west": "미국 - 서부",
+            "vip_amsterdam": "<:vip:762569445427511307> 네덜란드 - 암스테르담",
+            "vip_us_east": "<:vip:762569445427511307> 미국 - 동부",
+            "vip_us_west": "<:vip:762569445427511307> 미국 - 서부"
+        }
+        verification = {
+            discord.VerificationLevel.none: "**없음**\n제한 없음",
+            discord.VerificationLevel.low: "**낮음**\n이메일 인증이 완료된 Discord 계정이어야 해요.",
+            discord.VerificationLevel.medium: "**중간**\n이메일 인증이 완료되고, Discord에 가입한 지 5분이 지나야 해요.",
+            discord.VerificationLevel.high: "**높음**\n이메일 인증이 완료되고, Discord에 가입한 지 5분이 지나며, 서버의 멤버가 된 지 10분이 지나야 해요.",
+            discord.VerificationLevel.extreme: "**매우 높음**\n휴대폰 인증이 완료된 Discord 계정이어야 해요."
+        }
+        KST = timezone('Asia/Seoul')
+        now = ctx.guild.created_at
+        time = utc.localize(now).astimezone(KST)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
@@ -234,7 +272,11 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="서버 오너", value=f"{str(ctx.guild.owner)}님")
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
-        embed.set_thumbnail(url=self.miya.user.avatar_url_as(static_format="png", size=2048))
+        embed.add_field(name="서버 위치", value=location[str(ctx.guild.region)])
+        embed.add_field(name="서버 개설 날짜", value=time.strftime("%Y년 %m월 %d일"))
+        embed.add_field(name="서버 보안 수준", value=verification[ctx.guild.verification_level])
+        embed.set_author(name="정보", icon_url=self.miya.user.avatar_url)
+        embed.set_thumbnail(url=ctx.guild.icon_url_as(static_format="png", size=2048))
         await working.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
@@ -251,7 +293,7 @@ class General(commands.Cog, name="일반"):
         else:
             text = " ".join(args)
             embed = discord.Embed(description=text, color=0x5FE9FF)
-            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url_as(static_format="png", size=2048))
+            embed.set_author(name=f"{ctx.author}님이 말하시길...", icon_url=ctx.author.avatar_url)
             await ctx.message.delete()
             await ctx.send(embed=embed)
 
@@ -271,6 +313,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="치료 중", value=f"{_corona[2]}명", inline=True)
         embed.add_field(name="사망", value=f"{_corona[3]}명", inline=True)
         embed.add_field(name="정보 출처", value="[질병관리청](http://ncov.mohw.go.kr/)", inline=True)
+        embed.set_author(name="COVID-19", icon_url=self.miya.user.avatar_url)
         embed.set_footer(text="코로나19 감염이 의심되면 즉시 보건소 및 콜센터(전화1339)로 신고바랍니다.")
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/746786600037384203/761404488023408640/unknown.png") 
         await working.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
