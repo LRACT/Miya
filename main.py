@@ -21,7 +21,7 @@ class Miya(commands.Bot):
                 return result
 
 miya = Miya(
-    command_prefix=commands.when_mentioned_or("청정수 "),
+    command_prefix=commands.when_mentioned_or("미야야 "),
     description="미야 discord.py 리라이트 버전",
     help_command=None,
     fetch_offline_members=True,
@@ -54,8 +54,8 @@ async def on_message(msg):
     if msg.author.bot:
         return
 
-    if msg.content.startswith("청정수 ") or msg.content.startswith(f"<@{miya.user.id}> ") or msg.content.startswith(f"<@!{miya.user.id}> "):
-        if msg.content.startswith("청정수 실행") or msg.content.startswith(f"<@{miya.user.id}> 실행") or msg.content.startswith(f"<@!{miya.user.id}> 실행"):
+    if msg.content.startswith("미야야 ") or msg.content.startswith(f"<@{miya.user.id}> ") or msg.content.startswith(f"<@!{miya.user.id}> "):
+        if msg.content.startswith("미야야 실행") or msg.content.startswith(f"<@{miya.user.id}> 실행") or msg.content.startswith(f"<@!{miya.user.id}> 실행"):
             await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await miya.process_commands(msg)
