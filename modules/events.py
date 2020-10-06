@@ -43,7 +43,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             return
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요...")
-        elif isinstance(error, commands.CommandNotFound):
+        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner):
             response_msg = None
             url = config.PPBRequest
             headers = {
@@ -68,8 +68,6 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/miya)", color=0x5FE9FF)
             embed.set_footer(text="이 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
             await ctx.send(ctx.author.mention, embed=embed)
-        elif isinstance(error, commands.NotOwner):
-            await ctx.send(f":tools: {ctx.author.mention} 해당 명령어는 미야 관리자에 한해 사용이 제한됩니다.")
         elif isinstance(error, commands.MissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
