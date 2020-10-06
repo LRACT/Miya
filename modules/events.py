@@ -102,6 +102,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         if msg.author.bot:
             return
 
+        if msg.channel.type == discord.ChannelType.private:
+            return
+
         if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
             result = await data.load('guilds', 'guild', msg.guild.id)
             if result is not None:

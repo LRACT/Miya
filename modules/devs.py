@@ -106,7 +106,7 @@ class Development(commands.Cog, name="개발"):
     @commands.is_owner()
     async def add_blacklist(self, ctx, user: discord.User, *, reason):
         """
-        미야야 블랙 < 유저 >
+        미야야 블랙 < 유저 > < 사유 >
 
 
         지목한 유저를 블랙리스트에 추가합니다.

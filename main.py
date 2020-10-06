@@ -38,6 +38,7 @@ def load_modules(miya):
         "modules.mods",
         "modules.register",
         "modules.log",
+        "modules.private",
     ]
 
     for ext in exts:
@@ -51,6 +52,9 @@ def load_modules(miya):
 
 @miya.event
 async def on_message(msg):
+    if msg.channel.type == discord.ChannelType.private:
+        return
+
     if msg.author.bot:
         return
 
