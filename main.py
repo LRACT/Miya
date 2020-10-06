@@ -4,7 +4,6 @@ import koreanbots
 from lib import config
 from utils import data, webhook
 
-
 class Miya(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,15 +20,13 @@ class Miya(commands.Bot):
                 result = 9 * (num - 1) + (index + 1)
                 return result
 
-
 miya = Miya(
-    command_prefix=commands.when_mentioned_or("미야야 "),
+    command_prefix=commands.when_mentioned_or("청정수 "),
     description="미야 discord.py 리라이트 버전",
     help_command=None,
     fetch_offline_members=True,
     intents=discord.Intents.all(),
 )
-
 
 def load_modules(miya):
     failed = []
@@ -39,7 +36,6 @@ def load_modules(miya):
         "modules.settings",
         "modules.devs",
         "modules.mods",
-        "modules.support",
         "modules.register",
         "modules.log",
     ]
@@ -53,14 +49,13 @@ def load_modules(miya):
 
     return failed
 
-
 @miya.event
 async def on_message(msg):
     if msg.author.bot:
         return
 
-    if msg.content.startswith("미야야 ") or msg.content.startswith(f"<@{miya.user.id}> ") or msg.content.startswith(f"<@!{miya.user.id}> "):
-        if msg.content.startswith("미야야 실행") or msg.content.startswith(f"<@{miya.user.id}> 실행") or msg.content.startswith(f"<@!{miya.user.id}> 실행"):
+    if msg.content.startswith("청정수 ") or msg.content.startswith(f"<@{miya.user.id}> ") or msg.content.startswith(f"<@!{miya.user.id}> "):
+        if msg.content.startswith("청정수 실행") or msg.content.startswith(f"<@{miya.user.id}> 실행") or msg.content.startswith(f"<@!{miya.user.id}> 실행"):
             await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await miya.process_commands(msg)
@@ -85,9 +80,6 @@ async def on_message(msg):
                     await webhook.terminal(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                     print(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
                     await msg.channel.send(f"<:cs_id:659355469034422282> {msg.author.mention} 아직 미야의 이용약관에 동의하지 않으셨어요. `미야야 등록` 명령어를 사용해 등록해보세요!")
-        
-            
-
 
 load_modules(miya)
 miya.run(config.BotToken)
