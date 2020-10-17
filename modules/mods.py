@@ -11,7 +11,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _mute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
+    async def _mute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 뮤트 < @유저 > [ 사유 ]
 
@@ -26,8 +26,6 @@ class Moderation(commands.Cog, name="관리"):
             except discord.Forbidden:
                 await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
             else:
-                if reason is None:
-                    reason = "사유 없음."
                 await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} **{member}**님을 뮤트했어요.\n사유 : {reason}")
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정` 명령어를 사용해주세요.")
@@ -35,7 +33,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _unmute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
+    async def _unmute(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 언뮤트 < @유저 > [ 사유 ]
 
@@ -50,8 +48,6 @@ class Moderation(commands.Cog, name="관리"):
             except discord.Forbidden:
                 await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
             else:
-                if reason is None:
-                    reason = "사유 없음."
                 await ctx.send(f"<:mic:761152232447148042> {ctx.author.mention} **{member}**님의 뮤트 상태를 해제했어요.\n사유 : {reason}")
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정` 명령어를 사용해주세요.")
@@ -59,21 +55,20 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="슬로우", aliases=["슬로우모드"])
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
-    async def _slowmode(self, ctx, numbers: commands.Greedy[int]):
+    async def _slowmode(self, ctx, number: typing.Optional[int]):
         """
         미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >
 
 
         실행한 채널의 메시지 딜레이를 설정합니다.
         """
-        if not numbers:
+        if number is None:
             if ctx.message.content.split(" ")[2] != "끄기":
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >`가 올바른 명령어에요!")
             else:
                 await ctx.channel.edit(slowmode_delay=0)
                 await ctx.send(f":hourglass: {ctx.author.mention} 채널의 메시지 딜레이를 삭제했어요!")
         else:
-            number = numbers[0]
             if number > 21600 or number <= 0:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 슬로우 < 1 ~ 21600 사이의 정수 / 끄기 >`가 올바른 명령어에요!")
             else:
@@ -83,7 +78,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="추방")
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def _kick(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = None):
+    async def _kick(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 추방 < 유저 > [ 사유 ]
         
@@ -96,8 +91,6 @@ class Moderation(commands.Cog, name="관리"):
             except:
                 print("Kick DM Failed.")
             await ctx.guild.kick(member, reason=reason)
-            if reason is None:
-                reason = "사유 없음."     
             await ctx.send(f"<a:ban_cat:761149577444720640> {ctx.author.mention} **{member}**님을 서버에서 추방했어요!\n사유 : {reason}")
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 추방하려는 유저보다 권한이 낮아 추방하지 못했어요.")
@@ -105,7 +98,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.command(name="차단")
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def _ban(self, ctx, user: discord.Member, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = None):
+    async def _ban(self, ctx, user: discord.Member, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 차단 < 유저 > [ 메시지 삭제 일 수 ( ~7일까지 ) ] [ 사유 ]
         
@@ -118,8 +111,6 @@ class Moderation(commands.Cog, name="관리"):
             except:
                 print("Ban DM Failed.")
             await ctx.guild.ban(user, delete_message_days=delete, reason=reason)
-            if reason is None:
-                reason = "사유 없음."
             await ctx.send(f"<a:ban_guy:761149578216603668> {ctx.author.mention} **{user}**님을 서버에서 차단했어요!\n메시지 삭제 일 수 : {delete}일\n사유 : {reason}")
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 차단하려는 유저보다 권한이 낮아 차단하지 못했어요.") 
