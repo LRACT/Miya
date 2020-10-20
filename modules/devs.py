@@ -118,7 +118,7 @@ class Development(commands.Cog, name="개발"):
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
         times = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
-        await data.insert('blacklist', 'user, admin, reason, datetime', f"{user.id}, {ctx.author.id}, '{reason}', '{times}'")
+        await data.insert('blacklist', '`user`, `admin`, `reason`, `datetime`', f"'{user.id}', '{ctx.author.id}', '{reason}', '{times}'")
         await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에 추가했어요!")
     
     @commands.command(name="언블랙")
@@ -147,10 +147,10 @@ class Development(commands.Cog, name="개발"):
         guild = self.miya.get_guild(int(args[0]))
         if guild is not None:
             working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-            g_result = await data.insert('guilds', 'guild, eventLog, muteRole, linkFiltering, warn_kick', f'{guild.id}, 1234, 1234, "false", 0')
+            g_result = await data.insert('guilds', '`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`', f'"{guild.id}", "1234", "1234", "false", "0"')
             default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
             default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}명"
-            m_result = await data.insert('memberNoti', 'guild, channel, join_msg, remove_msg', f'{guild.id}, 1234, "{default_join_msg}", "{default_quit_msg}"')
+            m_result = await data.insert('memberNoti', '`guild`, `channel`, `join_msg`, `remove_msg`', f'"{guild.id}", "1234", "{default_join_msg}", "{default_quit_msg}"')
             await webhook.terminal(f"Force guild register :: {guild.name} ( {guild.id} )\n{guild.id} guilds Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"Force guild register :: {guild.name} ( {guild.id} )\n{guild.id} guilds Table :: {g_result}\n{guild.id} memberNoti Table :: {m_result}")
             await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {guild.name} 서버를 DB에 등록 시도한 결과,\nguilds 테이블에서 `{g_result}` 결과를 제출했고,\nmemberNoti 테이블에서 `{m_result}` 결과를 제출했습니다.")

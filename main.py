@@ -20,12 +20,26 @@ class Miya(commands.Bot):
                 result = 9 * (num - 1) + (index + 1)
                 return result
 
+intents = discord.Intents(
+    guilds=True,
+    members=True,
+    bans=True,
+    emojis=True,
+    integrations=True,
+    webhooks=True,
+    invites=True,
+    voice_states=True,
+    presences=False,
+    messages=True,
+    reactions=True, 
+    typing=True
+)
 miya = Miya(
     command_prefix=commands.when_mentioned_or("미야야 "),
     description="미야 discord.py 리라이트 버전",
     help_command=None,
     fetch_offline_members=True,
-    intents=discord.Intents.all(),
+    intents=intents
 )
 
 def load_modules(miya):

@@ -1,7 +1,8 @@
 pytz
 aiosqlite
-discord.py[voice] == 1.5.0
+discord.py[voice] == 1.5.1
 aiohttp
 bs4
 lxml
 koreanbots
+aiomysql

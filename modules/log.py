@@ -57,12 +57,18 @@ class log(commands.Cog, name="로그"):
                     embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False)
                     embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
-                    await channel.send(files=msg.attachments)
+                    if len(msg.attachments) != 1:
+                        await channel.send(files=msg.attachments)
+                    else:
+                        await channel.send(file=msg.attachments[0])
                 elif msg.content != "" and msg.attachments:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
-                    await channel.send(files=msg.attachments)
+                    if len(msg.attachments) != 1:
+                        await channel.send(files=msg.attachments)
+                    else:
+                        await channel.send(file=msg.attachments[0])
                 else:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*", inline=False)
