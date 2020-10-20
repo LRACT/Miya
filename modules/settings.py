@@ -18,10 +18,8 @@ class Settings(commands.Cog, name="설정"):
         미야의 뮤트 명령어를 사용 시 적용할 역할을 설정합니다.
         """
         working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-        try:
-            await ctx.guild.me.add_roles(role)
-        except:
-            await working.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높아요. 설정하려는 역할을 봇의 최상위 역할보다 낮춰주세요.")
+        if role >= ctx.guild.me.top_role:
+            await working.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높거나 같아요. 설정하려는 역할을 봇의 최상위 역할보다 낮춰주세요.")
         else:
             await ctx.guild.me.remove_roles(role)
             result = await data.update('guilds', 'muteRole', role.id, 'guild', ctx.guild.id)
