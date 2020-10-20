@@ -6,6 +6,8 @@ import asyncio
 from utils import data, webhook
 from lib import config
 import datetime
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class Listeners(commands.Cog, name="이벤트 리스너"):
     def __init__(self, miya):

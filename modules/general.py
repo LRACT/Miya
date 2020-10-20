@@ -9,6 +9,8 @@ import datetime
 import koreanbots
 import asyncio
 from pytz import timezone, utc
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class General(commands.Cog, name="일반"):
     def __init__(self, miya):

@@ -1,5 +1,7 @@
 import aiohttp
 from bs4 import BeautifulSoup
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 async def team(user_id, app): 
     t_members = app.team.members
@@ -9,7 +11,6 @@ async def team(user_id, app):
             owner = True
     
     return owner
-
 
 async def corona():
     async with aiohttp.ClientSession() as cs:

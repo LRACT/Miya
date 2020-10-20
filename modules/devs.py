@@ -9,6 +9,8 @@ import asyncio
 from pytz import utc, timezone
 from utils import data, webhook
 import typing
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):

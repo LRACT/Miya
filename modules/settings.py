@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from utils import data, webhook
 from lib import config
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class Settings(commands.Cog, name="설정"):
     def __init__(self, miya):

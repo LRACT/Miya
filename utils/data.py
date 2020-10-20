@@ -1,5 +1,7 @@
 import aiomysql
 from lib import config
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 async def load(table, find_column, find_value):
     o = await aiomysql.connect(

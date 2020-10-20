@@ -3,6 +3,8 @@ from discord.ext import commands
 import koreanbots
 from lib import config
 from utils import data, webhook
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class Miya(commands.Bot):
     def __init__(self, *args, **kwargs):

@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from utils import data
 import datetime
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class log(commands.Cog, name="로그"):
     def __init__(self, miya):
@@ -58,17 +60,23 @@ class log(commands.Cog, name="로그"):
                     embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
                     if len(msg.attachments) != 1:
-                        await channel.send(files=msg.attachments)
+                        files = []
+                        for a in msg.attachments:
+                            files.append(a.to_file)
+                        await channel.send(files=files)
                     else:
-                        await channel.send(file=msg.attachments[0])
+                        await channel.send(file=msg.attachments[0].to_file)
                 elif msg.content != "" and msg.attachments:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
                     if len(msg.attachments) != 1:
-                        await channel.send(files=msg.attachments)
+                        files = []
+                        for a in msg.attachments:
+                            files.append(a.to_file)
+                        await channel.send(files=files)
                     else:
-                        await channel.send(file=msg.attachments[0])
+                        await channel.send(file=msg.attachments[0].to_file)
                 else:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*", inline=False)

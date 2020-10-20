@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands 
 from utils import data, webhook
 import asyncio
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class DataManagement(commands.Cog, name="서버 데이터 관리"): 
     def __init__(self, miya):

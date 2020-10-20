@@ -2,6 +2,8 @@ from discord import Webhook, AsyncWebhookAdapter
 import aiohttp
 from lib import config
 import typing
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 async def terminal(content, name, avatar):
     async with aiohttp.ClientSession() as session:

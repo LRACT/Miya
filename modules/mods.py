@@ -3,6 +3,8 @@ from discord.ext import commands
 import asyncio
 import typing
 from utils import data
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 class Moderation(commands.Cog, name="관리"):
     def __init__(self, bot):
