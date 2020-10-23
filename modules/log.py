@@ -61,22 +61,42 @@ class log(commands.Cog, name="로그"):
                     await channel.send(embed=embed)
                     if len(msg.attachments) != 1:
                         files = []
-                        for a in msg.attachments:
-                            files.append(a.to_file)
-                        await channel.send(files=files)
+                        try:   
+                            for a in msg.attachments:
+                                abc = await a.to_file()
+                                files.append(abc)
+                        except:
+                            return
+                        else:
+                            await channel.send(files=files)
                     else:
-                        await channel.send(file=msg.attachments[0].to_file)
+                        try:
+                            hi = await msg.attachments[0].to_file()
+                        except:
+                            return
+                        else:
+                            await channel.send(file=hi)
                 elif msg.content != "" and msg.attachments:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
                     if len(msg.attachments) != 1:
                         files = []
-                        for a in msg.attachments:
-                            files.append(a.to_file)
-                        await channel.send(files=files)
+                        try:   
+                            for a in msg.attachments:
+                                abc = await a.to_file()
+                                files.append(abc)
+                        except:
+                            return
+                        else:
+                            await channel.send(files=files)
                     else:
-                        await channel.send(file=msg.attachments[0].to_file)
+                        try:
+                            hi = await msg.attachments[0].to_file()
+                        except:
+                            return
+                        else:
+                            await channel.send(file=hi)
                 else:
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*", inline=False)
