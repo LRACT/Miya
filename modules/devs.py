@@ -150,35 +150,17 @@ class Development(commands.Cog, name="개발"):
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
         elif todo == "삭제":
-            if what == "서버":
-                guild = self.miya.get_guild(identity)
-                if guild is not None:
-                    result = await data.load('blacklist', 'id', guild.id)
-                    if result is not None:
-                        result = await data.delete('blacklist', 'id', guild.id)
-                        if result == "SUCCESS":
-                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 서버 {guild.name}(을)를 블랙리스트에서 삭제했어요!")
-                            await guild.leave()
-                        else:
-                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
+            if what == "서버" or what == "유저":
+                result = await data.load('blacklist', 'id', identity)
+                if result is not None:
+                    result = await data.delete('blacklist', 'id', identity)
+                    if result == "SUCCESS":
+                        await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {identity} ID를 블랙리스트에서 삭제했어요!")
+                        await guild.leave()
                     else:
-                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 등재되지 않은 서버에요.")
+                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
                 else:
-                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에서 삭제하려는 서버를 찾지 못했어요.")
-            elif what == "유저":
-                user = self.miya.get_user(identity)
-                if user is not None:
-                    result = await data.load('blacklist', 'id', user.id)
-                    if result is not None:
-                        result = await data.delete('blacklist', 'id', user.id)
-                        if result == "SUCCESS":
-                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에서 삭제했어요!")
-                        else:
-                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
-                    else:
-                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 등재되지 않은 유저에요.")
-                else:
-                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에서 삭제하려는 유저를 찾지 못했어요.")
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 등재되지 않은 ID에요.")
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
         else:
