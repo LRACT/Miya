@@ -156,7 +156,6 @@ class Development(commands.Cog, name="개발"):
                     result = await data.delete('blacklist', 'id', identity)
                     if result == "SUCCESS":
                         await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {identity} ID를 블랙리스트에서 삭제했어요!")
-                        await guild.leave()
                     else:
                         await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
                 else:
