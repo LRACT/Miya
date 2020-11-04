@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import aiosqlite
+import aiomysql
 import datetime
 import os
 import aiohttp
@@ -86,7 +86,7 @@ class Development(commands.Cog, name="개발"):
             'commands': commands,
             'ctx': ctx,
             '__import__': __import__,
-            'aiosqlite': aiosqlite,
+            'aiomysql': aiomysql,
             'asyncio': asyncio,
             'datetime': datetime,
             'aiohttp': aiohttp,
@@ -106,36 +106,83 @@ class Development(commands.Cog, name="개발"):
 
     @commands.command(name="블랙")
     @commands.is_owner()
-    async def add_blacklist(self, ctx, user: discord.User, *, reason):
+    async def blacklist_management(self, ctx, todo, what, identity: int, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
-        미야야 블랙 < 유저 > < 사유 >
+        미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]
 
-
-        지목한 유저를 블랙리스트에 추가합니다.
-        블랙리스트에 추가되면 미야를 사용할 수 없습니다.
+        
+        ID를 통해 유저나 서버의 블랙리스트를 관리합니다.
         """
-        await ctx.message.delete()
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
-        times = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
-        await data.insert('blacklist', '`user`, `admin`, `reason`, `datetime`', f"'{user.id}', '{ctx.author.id}', '{reason}', '{times}'")
-        await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에 추가했어요!")
-    
-    @commands.command(name="언블랙")
-    @commands.is_owner()
-    async def remove_blacklist(self, ctx, user: discord.User):
-        """
-        미야야 언블랙 < 유저 >
-
-
-        지목한 유저를 블랙리스트에서 제거합니다.
-        """
-        await ctx.message.delete()
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-        await data.delete("blacklist", 'user', user.id)
-        await working.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에서 제거했어요!")
+        time = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
+        if todo == "추가":
+            if what == "서버":
+                guild = self.miya.get_guild(identity)
+                if guild is not None:
+                    result = await data.load('blacklist', 'id', guild.id)
+                    if result is None:
+                        result = await data.insert('blacklist', '`id`, `admin`, `reason`, `datetime`', f"'{guild.id}', '{ctx.author.id}', '{reason}', '{time}'")
+                        if result == "SUCCESS":
+                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 서버 {guild.name}(을)를 블랙리스트에 추가했어요!")
+                            await guild.leave()
+                        else:
+                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 추가에 실패했어요. 사유 : {result}")
+                    else:
+                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이미 블랙리스트에 추가된 서버에요.")
+                else:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 추가하려는 서버를 찾지 못했어요.")
+            elif what == "유저":
+                user = self.miya.get_user(identity)
+                if user is not None:
+                    result = await data.load('blacklist', 'id', user.id)
+                    if result is None:
+                        result = await data.insert('blacklist', '`id`, `admin`, `reason`, `datetime`', f"'{user.id}', '{ctx.author.id}', '{reason}', '{time}'")
+                        if result == "SUCCESS":
+                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에 추가했어요!")
+                        else:
+                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 추가에 실패했어요. 사유 : {result}")
+                    else:
+                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이미 블랙리스트에 추가된 유저에요.")
+                else:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 추가하려는 유저를 찾지 못했어요.")
+            else:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
+        elif todo == "삭제":
+            if what == "서버":
+                guild = self.miya.get_guild(identity)
+                if guild is not None:
+                    result = await data.load('blacklist', 'id', guild.id)
+                    if result is not None:
+                        result = await data.delete('blacklist', 'id', guild.id)
+                        if result == "SUCCESS":
+                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} 서버 {guild.name}(을)를 블랙리스트에서 삭제했어요!")
+                            await guild.leave()
+                        else:
+                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
+                    else:
+                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 등재되지 않은 서버에요.")
+                else:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에서 삭제하려는 서버를 찾지 못했어요.")
+            elif what == "유저":
+                user = self.miya.get_user(identity)
+                if user is not None:
+                    result = await data.load('blacklist', 'id', user.id)
+                    if result is not None:
+                        result = await data.delete('blacklist', 'id', user.id)
+                        if result == "SUCCESS":
+                            await ctx.send(f"<:cs_yes:659355468715786262> {ctx.author.mention} {user}님을 블랙리스트에서 삭제했어요!")
+                        else:
+                            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트 삭제에 실패했어요. 사유 : {result}")
+                    else:
+                        await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에 등재되지 않은 유저에요.")
+                else:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 블랙리스트에서 삭제하려는 유저를 찾지 못했어요.")
+            else:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
+        else:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
     
     @commands.command(name="강제등록")
     @commands.is_owner()

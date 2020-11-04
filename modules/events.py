@@ -44,7 +44,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         if isinstance(error, discord.NotFound):
             return
         elif isinstance(error, discord.Forbidden):
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요...")
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
         elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner):
             response_msg = None
             url = config.PPBRequest
@@ -117,15 +117,29 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     async def on_guild_join(self, guild):
         await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
-        try:
-            embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
-                description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
-                    미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/mdgaSjB)에서 하실 수 있어요!
-                    미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
-                    """, color=0x5FE9FF)
-            await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
-        except:
-            return
+        result = await data.load("blacklist", "id", guild.id)
+        if result is None:
+            try:
+                embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
+                    description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
+                        미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/mdgaSjB)에서 하실 수 있어요!
+                        미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
+                        """, color=0x5FE9FF)
+                await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
+            except:
+                await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+                print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
+        else:
+            try:
+                admin = self.miya.get_user(int(result[1]))
+                embed = discord.Embed(title="이런, 이 서버는 미야 초대가 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {result[2]}\n처리한 관리자 : {admin}\n차단된 시각 : {result[3]}", color=0xFF0000)
+                await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
+            except:
+                await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+                print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
+            await webhook.terminal(f"Blacklisted guild : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
+            print(f"Blacklisted guild : {guild.name} ( {guild.id} )")
+            await guild.leave()
     
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):

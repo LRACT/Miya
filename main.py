@@ -84,12 +84,13 @@ async def on_message(msg):
             print(f"Command Cancelled ( Banned Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시의 사용을 금지합니다.""")
         else:
-            result = await data.load("blacklist", "user", msg.author.id)
+            result = await data.load("blacklist", "id", msg.author.id)
             if result is not None:
                 await webhook.terminal(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
                 admin = miya.get_user(int(result[1]))
-                await msg.channel.send(f"""<a:ban_guy:761149578216603668> {msg.author.mention} 죄송합니다. 당신은 봇 이용이 차단되셨습니다.\n이의제기, 문의는 미야 지원 디스코드에서 하실 수 있습니다. https://discord.gg/mdgaSjB\n사유 : {result[2]}\n처리한 관리자 : {admin}\n차단된 시각 : {result[3]}""")
+                embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {result[2]}\n처리한 관리자 : {admin}\n차단된 시각 : {result[3]}", color=0xFF0000)
+                await msg.channel.send(f"<a:ban_guy:761149578216603668> {msg.author.mention}", embed=embed)
             else:
                 g = await data.load("guilds", "guild", msg.guild.id)
                 if g is not None or msg.content == "미야야 등록":
