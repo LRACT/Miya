@@ -342,6 +342,12 @@ class General(commands.Cog, name="일반"):
 
     @commands.command(name="오리", aliases=['랜덤오리'])
     async def _duck(self, ctx):
+        """
+        미야야 오리
+
+
+        랜덤으로 아무 오리 사진이나 가져옵니다.
+        """
         async with aiohttp.ClientSession() as session:
             async with session.get("https://random-d.uk/api/v2/quack") as response:
                 p = await response.json()
