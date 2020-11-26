@@ -347,7 +347,7 @@ class General(commands.Cog, name="일반"):
                 p = await response.json()
                 duck = discord.Embed(color=0xFFFCC9, timestamp=datetime.datetime.now())
                 duck.set_image(url=p['url'])
-                duck.set_author(name="어떠한 오리 사진에 대하여", icon_url=miya.user.avatar_url)
+                duck.set_author(name="어떠한 오리 사진에 대하여", icon_url=self.miya.user.avatar_url)
                 duck.set_footer(text=p['message'])
                 await ctx.send(embed=duck)
 
