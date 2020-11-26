@@ -35,7 +35,6 @@ class Development(commands.Cog, name="개발"):
 
         미야에 등록된 모듈을 관리합니다.
         """
-        await ctx.message.delete()
         if not args or len(args) < 2:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >`(이)가 올바른 명령어에요!")
         else:
