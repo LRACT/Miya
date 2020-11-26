@@ -11,6 +11,7 @@ MySQL = {
     'password': '', # MySQL 연결 유저 비밀번호
     'database': '' # MySQL 데이터베이스 스키마 이름
 }
+Forbidden = "" # 자동 블랙리스트 기능에 사용할 단어 목록 / 띄어쓰기로 구분합니다.
 WebHookURL = "" # 터미널에 사용할 웹훅 URL
 BotToken = "" # Discord 봇 토큰 https://discord.com/developers/applications
 StatusMessages = ["안녕하세요!"] # 5초 간격으로 바뀌는 상태 메시지 목록 {1} = 서버, {0} = 유저

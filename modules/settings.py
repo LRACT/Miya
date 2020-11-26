@@ -9,12 +9,12 @@ class Settings(commands.Cog, name="설정"):
     def __init__(self, miya):
         self.miya = miya
 
-    @commands.command(name="역할설정")
+    @commands.command(name="뮤트설정")
     @commands.has_permissions(administrator=True)
     @commands.bot_has_permissions(manage_channels=True, manage_roles=True, manage_permissions=True)
     async def role_set(self, ctx, role: discord.Role):
         """
-        미야야 역할설정 < @역할 >
+        미야야 뮤트설정 < @역할 >
 
 
         미야의 뮤트 명령어를 사용 시 적용할 역할을 설정합니다.

@@ -1,6 +1,7 @@
 import aiohttp
 from bs4 import BeautifulSoup
 import locale
+from lib import config
 locale.setlocale(locale.LC_ALL, '')
 
 async def team(user_id, app): 
@@ -23,3 +24,15 @@ async def corona():
             corona_info = [corona_num.text for corona_num in num]
 
             return corona_info # 순서대로 확진자, 완치, 치료, 사망
+
+async def filter(msg):
+    forbidden = False
+    banned = None
+    words = config.Forbidden.split(" ")
+    for word in words:
+        if word in msg.content:
+            forbidden = True
+            banned = word
+    
+    value = [forbidden, banned]
+    return value

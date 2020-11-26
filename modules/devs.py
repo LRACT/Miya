@@ -35,6 +35,7 @@ class Development(commands.Cog, name="개발"):
 
         미야에 등록된 모듈을 관리합니다.
         """
+        await ctx.message.delete()
         if not args or len(args) < 2:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >`(이)가 올바른 명령어에요!")
         else:
@@ -113,6 +114,7 @@ class Development(commands.Cog, name="개발"):
         
         ID를 통해 유저나 서버의 블랙리스트를 관리합니다.
         """
+        await ctx.message.delete()
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
@@ -174,6 +176,7 @@ class Development(commands.Cog, name="개발"):
 
         서버의 ID를 통해 서버를 등록합니다.
         """
+        await ctx.message.delete()
         guild = self.miya.get_guild(int(args[0]))
         if guild is not None:
             working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
@@ -187,7 +190,7 @@ class Development(commands.Cog, name="개발"):
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 강제등록 < 서버 ID >`(이)가 올바른 명령어에요!")
     
-    @commands.command(name="응답")
+    @commands.command(name="응답", aliases=["답변"])
     @commands.is_owner()
     async def answer(self, ctx, sender: discord.User, *, response):
         """
@@ -196,6 +199,7 @@ class Development(commands.Cog, name="개발"):
 
         해당 유저에게 피드백에 대한 응답을 회신합니다.
         """
+        await ctx.message.delete()
         KST = timezone('Asia/Seoul')
         now = datetime.datetime.utcnow()
         time = utc.localize(now).astimezone(KST)
@@ -221,6 +225,7 @@ class Development(commands.Cog, name="개발"):
                     await sender.send(sender.mention, embed=embed)
                     await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
                 except:
+                    await msg.delete()
                     await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 해당 유저가 DM을 막아놓은 것 같아요. 전송에 실패했어요.")
             else:
                 await msg.delete() 

@@ -55,51 +55,11 @@ class log(commands.Cog, name="로그"):
                 embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
                 embed.set_thumbnail(url=msg.author.avatar_url_as(static_format="png", size=2048))
                 embed.set_footer(text="메시지 삭제 이벤트")
-                if msg.content == "" and msg.attachments:
+                if msg.content == "":
                     embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False)
-                    embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
                     await channel.send(embed=embed)
-                    if len(msg.attachments) != 1:
-                        files = []
-                        try:   
-                            for a in msg.attachments:
-                                abc = await a.to_file()
-                                files.append(abc)
-                        except:
-                            return
-                        else:
-                            await channel.send(files=files)
-                    else:
-                        try:
-                            hi = await msg.attachments[0].to_file()
-                        except:
-                            return
-                        else:
-                            await channel.send(file=hi)
-                elif msg.content != "" and msg.attachments:
+                elif msg.content != "":
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
-                    embed.add_field(name="파일", value="파일이 아래 업로드되었습니다.", inline=False)
-                    await channel.send(embed=embed)
-                    if len(msg.attachments) != 1:
-                        files = []
-                        try:   
-                            for a in msg.attachments:
-                                abc = await a.to_file()
-                                files.append(abc)
-                        except:
-                            return
-                        else:
-                            await channel.send(files=files)
-                    else:
-                        try:
-                            hi = await msg.attachments[0].to_file()
-                        except:
-                            return
-                        else:
-                            await channel.send(file=hi)
-                else:
-                    embed.add_field(name="메시지 내용", value=msg.content, inline=False)
-                    embed.add_field(name="파일", value="*파일이 없습니다. (싸늘한 바람)*", inline=False)
                     await channel.send(embed=embed)
             else:
                 embed = discord.Embed(title="메시지가 삭제되었습니다.", description="메시지가 캐싱되지 않아 내용 및 파일을 불러오지 못했습니다.", timestamp=datetime.datetime.now())

@@ -15,7 +15,7 @@ class Economy(commands.Cog, name="경제/돈"):
             user = ctx.author
         result = await data.load('users', 'user', user.id)
         if result is not None:
-            embed = discord.Embed(title=f"{user}님의 자산 정보", description="", color=)
+            embed = discord.Embed(title=f"{user}님의 자산 정보", description="test", color=0x5FE9FF)
             await ctx.send(ctx.author.mention, embed=embed)
 
 def setup(miya):

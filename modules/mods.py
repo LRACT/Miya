@@ -18,7 +18,7 @@ class Moderation(commands.Cog, name="관리"):
         미야야 뮤트 < @유저 > [ 사유 ]
 
 
-        지정된 뮤트 역할을 유저에게 적용합니다. 역할 설정이 필요합니다.
+        지정된 뮤트 역할을 유저에게 적용합니다. 뮤트 역할의 설정이 필요합니다.
         """
         result = await data.load('guilds', 'guild', ctx.guild.id)
         role = ctx.guild.get_role(int(result[2]))
@@ -30,7 +30,7 @@ class Moderation(commands.Cog, name="관리"):
             else:
                 await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} **{member}**님을 뮤트했어요.\n사유 : {reason}")
         else:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정` 명령어를 사용해주세요.")
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해주세요.")
     
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
@@ -77,7 +77,7 @@ class Moderation(commands.Cog, name="관리"):
                 await ctx.channel.edit(slowmode_delay=number)
                 await ctx.send(f":hourglass: {ctx.author.mention} 채널의 메시지 딜레이를 {number}초로 설정했어요!\n \n`채널 관리` 혹은 `메시지 관리` 권한을 가진 사람에게는 적용되지 않아요.\n채널의 메시지 딜레이를 삭제하려면 `미야야 슬로우 끄기` 명령어를 사용해주세요.")
 
-    @commands.command(name="추방")
+    @commands.command(name="추방", aliases=["킥"])
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
     async def _kick(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."):
@@ -97,7 +97,7 @@ class Moderation(commands.Cog, name="관리"):
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야가 추방하려는 유저보다 권한이 낮아 추방하지 못했어요.")
         
-    @commands.command(name="차단")
+    @commands.command(name="차단", aliases=["밴", "벤"])
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def _ban(self, ctx, user: discord.Member, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = "사유 없음."):
@@ -133,7 +133,7 @@ class Moderation(commands.Cog, name="관리"):
             if num <= 100:
                 await ctx.message.delete()
                 deleted = await ctx.channel.purge(limit=num)
-                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=3)
+                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=2)
             else:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
         else:
