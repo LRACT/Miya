@@ -88,7 +88,7 @@ async def on_message(msg):
             await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시의 사용을 금지합니다.""")
         else:
             result = await data.load("blacklist", "id", msg.author.id)
-            fbd = await utils.get.filter()
+            fbd = await utils.get.filter(msg)
             if result is not None:
                 await webhook.terminal(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
@@ -102,9 +102,9 @@ async def on_message(msg):
                 time = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
                 await webhook.terminal(f"Command Cancelled ( Forbidden ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Forbidden ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-                result = await data.insert('blacklist', '`id`, `admin`, `reason`, `datetime`', f"'{msg.author.id}', '{miya.user.id}', '부적절한 단어 사용 **[ 미야 자동 차단 ]** = {fbd[1]}', '{time}'")
+                result = await data.insert('blacklist', '`id`, `admin`, `reason`, `datetime`', f"'{msg.author.id}', '{miya.user.id}', '부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}', '{time}'")
                 if result == "SUCCESS":
-                    embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}\n처리한 관리자 : {miya.user}", color=0xFF0000)
+                    embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}\n처리한 관리자 : {miya.user}\n차단된 시각 : {time}", color=0xFF0000)
                     await msg.channel.send(f"<a:ban_guy:761149578216603668> {msg.author.mention} https://discord.gg/mdgaSjB", embed=embed)
             else:
                 g = await data.load("guilds", "guild", msg.guild.id)
