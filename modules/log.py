@@ -50,7 +50,7 @@ class log(commands.Cog, name="로그"):
                 if msg.author.bot:
                     return
 
-                embed = discord.Embed(title="메시지가 삭제되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
+                embed = discord.Embed(title="메시지가 삭제되었습니다.", timestamp=datetime.datetime.utcnow(), color=0xff0000)
                 embed.add_field(name="메시지 주인", value=f"{msg.author.mention} ( {msg.author.id} )", inline=False)
                 embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
                 embed.set_thumbnail(url=msg.author.avatar_url_as(static_format="png", size=2048))
@@ -62,7 +62,7 @@ class log(commands.Cog, name="로그"):
                     embed.add_field(name="메시지 내용", value=msg.content, inline=False)
                     await channel.send(embed=embed)
             else:
-                embed = discord.Embed(title="메시지가 삭제되었습니다.", description="메시지가 캐싱되지 않아 내용 및 파일을 불러오지 못했습니다.", timestamp=datetime.datetime.now())
+                embed = discord.Embed(title="메시지가 삭제되었습니다.", description="메시지가 캐싱되지 않아 내용 및 파일을 불러오지 못했습니다.", timestamp=datetime.datetime.utcnow())
                 embed.add_field(name="메시지가 삭제된 채널", value=f"<#{payload.channel_id}> ( {payload.channel_id} )", inline=False)
                 await channel.send(embed=embed)
     
@@ -73,7 +73,7 @@ class log(commands.Cog, name="로그"):
 
         channel = await log.get_channel(self, before.guild.id)
         if channel is not None:
-            embed = discord.Embed(title="메시지가 수정되었습니다.", timestamp=datetime.datetime.now(), color=0xff0000)
+            embed = discord.Embed(title="메시지가 수정되었습니다.", timestamp=datetime.datetime.utcnow(), color=0xff0000)
             embed.add_field(name="메시지 주인", value=f"{after.author.mention} ( {after.author.id} )", inline=False)
             embed.add_field(name="메시지가 수정된 채널", value=f"{after.channel.mention} ( {after.channel.id} )", inline=False)
             embed.add_field(name="메시지로 이동하기", value=f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id})", inline=False)

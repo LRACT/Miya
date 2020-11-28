@@ -24,7 +24,7 @@ class General(commands.Cog, name="일반"):
 
         미야의 명령어 목록을 보여줍니다.
         """
-        embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF, timestamp=datetime.datetime.now())
+        embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
             private = ["개발", "서버 데이터 관리", "PRIVATE"]
@@ -59,17 +59,17 @@ class General(commands.Cog, name="일반"):
         미야의 지연 시간을 표시합니다.
         """
         channel = self.miya.get_channel(663806206376149073)
-        first_time = datetime.datetime.now()
+        first_time = datetime.datetime.utcnow()
         m = await channel.send("핑1")
         await m.edit(content="핑2")
-        last_time = datetime.datetime.now()
+        last_time = datetime.datetime.utcnow()
         await m.delete()
         ocha = str(last_time - first_time)[6:]
         row = await data.load("miya", "botId", self.miya.user.id)
         record = str(row[1].split(".")[0])
         start_time = datetime.datetime.strptime(record, "%Y-%m-%d %H:%M:%S")
-        uptime = datetime.datetime.now() - start_time
-        embed = discord.Embed(color=0x5FE9FF, timestamp=datetime.datetime.now())
+        uptime = datetime.datetime.utcnow() - start_time
+        embed = discord.Embed(color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.add_field(name="API 지연 시간", value=f"{round(self.miya.latency * 1000)}ms", inline=False)
         embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000)}ms", inline=False)
         embed.add_field(name="구동 시간", value=str(uptime).split(".")[0])
@@ -85,7 +85,7 @@ class General(commands.Cog, name="일반"):
 
         미야의 초대 링크를 표시합니다.
         """
-        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.now())
+        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         await ctx.send(ctx.author.mention, embed=embed)
     
     @commands.command(name="피드백", aliases=["문의", "지원"])
@@ -138,7 +138,7 @@ class General(commands.Cog, name="일반"):
                 <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
                 <:cs_settings:659355468992610304> 호스트 : 개인 서버 - 한국
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
-                <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF, timestamp=datetime.datetime.now())
+                <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         e.set_thumbnail(url=self.miya.user.avatar_url_as(static_format='png', size=2048))
         e.set_author(name="정보", icon_url=self.miya.user.avatar_url)
         await working.edit(content=ctx.author.mention, embed=e)
@@ -348,14 +348,15 @@ class General(commands.Cog, name="일반"):
 
         랜덤으로 아무 오리 사진이나 가져옵니다.
         """
+        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         async with aiohttp.ClientSession() as session:
             async with session.get("https://random-d.uk/api/v2/quack") as response:
                 p = await response.json()
-                duck = discord.Embed(color=0xFFFCC9, timestamp=datetime.datetime.now())
+                duck = discord.Embed(color=0xFFFCC9, timestamp=datetime.datetime.utcnow())
                 duck.set_image(url=p['url'])
                 duck.set_author(name="어떠한 오리 사진에 대하여", icon_url=self.miya.user.avatar_url)
                 duck.set_footer(text=p['message'])
-                await ctx.send(embed=duck)
+                await working.edit(content=ctx.author.mention, embed=duck)
 
 def setup(miya):
     miya.add_cog(General(miya))

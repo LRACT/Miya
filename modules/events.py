@@ -19,7 +19,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         print(self.miya.user.id)        
         print("READY")
         await webhook.terminal(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
-        uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.now()), 'botId', self.miya.user.id)
+        uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.utcnow()), 'botId', self.miya.user.id)
         await webhook.terminal(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Uptime Change :: {uptime_set}")
         while True:
