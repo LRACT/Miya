@@ -83,12 +83,13 @@ async def on_message(msg):
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await miya.process_commands(msg)
         elif "'" in msg.content or '"' in msg.content or "\\" in msg.content:
-            await webhook.terminal(f"Command Cancelled ( Banned Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
-            print(f"Command Cancelled ( Banned Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
+            await webhook.terminal(f"Command Cancelled ( Forbidden - Symbols ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
+            print(f"Command Cancelled ( Forbidden - Symbols ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시의 사용을 금지합니다.""")
         else:
             result = await data.load("blacklist", "id", msg.author.id)
             fbd = await utils.get.filter(msg)
+            g = await data.load("guilds", "guild", msg.guild.id)
             if result is not None:
                 await webhook.terminal(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
@@ -100,22 +101,20 @@ async def on_message(msg):
                 now = datetime.datetime.utcnow()
                 time = utc.localize(now).astimezone(KST)
                 time = time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
-                await webhook.terminal(f"Command Cancelled ( Forbidden ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
-                print(f"Command Cancelled ( Forbidden ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
+                await webhook.terminal(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
+                print(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
                 result = await data.insert('blacklist', '`id`, `admin`, `reason`, `datetime`', f"'{msg.author.id}', '{miya.user.id}', '부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}', '{time}'")
                 if result == "SUCCESS":
                     embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}\n처리한 관리자 : {miya.user}\n차단된 시각 : {time}", color=0xFF0000)
                     await msg.channel.send(f"<a:ban_guy:761149578216603668> {msg.author.mention} https://discord.gg/mdgaSjB", embed=embed)
+            elif g is not None or msg.content == "미야야 등록":
+                await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
+                print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
+                await miya.process_commands(msg)
             else:
-                g = await data.load("guilds", "guild", msg.guild.id)
-                if g is not None or msg.content == "미야야 등록":
-                    await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
-                    print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-                    await miya.process_commands(msg)
-                else:
-                    await webhook.terminal(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
-                    print(f"Command Cancelled ( Guild not registered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-                    await msg.channel.send(f"<:cs_id:659355469034422282> {msg.author.mention} 아직 미야의 이용약관에 동의하지 않으셨어요. `미야야 등록` 명령어를 사용해 등록해보세요!")
+                await webhook.terminal(f"Command Cancelled ( Unregistered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
+                print(f"Command Cancelled ( Unregistered ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
+                await msg.channel.send(f"<:cs_id:659355469034422282> {msg.author.mention} 아직 미야의 이용약관에 동의하지 않으셨어요. `미야야 등록` 명령어를 사용해 등록해보세요!")
 
 load_modules(miya)
 miya.run(config.BotToken)

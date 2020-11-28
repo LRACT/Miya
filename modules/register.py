@@ -36,7 +36,7 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
                 working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
                 g_result = await data.insert('guilds', '`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`', f'"{ctx.guild.id}", "1234", "1234", "false", "0"')
                 default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
-                default_quit_msg = "{member}님 잘가세요.. 현재 인원 : {count}명"
+                default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
                 m_result = await data.insert('memberNoti', '`guild`, `channel`, `join_msg`, `remove_msg`', f'"{ctx.guild.id}", "1234", "{default_join_msg}", "{default_quit_msg}"')
                 if g_result == "SUCCESS" and m_result == "SUCCESS":
                     await webhook.terminal(f"Guild registered :: {ctx.guild.name} ( {ctx.guild.id} )", "미야 Terminal", self.miya.user.avatar_url)

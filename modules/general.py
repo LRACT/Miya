@@ -16,7 +16,7 @@ class General(commands.Cog, name="일반"):
     def __init__(self, miya):
         self.miya = miya
 
-    @commands.command(name="도움말", aliases=["도움"])
+    @commands.command(name="도움말", aliases=["도움", "명령어"])
     async def _help(self, ctx):
         """
         미야야 도움말
@@ -27,7 +27,7 @@ class General(commands.Cog, name="일반"):
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
-            private = ["개발", "서버 데이터 관리", "PRIVATE"]
+            private = ["개발", "서버 데이터 관리", "PRIVATE", "경제/돈"]
             if command.cog.qualified_name in private:
                 app = await self.miya.application_info()
                 owner = await get.team(ctx.author.id, app)
@@ -91,10 +91,10 @@ class General(commands.Cog, name="일반"):
     @commands.command(name="피드백", aliases=["문의", "지원"])
     async def request(self, ctx, *, message):
         """
-        미야야 피드백 < 할말 >
+        미야야 문의 < 할말 >
 
 
-        개발자들 에게 피드백 메세지를 전송합니다.
+        미야 관리팀에게 문의 메세지를 전송합니다.
         """
         channel = self.miya.get_channel(config.Newsfeed)
         KST = timezone('Asia/Seoul')
@@ -126,7 +126,7 @@ class General(commands.Cog, name="일반"):
     @commands.command(name="봇정보", aliases=["미야정보", "미야"])
     async def _miyainfo(self, ctx):
         """
-        미야야 봇정보
+        미야야 미야
 
 
         미야의 정보를 표시합니다.
@@ -325,7 +325,7 @@ class General(commands.Cog, name="일반"):
         미야야 하트 [ @유저 ]
 
 
-        한국 디스코드 봇 리스트의 미야 페이지를 하트했는지 확인합니다.
+        한국 디스코드 봇 리스트의 미야에게 하트를 눌러주셨는지 확인합니다.
         """
         if user is None:
             user = ctx.author
