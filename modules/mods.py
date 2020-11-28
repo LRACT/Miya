@@ -25,10 +25,10 @@ class Moderation(commands.Cog, name="관리"):
         if role is not None and role < ctx.guild.me.top_role:
             if role not in member.roles:
                 if member.guild_permissions.administrator:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 지정한 유저가 서버의 관리자 권한을 가지고 있어 취소되었어요.")
+                else:
                     await member.add_roles(role, reason=reason)
                     await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} **{member}**님을 뮤트했어요.\n사유 : {reason}")
-                else:
-                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 지정한 유저가 서버의 관리자 권한을 가지고 있어 취소되었어요.")
             else:
                 await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} 그 유저는 이미 뮤트되어 있어요!")
         else:
