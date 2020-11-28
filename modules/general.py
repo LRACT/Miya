@@ -46,7 +46,7 @@ class General(commands.Cog, name="일반"):
         try:
             await ctx.author.send(embed=embed)
         except:
-            await ctx.message.add_reaction("<:cs_no:659355468816187405>")
+            await ctx.send(f"{ctx.author.mention} - ")
         else:
             await ctx.message.add_reaction("<:cs_sent:659355469684539402>")
 
@@ -136,6 +136,7 @@ class General(commands.Cog, name="일반"):
         e = discord.Embed(title="미야 서버(봇) 정보",
             description=f"""
                 <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
+                <:GitHub_W:782076841141207071> 코드 저장소 : [보러 가기](https://github.com/LRACT/Miya)
                 <:cs_settings:659355468992610304> 호스트 : 개인 서버 - 한국
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
                 <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
