@@ -22,15 +22,17 @@ class Moderation(commands.Cog, name="관리"):
         """
         result = await data.load('guilds', 'guild', ctx.guild.id)
         role = ctx.guild.get_role(int(result[2]))
-        if role is not None:
-            try:
-                await member.add_roles(role, reason=reason)
-            except discord.Forbidden:
-                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
+        if role is not None and role < ctx.guild.me.top_role:
+            if role not in member.roles:
+                if member.guild_permissions.administrator:
+                    await member.add_roles(role, reason=reason)
+                    await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} **{member}**님을 뮤트했어요.\n사유 : {reason}")
+                else:
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 지정한 유저가 서버의 관리자 권한을 가지고 있어 취소되었어요.")
             else:
-                await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} **{member}**님을 뮤트했어요.\n사유 : {reason}")
+                await ctx.send(f"<:mute:761151751583301682> {ctx.author.mention} 그 유저는 이미 뮤트되어 있어요!")
         else:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해주세요.")
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트에 사용할 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해 설정을 완료해주세요.")
     
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
@@ -40,19 +42,18 @@ class Moderation(commands.Cog, name="관리"):
         미야야 언뮤트 < @유저 > [ 사유 ]
 
 
-        유저의 뮤트 상태를 해제합니다. 역할 설정이 필요합니다.
+        유저의 뮤트 상태를 해제합니다. 뮤트 역할의 설정이 필요합니다.
         """
         result = await data.load('guilds', 'guild', ctx.guild.id)
         role = ctx.guild.get_role(int(result[2]))
-        if role is not None:
-            try:
+        if role is not None and role < ctx.guild.me.top_role:
+            if role in member.roles:
                 await member.remove_roles(role, reason=reason)
-            except discord.Forbidden:
-                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트 역할이 미야보다 낮아야 해요.")
-            else:
                 await ctx.send(f"<:mic:761152232447148042> {ctx.author.mention} **{member}**님의 뮤트 상태를 해제했어요.\n사유 : {reason}")
+            else:
+                await ctx.send(f"<:mic:761152232447148042> {ctx.author.mention} 그 유저는 뮤트되지 않았어요!")
         else:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 역할이 지정되어 있어야 해요. `미야야 역할설정` 명령어를 사용해주세요.")
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 이 명령어를 실행하려면 뮤트에 사용할 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해 설정을 완료해주세요.")
 
     @commands.command(name="슬로우", aliases=["슬로우모드"])
     @commands.has_permissions(manage_channels=True)
@@ -130,7 +131,7 @@ class Moderation(commands.Cog, name="관리"):
         """ 
         if args and args[0].isdecimal() == True:
             num = int(args[0])
-            if num <= 100:
+            if num <= 100 and num > 0:
                 await ctx.message.delete()
                 deleted = await ctx.channel.purge(limit=num)
                 await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=2)
