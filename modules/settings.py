@@ -64,13 +64,16 @@ class Settings(commands.Cog, name="설정"):
         value = None
         table = None
         if what == "공지":
-            follow = self.miya.get_channel(config.NotifyChannel)
-            try:
-                await follow.follow(destination=channel, reason="미야 봇 공지 채널 설정")
-            except discord.Forbidden:
-                await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요.")
+            if channel.type == discord.ChannelType.news:
+                await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 미야 공지 채널은 Discord 커뮤니티 공지 채널이 아닌 곳에만 설정할 수 있어요.")
             else:
-                await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면 서버의 연동 설정에서 팔로우를 취소해주세요!*")
+                follow = self.miya.get_channel(config.NotifyChannel)
+                try:
+                    await follow.follow(destination=channel, reason="미야 봇 공지 채널 설정")
+                except discord.Forbidden:
+                    await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요.")
+                else:
+                    await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면 서버의 연동 설정에서 팔로우를 취소해주세요!*")
         else:
             if what == "로그":
                 table = "guilds"

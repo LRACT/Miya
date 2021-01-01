@@ -40,7 +40,7 @@ intents = discord.Intents(
     typing=True
 )
 miya = Miya(
-    command_prefix="미야야",
+    command_prefix="미야야 ",
     description="미야 discord.py 리라이트 버전",
     help_command=None,
     fetch_offline_members=True,
@@ -57,7 +57,6 @@ def load_modules(miya):
         "modules.mods",
         "modules.register",
         "modules.log",
-        "modules.private",
         "jishaku",
     ]
 

@@ -27,16 +27,9 @@ class General(commands.Cog, name="일반"):
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
-            private = ["개발", "서버 데이터 관리", "PRIVATE", "경제/돈"]
+            private = ["개발", "서버 데이터 관리", "PRIVATE", "경제/돈", "Jishaku"]
             if command.cog.qualified_name in private:
-                app = await self.miya.application_info()
-                owner = await get.team(ctx.author.id, app)
-                if owner == True:
-                    temp = command.help.split("\n")[3:]
-                    local = ""
-                    for arg in temp:
-                        local += f"{arg}\n"
-                    embed.add_field(name=command.help.split("\n")[0], value=local, inline=False)
+                pass
             else:
                 temp = command.help.split("\n")[3:]
                 local = ""
@@ -135,7 +128,7 @@ class General(commands.Cog, name="일반"):
         heart = await self.miya.get_rank()
         e = discord.Embed(title="미야 서버(봇) 정보",
             description=f"""
-                <:koreanbots:752354740314177568> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
+                <:koreanbots:794450277792481290> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
                 <:GitHub_W:782076841141207071> 코드 저장소 : [보러 가기](https://github.com/LRACT/Miya)
                 <:cs_settings:659355468992610304> 호스트 : 개인 서버 - 한국
                 <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
