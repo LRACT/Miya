@@ -3,7 +3,7 @@ from lib import config
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
-async def load(table, find_column, find_value):
+async def fetch(sql):
     o = await aiomysql.connect(
         host=config.MySQL['host'],
         port=config.MySQL['port'],
@@ -13,18 +13,12 @@ async def load(table, find_column, find_value):
         autocommit=True
     )
     c = await o.cursor()
-    await c.execute(f"SELECT * FROM `{table}` WHERE `{find_column}` = '{find_value}'")
+    await c.execute(sql)
     rows = await c.fetchall()
-    if rows:
-        if len(rows) == 1:
-            return rows[0]
-        else:
-            return rows
-    else:
-        return None
+    return rows
     o.close()
 
-async def update(table, column, value, find_column, find_value):
+async def commit(sql):
     o = await aiomysql.connect(
         host=config.MySQL['host'],
         port=config.MySQL['port'],
@@ -35,46 +29,9 @@ async def update(table, column, value, find_column, find_value):
     )
     c = await o.cursor()
     try:
-        await c.execute(f"UPDATE `{table}` SET `{column}` = '{value}' WHERE `{find_column}` = '{find_value}'")
+        await c.execute(sql)
     except Exception as e:
         return e
     else:
         return "SUCCESS"
     o.close()
-
-async def insert(table, columns, values):
-    o = await aiomysql.connect(
-        host=config.MySQL['host'],
-        port=config.MySQL['port'],
-        user=config.MySQL['username'],
-        password=config.MySQL['password'],
-        db=config.MySQL['database'],
-        autocommit=True
-    )
-    c = await o.cursor()
-    try:
-        await c.execute(f"INSERT INTO `{table}`({columns}) VALUES({values})")
-    except Exception as e:
-        return e
-    else:
-        return "SUCCESS"
-    o.close()
-
-async def delete(table, find_column, find_value):
-    o = await aiomysql.connect(
-        host=config.MySQL['host'],
-        port=config.MySQL['port'],
-        user=config.MySQL['username'],
-        password=config.MySQL['password'],
-        db=config.MySQL['database'],
-        autocommit=True
-    )
-    c = await o.cursor()
-    try:
-        await c.execute(f"DELETE FROM `{table}` WHERE `{find_column}` = '{find_value}'")
-    except Exception as e:
-        return e
-    else:
-        return "SUCCESS"
-    o.close()
-

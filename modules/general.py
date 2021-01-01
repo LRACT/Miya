@@ -80,41 +80,6 @@ class General(commands.Cog, name="일반"):
         """
         embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         await ctx.send(ctx.author.mention, embed=embed)
-    
-    @commands.command(name="피드백", aliases=["문의", "지원"])
-    async def request(self, ctx, *, message):
-        """
-        미야야 문의 < 할말 >
-
-
-        미야 관리팀에게 문의 메세지를 전송합니다.
-        """
-        channel = self.miya.get_channel(config.Newsfeed)
-        KST = timezone('Asia/Seoul')
-        now = datetime.datetime.utcnow()
-        time = utc.localize(now).astimezone(KST)
-        embed = discord.Embed(title="피드백이 도착했어요!", color=0x95E1F4)
-        embed.add_field(name="피드백을 접수한 유저", value=f"{ctx.author} ( {ctx.author.id} )", inline=False)
-        embed.add_field(name="피드백이 접수된 서버", value=f"{ctx.guild.name} ( {ctx.guild.id} )", inline=False)
-        embed.add_field(name="피드백이 접수된 채널", value=f"{ctx.channel.name} ( {ctx.channel.id} )", inline=False)
-        embed.add_field(name="피드백 내용", value=message, inline=False)
-        embed.add_field(name="피드백 접수 완료 시간", value=time.strftime("%Y년 %m월 %d일 %H시 %M분 %S초"), inline=False)
-        embed.set_author(name="문의 및 답변", icon_url=self.miya.user.avatar_url)
-        msg = await ctx.send(f"{ctx.author.mention} 이렇게 전송하는 게 맞나요?\n```{message}```")
-        await msg.add_reaction("<:cs_yes:659355468715786262>")
-        await msg.add_reaction("<:cs_no:659355468816187405>")
-        def check(reaction, user):
-            return reaction.message.id == msg.id and user == ctx.author
-        try:
-            reaction, user = await self.miya.wait_for('reaction_add', timeout=60, check=check)
-        except asyncio.TimeoutError:
-            await msg.delete()
-        else:
-            if str(reaction.emoji) == "<:cs_yes:659355468715786262>":
-                await msg.edit(content=f"<:cs_yes:659355468715786262> {ctx.author.mention} 개발자에게 전송했어요! 피드백 명령어를 용도에 맞게 사용하지 않거나 이유 없이 사용하시면 봇 사용이 제한될 수 있어요.", embed=None, supress=True, delete_after=10)
-                await channel.send("@everyone", embed=embed)
-            else:
-                await msg.delete()
 
     @commands.command(name="봇정보", aliases=["미야정보", "미야"])
     async def _miyainfo(self, ctx):
@@ -146,22 +111,14 @@ class General(commands.Cog, name="일반"):
         현재 한강의 수온을 출력합니다.
         """
         working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get("http://hangang.dkserver.wo.tc") as r:
-                response = await r.json(content_type=None)
-                embed = discord.Embed(description=f'현재 한강의 온도는 `{response["temp"]}`도에요!\n`측정: {(response["time"]).split(" ")[0]}`', color=0x5FE9FF)
-                embed.set_author(name="지금 한강은", icon_url=self.miya.user.avatar_url)
-                temp = None
-                if "." in response["temp"]:
-                    temp = int(response["temp"].split(".")[0])
-                else:
-                    temp = int(response["temp"])
-
-                if temp > 15:
-                    embed.set_footer(text="거 수온이 뜨듯하구먼!")
-                else:
-                    embed.set_footer(text="거 이거 완전 얼음장이구먼!")
-                await working.edit(content=ctx.author.mention, embed=embed)
+        result = await get.hangang()
+        embed = discord.Embed(description=f'현재 한강의 온도는 `{result[0]}`도에요!\n`측정: {result[1]}`', color=0x5FE9FF)
+        embed.set_author(name="지금 한강은", icon_url=self.miya.user.avatar_url)
+        if temp > 15:
+            embed.set_footer(text="거 수온이 뜨듯하구먼!")
+        else:
+            embed.set_footer(text="거 이거 완전 얼음장이구먼!")
+        await working.edit(content=ctx.author.mention, embed=embed)
 
     @commands.command(name="골라", aliases=["골라줘"])
     async def _select(self, ctx, *args):

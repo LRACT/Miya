@@ -2,7 +2,13 @@ import aiohttp
 from bs4 import BeautifulSoup
 import locale
 from lib import config
+from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
+
+async def kor_time():
+    KST = timezone('Asia/Seoul')
+    now = datetime.datetime.utcnow()
+    time = utc.localize(now).astimezone(KST)
 
 async def team(user_id, app): 
     t_members = app.team.members
@@ -12,6 +18,19 @@ async def team(user_id, app):
             owner = True
     
     return owner
+
+async def hangang():
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get("http://hangang.dkserver.wo.tc") as r:
+            response = await r.json(content_type=None)
+            temp = None
+            time = (response["time"]).split(" ")[0]
+            if "." in response["temp"]:
+                temp = int(response["temp"].split(".")[0])
+            else:
+                temp = int(response["temp"])
+    
+    return [temp, time]
 
 async def corona():
     async with aiohttp.ClientSession() as cs:
@@ -28,11 +47,21 @@ async def corona():
 async def filter(msg):
     forbidden = False
     banned = None
-    words = config.Forbidden.split(" ")
-    for word in words:
-        if word in msg.content:
+    o = await aiomysql.connect(
+        host=config.MySQL['host'],
+        port=config.MySQL['port'],
+        user=config.MySQL['username'],
+        password=config.MySQL['password'],
+        db=config.MySQL['database'],
+        autocommit=True
+    )
+    c = await o.cursor()
+    await c.execute("SELECT * FROM `forbidden`")
+    rows = await c.fetchall()
+    for row in rows:
+        if row[0] in msg.content:
             forbidden = True
-            banned = word
+            banned = row[0]
     
     value = [forbidden, banned]
     return value
