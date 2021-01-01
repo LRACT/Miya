@@ -114,7 +114,7 @@ class General(commands.Cog, name="일반"):
         result = await get.hangang()
         embed = discord.Embed(description=f'현재 한강의 온도는 `{result[0]}`도에요!\n`측정: {result[1]}`', color=0x5FE9FF)
         embed.set_author(name="지금 한강은", icon_url=self.miya.user.avatar_url)
-        if temp > 15:
+        if result[0] > 15:
             embed.set_footer(text="거 수온이 뜨듯하구먼!")
         else:
             embed.set_footer(text="거 이거 완전 얼음장이구먼!")
@@ -213,9 +213,7 @@ class General(commands.Cog, name="일반"):
             discord.VerificationLevel.high: "**높음**\n이메일 인증이 완료되고, Discord에 가입한 지 5분이 지나며, 서버의 멤버가 된 지 10분이 지나야 해요.",
             discord.VerificationLevel.extreme: "**매우 높음**\n휴대폰 인증이 완료된 Discord 계정이어야 해요."
         }
-        KST = timezone('Asia/Seoul')
-        now = ctx.guild.created_at
-        time = utc.localize(now).astimezone(KST)
+        time = await utils.get.kor_time(ctx.guild.created_at)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
@@ -225,7 +223,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="서버 인원 수", value=f"{ctx.guild.member_count}명")
         embed.add_field(name="서버 역할 갯수", value=f"{len(ctx.guild.roles)}개")
         embed.add_field(name="서버 위치", value=location[str(ctx.guild.region)])
-        embed.add_field(name="서버 개설 날짜", value=time.strftime("%Y년 %m월 %d일"))
+        embed.add_field(name="서버 개설 날짜", value=time)
         embed.add_field(name="서버 보안 수준", value=verification[ctx.guild.verification_level])
         embed.set_author(name="정보", icon_url=self.miya.user.avatar_url)
         embed.set_thumbnail(url=ctx.guild.icon_url_as(static_format="png", size=2048))

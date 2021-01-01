@@ -2,22 +2,17 @@ import aiohttp
 from bs4 import BeautifulSoup
 import locale
 from lib import config
+import datetime
+import aiomysql
 from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
 
-async def kor_time():
+async def kor_time(date):
     KST = timezone('Asia/Seoul')
-    now = datetime.datetime.utcnow()
-    time = utc.localize(now).astimezone(KST)
-
-async def team(user_id, app): 
-    t_members = app.team.members
-    owner = False
-    for t in t_members:
-        if t.id == user_id:
-            owner = True
-    
-    return owner
+    now = date
+    abc = utc.localize(now).astimezone(KST)
+    time = abc.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
+    return time
 
 async def hangang():
     async with aiohttp.ClientSession() as cs:

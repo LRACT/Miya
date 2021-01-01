@@ -48,7 +48,7 @@ class Development(commands.Cog, name="개발"):
 
     @commands.command(name="블랙")
     @commands.is_owner()
-    async def blacklist_management(self, ctx, todo, id, *, reason = typing.Optional[str] = "사유가 지정되지 않았습니다."):
+    async def blacklist_management(self, ctx, todo, id, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
         미야야 블랙 < 추가 / 삭제 > < 서버 / 유저 > < ID > [ 사유 ]
 

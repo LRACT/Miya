@@ -122,7 +122,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     async def on_guild_join(self, guild):
         await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
-        result = await data.load("blacklist", "id", guild.id)
+        result = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         if result is None:
             try:
                 embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
