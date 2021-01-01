@@ -14,6 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
+lib/
 lib64/
 parts/
 sdist/
@@ -25,8 +26,12 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+config.py
+miya.sqlite
+*.zip
+test.*
 private.*
-config.*
+money.*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
