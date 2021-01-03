@@ -87,10 +87,11 @@ async def on_message(msg):
             print(f"Command Cancelled ( Forbidden - Symbols ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 특정 특수문자의 사용을 금지합니다.""")
         else:
-            result = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{msg.author.id}'")
+            rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{msg.author.id}'")
             fbd = await utils.get.filter(msg)
             g = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'")
-            if result:
+            if rows:
+                result = rows[0]
                 await webhook.terminal(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Blacklisted ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
                 admin = miya.get_user(int(result[1]))
