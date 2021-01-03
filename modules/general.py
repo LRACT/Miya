@@ -1,7 +1,8 @@
 import aiohttp
 import discord
 from discord.ext import commands
-from utils import get, data
+import utils
+from utils import get, webhook
 from lib import config
 import random
 import typing
