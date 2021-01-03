@@ -19,7 +19,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         print(self.miya.user.id)        
         print("READY")
         await webhook.terminal(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
-        uptime_set = await data.update('miya', 'uptime', str(datetime.datetime.utcnow()), 'botId', self.miya.user.id)
+        uptime_set = await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
         await webhook.terminal(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Uptime Change :: {uptime_set}")
         while True:
@@ -111,9 +111,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             return
 
         if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
-            result = await data.load('guilds', 'guild', msg.guild.id)
-            if result is not None:
-                if result[3] == 'true':
+            result = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'")
+            if rows:
+                if rows[0][3] == 'true':
                     if msg.channel.topic is None or '=무시' not in msg.channel.topic:
                         await msg.delete()
                         await msg.channel.send(f"<:cs_trash:659355468631769101> {msg.author.mention} 서버 설정에 따라 이 채널에는 Discord 초대 링크를 포스트하실 수 없어요.")
@@ -122,8 +122,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     async def on_guild_join(self, guild):
         await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
-        result = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
-        if result is None:
+        rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
+        if rows:
             try:
                 embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
                     description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
@@ -154,30 +154,39 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot == False:
-            value = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
-            if value is None:
+            rows = await data.fetch(f"SELECT * FROM `membernoti` WHERE `guild` = '{member.guild.id}'")
+            if not rows:
                 return
             else:
+                value = rows[0]
                 channel = member.guild.get_channel(int(value[1]))
                 if channel is not None and value[2] != "":
-                    msg = value[2].replace("{member}", str(member.mention))
-                    msg = msg.replace("{guild}", str(member.guild.name))
-                    msg = msg.replace("{count}", str(member.guild.member_count))
-                    await channel.send(msg)
+                    try:
+                        msg = value[2].replace("{member}", str(member.mention))
+                        msg = msg.replace("{guild}", str(member.guild.name))
+                        msg = msg.replace("{count}", str(member.guild.member_count))
+                        await channel.send(msg)
+                    except Exception as e:
+                        print(f"Can't welcome user : {member.guild} ( {member.guild.id} )\n{e}")
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         if member.bot == False:
-            value = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
-            if value is None:
+            rows = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
+            if not rows:
                 return
             else:
+                value = rows[0]
                 channel = member.guild.get_channel(int(value[1]))
                 if channel is not None and value[3] != "":
-                    msg = value[3].replace("{member}", str(member))
-                    msg = msg.replace("{guild}", str(member.guild.name))
-                    msg = msg.replace("{count}", str(member.guild.member_count))
-                    await channel.send(msg)
+                    try:
+                        msg = value[3].replace("{member}", str(member))
+                        msg = msg.replace("{guild}", str(member.guild.name))
+                        msg = msg.replace("{count}", str(member.guild.member_count))
+                        await channel.send(msg)
+                    except Exception as e:
+                        print(f"Can't welcome user : {member.guild} ( {member.guild.id} )\n{e}")
+
                     
 def setup(miya):
     miya.add_cog(Listeners(miya))
