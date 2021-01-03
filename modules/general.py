@@ -169,15 +169,15 @@ class General(commands.Cog, name="일반"):
         muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
-        if guilds[2] != 1234:
+        if guilds[0][2] != 1234:
             role = ctx.guild.get_role(int(guilds[0][2]))
             if role is not None:
                 muteRole = role.mention
-        if memberNoti[1] != 1234:
+        if memberNoti[0][1] != 1234:
             channel = ctx.guild.get_channel(int(memberNoti[0][1]))
             if channel is not None:
                 memberCh = channel.mention
-        if guilds[1] != 1234:
+        if guilds[0][1] != 1234:
             channel = ctx.guild.get_channel(int(guilds[0][1]))
             if channel is not None:
                 logCh = channel.mention

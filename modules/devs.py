@@ -1,14 +1,6 @@
 import discord
 from discord.ext import commands
-import aiomysql
-import datetime
-import os
-import aiohttp
-import ast
-import asyncio
-from pytz import utc, timezone
 import utils
-import typing
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
@@ -35,13 +27,14 @@ class Development(commands.Cog, name="개발"):
         
         특정 단어 사용 시 미야 사용이 제한되게 합니다.
         """
-        await ctx.message.delete()
         if todo == "추가":
-            await utils.data.commit(f"INSERT INTO `forbidden`(`word`) VALUES('{word}')")
-            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+            result = await utils.data.commit(f"INSERT INTO `forbidden`(`word`) VALUES('{word}')")
+            if result == "SUCCESS":
+                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         elif todo == "삭제":
-            await utils.data.commit(f"DELETE FROM `forbidden` WHERE `word` = '{word}'")
-            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+            result = await utils.data.commit(f"DELETE FROM `forbidden` WHERE `word` = '{word}'")
+            if result == "SUCCESS":
+                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 제한 < 추가 / 삭제 > < 단어 >`(이)가 올바른 명령어에요!")
 
@@ -55,14 +48,15 @@ class Development(commands.Cog, name="개발"):
         
         ID를 통해 유저나 서버의 블랙리스트를 관리합니다.
         """
-        await ctx.message.delete()
         time = await utils.get.kor_time()
         if todo == "추가":
-            await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{id}', '{reason}', '{ctx.author.id}', '{time}')")
-            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+            result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{id}', '{reason}', '{ctx.author.id}', '{time}')")
+            if result == "SUCCESS":
+                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         elif todo == "삭제":
-            await utils.data.commit(f"DELETE FROM `blacklist` WHERE `id` = '{id}'")
-            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+            result = await utils.data.commit(f"DELETE FROM `blacklist` WHERE `id` = '{id}'")
+            if result == "SUCCESS":
+                await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
 
