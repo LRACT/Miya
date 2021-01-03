@@ -1,7 +1,7 @@
 import discord 
 from discord.ext import commands
 import koreanbots
-import datetime # 안녕하시기?
+import datetime
 from pytz import utc, timezone
 from lib import config
 import utils
@@ -82,10 +82,10 @@ async def on_message(msg):
             await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await miya.process_commands(msg)
-        elif "'" in msg.content or '"' in msg.content or "\\" in msg.content:
+        elif "'" in msg.content or '"' in msg.content or "\\" in msg.content or ";" in msg.content:
             await webhook.terminal(f"Command Cancelled ( Forbidden - Symbols ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Command Cancelled ( Forbidden - Symbols ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-            await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 따옴표와 역슬래시의 사용을 금지합니다.""")
+            await msg.channel.send(f"""<:cs_console:659355468786958356> {msg.author.mention} 미야의 오류 방지를 위해 특정 특수문자의 사용을 금지합니다.""")
         else:
             result = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{msg.author.id}'")
             fbd = await utils.get.filter(msg)
