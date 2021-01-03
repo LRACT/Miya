@@ -20,8 +20,8 @@ class Moderation(commands.Cog, name="관리"):
 
         지정된 뮤트 역할을 유저에게 적용합니다. 뮤트 역할의 설정이 필요합니다.
         """
-        result = await data.load('guilds', 'guild', ctx.guild.id)
-        role = ctx.guild.get_role(int(result[2]))
+        rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+        role = ctx.guild.get_role(int(rows[0][2]))
         if role is not None and role < ctx.guild.me.top_role:
             if role not in member.roles:
                 if member.guild_permissions.administrator:
@@ -44,8 +44,8 @@ class Moderation(commands.Cog, name="관리"):
 
         유저의 뮤트 상태를 해제합니다. 뮤트 역할의 설정이 필요합니다.
         """
-        result = await data.load('guilds', 'guild', ctx.guild.id)
-        role = ctx.guild.get_role(int(result[2]))
+        rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+        role = ctx.guild.get_role(int(rows[0][2]))
         if role is not None and role < ctx.guild.me.top_role:
             if role in member.roles:
                 await member.remove_roles(role, reason=reason)
@@ -122,23 +122,19 @@ class Moderation(commands.Cog, name="관리"):
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.channel)
-    async def _purge(self, ctx, *args):
+    async def _purge(self, ctx, num: int):
         """
         미야야 청소 < 1 ~ 100 사이의 정수 >
 
         
         설정한 갯수 만큼의 메세지를 채널에서 삭제합니다.
         """ 
-        if args and args[0].isdecimal() == True:
-            num = int(args[0])
-            if num <= 100 and num > 0:
-                await ctx.message.delete()
-                deleted = await ctx.channel.purge(limit=num)
-                await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=2)
-            else:
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
+        if num <= 100 and num > 0:
+            await ctx.message.delete()
+            deleted = await ctx.channel.purge(limit=num)
+            await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=2)
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 청소 < 1 ~ 100 사이의 정수 >`가 올바른 명령어에요!")
-
+        
 def setup(miya):
     miya.add_cog(Moderation(miya))

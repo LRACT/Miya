@@ -1,8 +1,7 @@
 import aiohttp
 import discord
 from discord.ext import commands
-import utils
-from utils import get, webhook
+from utils import data, get, webhook
 from lib import config
 import random
 import typing
@@ -59,8 +58,8 @@ class General(commands.Cog, name="일반"):
         last_time = datetime.datetime.utcnow()
         await m.delete()
         ocha = str(last_time - first_time)[6:]
-        row = await data.load("miya", "botId", self.miya.user.id)
-        record = str(row[1].split(".")[0])
+        rows = await data.fetch(f"SELECT * FROM `miya` WHERE `botId` = '{self.miya.user.id}'")
+        record = str(rows[0][1].split(".")[0])
         start_time = datetime.datetime.strptime(record, "%Y-%m-%d %H:%M:%S")
         uptime = datetime.datetime.utcnow() - start_time
         embed = discord.Embed(color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
@@ -165,21 +164,21 @@ class General(commands.Cog, name="일반"):
             f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!"
         )
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
-        guilds = await data.load("guilds", "guild", ctx.guild.id)
-        memberNoti = await data.load("memberNoti", "guild", ctx.guild.id)
+        guilds = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+        memberNoti = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
         muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
         if guilds[2] != 1234:
-            role = ctx.guild.get_role(int(guilds[2]))
+            role = ctx.guild.get_role(int(guilds[0][2]))
             if role is not None:
                 muteRole = role.mention
         if memberNoti[1] != 1234:
-            channel = ctx.guild.get_channel(int(memberNoti[1]))
+            channel = ctx.guild.get_channel(int(memberNoti[0][1]))
             if channel is not None:
                 memberCh = channel.mention
         if guilds[1] != 1234:
-            channel = ctx.guild.get_channel(int(guilds[1]))
+            channel = ctx.guild.get_channel(int(guilds[0][1]))
             if channel is not None:
                 logCh = channel.mention
         location = {
@@ -214,7 +213,7 @@ class General(commands.Cog, name="일반"):
             discord.VerificationLevel.high: "**높음**\n이메일 인증이 완료되고, Discord에 가입한 지 5분이 지나며, 서버의 멤버가 된 지 10분이 지나야 해요.",
             discord.VerificationLevel.extreme: "**매우 높음**\n휴대폰 인증이 완료된 Discord 계정이어야 해요."
         }
-        time = await utils.get.kor_time(ctx.guild.created_at)
+        time = await get.kor_time(ctx.guild.created_at)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)

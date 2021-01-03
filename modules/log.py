@@ -10,9 +10,9 @@ class log(commands.Cog, name="로그"):
         self.miya = miya
     
     async def get_channel(self, guild_id):
-        result = await data.load('guilds', 'guild', guild_id)
-        if result is not None:
-            channel = self.miya.get_channel(int(result[1]))
+        rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{guild_id}'")
+        if rows:
+            channel = self.miya.get_channel(int(rows[0][1]))
             if channel is not None:
                 return channel
             else:

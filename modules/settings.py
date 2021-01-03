@@ -23,7 +23,7 @@ class Settings(commands.Cog, name="설정"):
         if role >= ctx.guild.me.top_role:
             await working.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높거나 같아요. 설정하려는 역할을 봇의 최상위 역할보다 낮춰주세요.")
         else:
-            result = await data.update('guilds', 'muteRole', role.id, 'guild', ctx.guild.id)
+            result = await data.commit(f"UPDATE `guilds` SET `muteRole` = '{role.id}' WHERE `guild` = '{ctx.guild.id}'")
             if result == "SUCCESS":
                 for channel in ctx.guild.text_channels:
                     perms = channel.overwrites_for(role)
@@ -82,7 +82,7 @@ class Settings(commands.Cog, name="설정"):
                 table = "memberNoti"
                 value = "channel"
             if value is not None and table is not None:
-                result = await data.update(table, value, channel.id, 'guild', ctx.guild.id)
+                result = await data.commit(f"UPDATE `{table}` SET `{value}` = '{channel.id}' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
                     await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {what} 채널을 {channel.mention} 채널로 설정했어요.")
                 else:
@@ -107,7 +107,7 @@ class Settings(commands.Cog, name="설정"):
         else:
             if args[0] == "켜기":
                 working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-                result = await data.update('guilds', 'linkFiltering', "true", 'guild', ctx.guild.id)
+                result = await data.commit(f"UPDATE `guilds` SET `linkFiltering` = 'true' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
                     await working.edit(content=f"<:cs_on:659355468682231810> {ctx.author.mention} 링크 차단 기능을 활성화했어요!\n특정 채널에서만 이 기능을 끄고 싶으시다면 채널 주제에 `=무시`라는 단어를 넣어주세요.")
                 else:
@@ -116,7 +116,7 @@ class Settings(commands.Cog, name="설정"):
                     await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
             elif args[0] == "끄기":
                 working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-                result = await data.update('guilds', 'linkFiltering', "false", 'guild', ctx.guild.id)
+                result = await data.commit(f"UPDATE `guilds` SET `linkFiltering` = 'false' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
                     await working.edit(content=f"<:cs_off:659355468887490560> {ctx.author.mention} 링크 차단 기능을 비활성화했어요!")
                 else:
@@ -145,7 +145,7 @@ class Settings(commands.Cog, name="설정"):
             value = 'remove_msg'
         if value is not None:
             working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
-            result = await data.update("memberNoti", value, message, 'guild', ctx.guild.id)
+            result = await data.commit(f"UPDATE `membernoti` SET `{value}` = '{message}' WHERE `guild` = '{ctx.guild.id}'")
             if result == "SUCCESS":
                 a = message.replace("{member}", str(ctx.author.mention))
                 a = a.replace("{guild}", str(ctx.guild.name))
