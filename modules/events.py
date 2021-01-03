@@ -136,8 +136,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
         else:
             try:
-                admin = self.miya.get_user(int(result[1]))
-                embed = discord.Embed(title="이런, 이 서버는 미야 초대가 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {result[2]}\n처리한 관리자 : {admin}\n차단된 시각 : {result[3]}", color=0xFF0000)
+                admin = self.miya.get_user(int(rows[0][1]))
+                embed = discord.Embed(title="이런, 이 서버는 미야 초대가 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {rows[0][2]}\n처리한 관리자 : {admin}\n차단된 시각 : {rows[0][3]}", color=0xFF0000)
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/mdgaSjB", embed=embed)
             except:
                 await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
