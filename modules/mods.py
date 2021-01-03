@@ -122,7 +122,7 @@ class Moderation(commands.Cog, name="관리"):
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.channel)
-    async def _purge(self, ctx, number: int):
+    async def _purge(self, ctx, num: int):
         """
         미야야 청소 < 1 ~ 100 사이의 정수 >
 
