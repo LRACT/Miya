@@ -19,8 +19,8 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
 
         미야 DB에 서버를 등록합니다. *이용 약관에 동의해야 합니다.*
         """
-        result = await data.load('guilds', 'guild', ctx.guild.id)
-        if result is None:        
+        rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+        if not rows:        
             embed = discord.Embed(title="미야 이용 약관에 동의하시겠어요?", description="`미야`의 서비스를 해당 서버에서 사용하시려면 약관에 동의해야 해요.\n`동의합니다`를 입력하여 이용 약관에 동의하실 수 있어요!\n \n[이용 약관](https://miya.kro.kr/tos)\n[개인정보보호방침](https://miya.kro.kr/privacy)", color=0x5FE9FF)
             register_msg = await ctx.send(f"{ctx.author.mention}", embed=embed) 
             def check(msg): 
@@ -34,10 +34,10 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
                 await msg.delete()
                 await register_msg.delete()
                 working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... DB에서 당신의 요청을 처리하고 있어요!")
-                g_result = await data.insert('guilds', '`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`', f'"{ctx.guild.id}", "1234", "1234", "false", "0"')
+                g_result = await data.commit(f"INSERT INTO `guilds`(`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`) VALUES('{ctx.guild.id}', '1234', '1234', 'false', '0')")
                 default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
                 default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
-                m_result = await data.insert('memberNoti', '`guild`, `channel`, `join_msg`, `remove_msg`', f'"{ctx.guild.id}", "1234", "{default_join_msg}", "{default_quit_msg}"')
+                m_result = await data.commit(f"INSERT INTO `membernoti`(`guild`, `channel`, `join_msg`, `remove_msg`) VALUES('{ctx.guild.id}', '1234', '{default_join_msg}', '{default_quit_msg}')")
                 if g_result == "SUCCESS" and m_result == "SUCCESS":
                     await webhook.terminal(f"Guild registered :: {ctx.guild.name} ( {ctx.guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
                     print(f"Guild registered :: {ctx.guild.name} ( {ctx.guild.id} )")
