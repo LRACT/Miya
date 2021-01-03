@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import typing
 import utils
 import locale
 locale.setlocale(locale.LC_ALL, '')
