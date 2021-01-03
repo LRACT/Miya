@@ -165,7 +165,7 @@ class General(commands.Cog, name="일반"):
         )
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
-        memberNoti = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+        memberNoti = await data.fetch(f"SELECT * FROM `membernoti` WHERE `guild` = '{ctx.guild.id}'")
         muteRole = "설정되어 있지 않아요!"
         memberCh = "설정되어 있지 않아요!"
         logCh = "설정되어 있지 않아요!"
