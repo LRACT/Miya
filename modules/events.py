@@ -111,7 +111,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             return
 
         if 'discord.gg' in msg.content or 'discord.com/invite' in msg.content or 'discordapp.com/invite' in msg.content:
-            result = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'")
+            rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'")
             if rows:
                 if rows[0][3] == 'true':
                     if msg.channel.topic is None or '=무시' not in msg.channel.topic:
@@ -172,7 +172,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         if member.bot == False:
-            rows = await data.load(table="memberNoti", find_column="guild", find_value=member.guild.id)
+            rows = await data.fetch(f"SELECT * FROM `membernoti` WHERE `guild` = '{member.guild.id}'")
             if not rows:
                 return
             else:
