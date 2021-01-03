@@ -49,7 +49,8 @@ class Development(commands.Cog, name="개발"):
         
         ID를 통해 유저나 서버의 블랙리스트를 관리합니다.
         """
-        time = await utils.get.kor_time()
+        date = datetime.datetime.utcnow()
+        time = await utils.get.kor_time(date)
         if todo == "추가":
             result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{id}', '{reason}', '{ctx.author.id}', '{time}')")
             if result == "SUCCESS":

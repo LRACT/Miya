@@ -97,7 +97,8 @@ async def on_message(msg):
                 embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {result[2]}\n처리한 관리자 : {admin}\n차단된 시각 : {result[3]}", color=0xFF0000)
                 await msg.channel.send(f"<a:ban_guy:761149578216603668> {msg.author.mention} https://discord.gg/mdgaSjB", embed=embed)
             elif fbd[0] == True:
-                time = await utils.get.kor_time()
+                date = datetime.datetime.utcnow()
+                time = await utils.get.kor_time(date)
                 await webhook.terminal(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
                 result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) '{msg.author.id}', '부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}', '{miya.user.id}', '{time}')")
