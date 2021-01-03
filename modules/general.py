@@ -1,7 +1,6 @@
 import aiohttp
 import discord
 from discord.ext import commands
-import utils
 from utils import get, webhook
 from lib import config
 import random
@@ -214,7 +213,7 @@ class General(commands.Cog, name="일반"):
             discord.VerificationLevel.high: "**높음**\n이메일 인증이 완료되고, Discord에 가입한 지 5분이 지나며, 서버의 멤버가 된 지 10분이 지나야 해요.",
             discord.VerificationLevel.extreme: "**매우 높음**\n휴대폰 인증이 완료된 Discord 계정이어야 해요."
         }
-        time = await utils.get.kor_time(ctx.guild.created_at)
+        time = await get.kor_time(ctx.guild.created_at)
         embed.add_field(name="공지 채널", value="📢 **서버의 연동 설정을 확인하세요!**", inline=False)
         embed.add_field(name="멤버 알림 채널", value=memberCh)
         embed.add_field(name="로그 채널 ⚒️", value=logCh)
