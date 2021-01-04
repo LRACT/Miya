@@ -14,3 +14,8 @@ async def send(url, content, name: typing.Optional[str] = None, avatar: typing.O
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(url, adapter=AsyncWebhookAdapter(session))
         await webhook.send(content, username=name, avatar_url=avatar)
+
+async def blacklist(content, name, avatar):
+    async with aiohttp.ClientSession() as session:
+        webhook = Webhook.from_url(config.BlackURL, adapter=AsyncWebhookAdapter(session))
+        await webhook.send(f"```{content}```", username=name, avatar_url=avatar)
