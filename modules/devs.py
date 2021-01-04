@@ -35,7 +35,7 @@ class Development(commands.Cog, name="개발"):
                 await ctx.message.add_reaction("<:cs_on:659355468682231810>")
         elif todo == "비활성화":
             try:
-                self.miya.unload_extension(f'modules.{args[1]}')
+                self.miya.unload_extension(module)
             except Exception as e:
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {module} 모듈을 비활성화할 수 없었어요.\n`{e}`")
             else:
