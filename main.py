@@ -102,7 +102,7 @@ async def on_message(msg):
                 time = await utils.get.kor_time(date)
                 await webhook.terminal(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
                 print(f"Command Cancelled ( Forbidden - Bad Word ) : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
-                await webhook.blacklist(f"Blacklisted ( Forbidden ) : {msg.author} ( {msg.author.id} ) - 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}", "Blacklist Notify", miya.user.avatar_url)
+                await webhook.blacklist(f"Blacklisted ( Automatic ) : {msg.author.id} - 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}", "Blacklist Notify", miya.user.avatar_url)
                 result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{msg.author.id}', '부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}', '{miya.user.id}', '{time}')")
                 if result == "SUCCESS":
                     embed = discord.Embed(title="이런, 당신은 미야 사용이 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : 부적절한 단어 사용 **[ 미야 자동 차단 ]** - {fbd[1]}\n처리한 관리자 : {miya.user}\n차단된 시각 : {time}", color=0xFF0000)
