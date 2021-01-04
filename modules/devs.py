@@ -10,6 +10,40 @@ class Development(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
+    @commands.command(name="모듈")
+    @commands.is_owner()
+    async def module_management(self, ctx, todo, *, module):
+        """
+        미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >
+
+
+        미야에게 등록된 모듈을 관리합니다.
+        """
+        if todo == "재시작":
+            try:
+                self.miya.reload_extension(module)
+            except Exception as e:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {module} 모듈을 다시 시작할 수 없었어요.\n`{e}`")
+            else:
+                await ctx.message.add_reaction("<:cs_reboot:659355468791283723>")
+        elif todo == "활성화":
+            try:
+                self.miya.load_extension(module)
+            except Exception as e:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {module} 모듈을 활성화할 수 없었어요.\n`{e}`")
+            else:
+                await ctx.message.add_reaction("<:cs_on:659355468682231810>")
+        elif todo == "비활성화":
+            try:
+                self.miya.unload_extension(f'modules.{args[1]}')
+            except Exception as e:
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} {module} 모듈을 비활성화할 수 없었어요.\n`{e}`")
+            else:
+                await ctx.message.add_reaction("<:cs_off:659355468887490560>")
+        else:
+            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 모듈 < 활성화 / 비활성화 / 재시작 > < 모듈 >`(이)가 올바른 명령어에요!")
+
+
     @commands.command(name="제한")
     @commands.is_owner()
     async def _black_word(self, ctx, todo, *, word):
