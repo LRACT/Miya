@@ -123,7 +123,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
         rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
-        if rows:
+        if not rows:
             try:
                 embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
                     description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
