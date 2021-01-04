@@ -84,7 +84,7 @@ class Development(commands.Cog, name="개발"):
             result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{id}', '{reason}', '{ctx.author.id}', '{time}')")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
-                await webhook.blacklist(f"Blacklisted ( Administrator ) : {id} - {reason}", "Blacklist Notify", self.miya.user.avatar_url)
+                await utils.webhook.blacklist(f"Blacklisted ( Administrator ) : {id} - {reason}", "Blacklist Notify", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         elif todo == "삭제":
