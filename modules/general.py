@@ -78,7 +78,7 @@ class General(commands.Cog, name="일반"):
 
         미야의 초대 링크를 표시합니다.
         """
-        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=http%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
+        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=https%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         await ctx.send(ctx.author.mention, embed=embed)
 
     @commands.command(name="봇정보", aliases=["미야정보", "미야"])
