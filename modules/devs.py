@@ -99,12 +99,18 @@ class Development(commands.Cog, name="개발"):
     @commands.command(name="탈주")
     @commands.is_owner()
     async def _leave(self, ctx, guild_id: int):
+        """
+        미야야 탈주 < ID >
+        
+        
+        지정한 서버에서 미야가 나갑니다.
+        """
         guild = self.miya.get_guild(int(guild_id))
         if guild is not None:
             await guild.leave()
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         else:
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요.") 
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요.")
 
 def setup(miya):
     miya.add_cog(Development(miya)) 
