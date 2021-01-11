@@ -95,6 +95,16 @@ class Development(commands.Cog, name="개발"):
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         else:
             await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
+   
+    @commands.command(name="탈주")
+    @commands.is_owner()
+    async def _leave(self, ctx, guild_id: int):
+        guild = self.miya.get_guild(int(guild_id))
+        if guild is not None:
+            await guild.leave()
+            await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+        else:
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요.") 
 
 def setup(miya):
     miya.add_cog(Development(miya)) 
