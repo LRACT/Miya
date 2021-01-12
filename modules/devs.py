@@ -52,7 +52,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="제한")
-    @commands.is_owner()
+    @is_manager()
     async def _black_word(self, ctx, todo, *, word):
         """
         미야야 제한 < 추가 / 삭제 > < 단어 >
@@ -64,12 +64,14 @@ class Development(commands.Cog, name="개발"):
             result = await utils.data.commit(f"INSERT INTO `forbidden`(`word`) VALUES('{word}')")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                await utils.webhook.blacklist(f"Forbidden Word Added By {ctx.author} - {word}", "Word Limit Notify", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         elif todo == "삭제":
             result = await utils.data.commit(f"DELETE FROM `forbidden` WHERE `word` = '{word}'")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                await utils.webhook.blacklist(f"Forbidden Word Removed By {ctx.author} - {word}", "Word Limit Notify", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         else:
@@ -77,7 +79,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="블랙")
-    @commands.is_owner()
+    @is_manager()
     async def blacklist_management(self, ctx, todo, id, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
         미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]
