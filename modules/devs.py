@@ -52,7 +52,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="제한")
-    @commands.check(is_manager)
+    @commands.check_any(commands.is_owner(), is_manager())
     async def _black_word(self, ctx, todo, *, word):
         """
         미야야 제한 < 추가 / 삭제 > < 단어 >
@@ -79,7 +79,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="블랙")
-    @commands.check(is_manager)
+    @commands.check_any(commands.is_owner(), is_manager())
     async def blacklist_management(self, ctx, todo, id, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
         미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]
