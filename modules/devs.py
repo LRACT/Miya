@@ -11,7 +11,7 @@ class Development(commands.Cog, name="개발"):
         self.miya = miya
 
     async def is_manager(self, user: discord.User):
-        mgr = await utils.get.mgr(user)
+        mgr = await utils.get.mgr(user, self.miya)
         if mgr == True:
             return True
         
