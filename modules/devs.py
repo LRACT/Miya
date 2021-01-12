@@ -10,12 +10,12 @@ class Development(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
-    async def is_manager(self, user: discord.User):
-        mgr = await utils.get.mgr(user, self.miya)
+    async def is_manager(self, ctx):
+        mgr = await utils.get.mgr(ctx.author, self.miya)
         if mgr == True:
             return True
         
-        return await super().is_owner(user)
+        return await super().is_owner(ctx.author)
 
     @commands.command(name="모듈")
     @commands.is_owner()
@@ -52,7 +52,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="제한")
-    @is_manager()
+    @commands.check(is_manager)
     async def _black_word(self, ctx, todo, *, word):
         """
         미야야 제한 < 추가 / 삭제 > < 단어 >
@@ -79,7 +79,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="블랙")
-    @is_manager()
+    @commands.check(is_manager)
     async def blacklist_management(self, ctx, todo, id, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
         미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]
