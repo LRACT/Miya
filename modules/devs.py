@@ -10,6 +10,13 @@ class Development(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
+    async def is_manager(self, user: discord.User):
+        mgr = await utils.get.mgr(user)
+        if mgr == True:
+            return True
+        
+        return await super().is_owner(user)
+
     @commands.command(name="모듈")
     @commands.is_owner()
     async def module_management(self, ctx, todo, *, module):
