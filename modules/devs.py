@@ -10,12 +10,11 @@ class Development(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
-    async def is_manager(self, ctx):
-        mgr = await utils.get.mgr(ctx.author, self.miya)
-        if mgr == True:
-            return True
-        
-        return await super().is_owner(ctx.author)
+    def is_manager():
+        async def predicate(self, ctx):
+            mgr = await utils.get.mgr(ctx.author, self.miya)
+            return mgr
+        return commands.check(predicate)
 
     @commands.command(name="모듈")
     @commands.is_owner()
