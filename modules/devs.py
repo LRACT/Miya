@@ -11,10 +11,7 @@ class Development(commands.Cog, name="개발"):
         self.miya = miya
 
     def is_manager():
-        async def predicate(self, ctx):
-            mgr = await utils.get.mgr(ctx.author, self.miya)
-            return mgr
-        return commands.check(predicate)
+        return commands.check(utils.get.mgr)
 
     @commands.command(name="모듈")
     @commands.is_owner()
@@ -51,7 +48,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="제한")
-    @commands.check_any(commands.is_owner(), is_manager())
+    @is_manager()
     async def _black_word(self, ctx, todo, *, word):
         """
         미야야 제한 < 추가 / 삭제 > < 단어 >
@@ -78,7 +75,7 @@ class Development(commands.Cog, name="개발"):
 
 
     @commands.command(name="블랙")
-    @commands.check_any(commands.is_owner(), is_manager())
+    @is_manager()
     async def blacklist_management(self, ctx, todo, id, *, reason: typing.Optional[str] = "사유가 지정되지 않았습니다."):
         """
         미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]

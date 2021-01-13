@@ -7,7 +7,7 @@ import aiomysql
 from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
 
-async def mgr(user, miya):
+async def mgr(ctx):
     o = await aiomysql.connect(
         host=config.MySQL['host'],
         port=config.MySQL['port'],
@@ -17,11 +17,11 @@ async def mgr(user, miya):
         autocommit=True
     )
     c = await o.cursor()
-    await c.execute("SELECT `manager` FROM `miya` WHERE `botId` = '{miya.user.id}'")
+    await c.execute("SELECT `manager` FROM `miya`")
     rows = await c.fetchall()
     mgrs = rows[0][0].split(" ")
     for m in mgrs:
-        if user.id == m:
+        if ctx.author.id == int(m):
             return True 
 
 async def kor_time(date):
