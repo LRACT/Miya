@@ -45,7 +45,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             return
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
-        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner):
+        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, commands.CheckFailure):
             response_msg = None
             url = config.PPBRequest
             headers = {
