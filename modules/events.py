@@ -45,6 +45,28 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             return
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
+        elif isinstance(error, commands.MissingPermissions):
+            mp = error.missing_perms
+            p = perms[mp[0]]
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`")
+        elif isinstance(error, commands.BotMissingPermissions):
+            mp = error.missing_perms
+            p = perms[mp[0]]
+            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
+        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+            if isinstance(error, commands.MemberNotFound) or isinstance(error, commands.UserNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!")
+            elif isinstance(error, commands.ChannelNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!")
+            elif isinstance(error, commands.ChannelNotReadable):
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널에 미야가 접근할 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!")
+            elif isinstance(error, commands.RoleNotFound):
+                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!")
+            else:
+                usage = ctx.command.help.split("\n")[0]
+                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, commands.CheckFailure):
             response_msg = None
             url = config.PPBRequest
@@ -75,28 +97,6 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
-        elif isinstance(error, commands.MissingPermissions):
-            mp = error.missing_perms
-            p = perms[mp[0]]
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`")
-        elif isinstance(error, commands.BotMissingPermissions):
-            mp = error.missing_perms
-            p = perms[mp[0]]
-            await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
-        elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
-        elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
-            if isinstance(error, commands.MemberNotFound) or isinstance(error, commands.UserNotFound):
-                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!")
-            elif isinstance(error, commands.ChannelNotFound):
-                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!")
-            elif isinstance(error, commands.ChannelNotReadable):
-                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널에 미야가 접근할 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!")
-            elif isinstance(error, commands.RoleNotFound):
-                await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!")
-            else:
-                usage = ctx.command.help.split("\n")[0]
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         else:
             await webhook.terminal(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred while running command {ctx.command.name} : {error}")
