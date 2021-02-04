@@ -78,7 +78,7 @@ async def on_message(msg):
         return
 
     if msg.content.startswith("미야야 "):
-        if msg.content.startswith("미야야 제한") or msg.content.startswith("미야야 jsk"):
+        if msg.content.startswith("미야야 제한") or msg.content.startswith("미야야 jsk") or msg.content.startswith("미야야 블랙"):
             await webhook.terminal(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )", "미야 Terminal", miya.user.avatar_url)
             print(f"Processed Command : {msg.author} ( {msg.author.id} ) - {msg.content} / Guild : {msg.guild.name} ( {msg.guild.id} )")
             await miya.process_commands(msg)
