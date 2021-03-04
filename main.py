@@ -9,7 +9,7 @@ from utils import data, webhook
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
-class Miya(commands.Bot):
+class Miya(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.koreanbots = koreanbots.Client(self, config.DBKRToken)
@@ -40,6 +40,7 @@ intents = discord.Intents(
     typing=True
 )
 miya = Miya(
+    shard_count=3,
     command_prefix="미야야 ",
     description="미야 discord.py 리라이트 버전",
     help_command=None,
