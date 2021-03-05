@@ -11,7 +11,7 @@
 ## 외부 링크
 [한국 디스코드 봇 리스트](https://koreanbots.dev/bots/720724942873821316)
 
-[Discord 지원 서버](https://discord.gg/mdgaSjB)
+[Discord 지원 서버](https://discord.gg/tu4NKbEEnn)
 
 [Developers Forum](https://discord.gg/DyGqBZm)
 
