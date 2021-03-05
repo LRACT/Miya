@@ -17,7 +17,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     async def on_shard_ready(self, shard):
         await webhook.terminal(f"Shard Ready >\nShard ID - #{shard}", "샤드 기록", self.miya.user.avatar_url)
         await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
-        await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard_id} | 미야야 도움"), shard_id=shard)
+        await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard} | 미야야 도움"), shard_id=shard)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
