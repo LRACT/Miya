@@ -15,8 +15,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_shard_ready(self, shard_id):
-        print(f"Shard #{shard_id} :: READY")
-        await webhook.terminal(f"{shard_id}번 샤드가 준비되었습니다.", "샤드 준비됨", self.miya.user.avatar_url)
+        await webhook.terminal(f"Shard Ready >\nShard ID - #{shard_id}", "샤드 기록", self.miya.user.avatar_url)
         await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
         await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard_id} | 미야야 도움"))
 
@@ -83,7 +82,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
             if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
-                await webhook.terminal(f"Sent - {query}\nReceived - {msg}", "PINGPONG Builder", self.miya.user.avatar_url)
+                await webhook.terminal(f"PINGPONG Builder >\nSent - {query}\nReceived - {msg}", "명령어 처리 기록", self.miya.user.avatar_url)
                 embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
@@ -92,8 +91,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
         else:
-            await webhook.terminal(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
-            print(f"An error occurred while running command {ctx.command.name} : {error}")
+            await webhook.terminal(f"Error >\nContent - {ctx.message.content}\nException - {error}", "명령어 처리 기록", self.miya.user.avatar_url)
             await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
 
     @commands.Cog.listener()
@@ -114,8 +112,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
-        print(f"Added to {guild.name} ( {guild.id} )")
+        await webhook.terminal(f"Join >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
         rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         rows2 = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
         if not rows and not rows2:
@@ -132,8 +129,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 )
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
             except:
-                await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
+                await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
         else:
             try:
                 admin = self.miya.get_user(int(rows[0][1]))
@@ -150,17 +146,14 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 )
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
-                await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
-            await webhook.terminal(f"Blacklisted guild : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
-            print(f"Blacklisted guild : {guild.name} ( {guild.id} )")
+                await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
+            await webhook.terminal(f"Block >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
             await guild.leave()
     
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        await webhook.terminal(f"Removed from {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
-        print(f"Removed from {guild.name} ( {guild.id} )")
-
+        await webhook.terminal(f"Quit >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
+        
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot == False:
@@ -177,7 +170,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         msg = msg.replace("{count}", str(member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
-                        print(f"Can't welcome user : {member.guild} ( {member.guild.id} )\n{e}")
+                        await webhook.terminal(f"MemberNoti Failed >\nGuild - {member.guild.name} ({member.guild.id})\nException - {e}", "유저 입퇴장 알림 기록", self.miya.user.avatar_url)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -195,8 +188,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         msg = msg.replace("{count}", str(member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
-                        print(f"Can't welcome user : {member.guild} ( {member.guild.id} )\n{e}")
-
+                        await webhook.terminal(f"MemberNoti Failed >\nGuild - {member.guild.name} ({member.guild.id})\nException - {e}", "유저 입퇴장 알림 기록", self.miya.user.avatar_url)
                     
 def setup(miya):
     miya.add_cog(Listeners(miya))
