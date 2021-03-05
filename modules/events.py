@@ -62,35 +62,69 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
-            response_msg = None
-            url = config.PPBRequest
-            headers = {
-                "Authorization": config.PPBToken,
-                "Content-Type": "application/json",
-            }
-            query = ""
-            for q in ctx.message.content.split(" ")[1:]:
-                query += f"{q} "
-            async with aiohttp.ClientSession() as cs:
-                async with cs.post(
-                    url,
-                    headers=headers,
-                    json={
-                        "request": {"query": query}
-                    },
-                ) as r:
-                    response_msg = await r.json()  
-            msg = response_msg["response"]["replies"][0]["text"]
-            if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
-                await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
-                embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
-                embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
-                await ctx.send(ctx.author.mention, embed=embed)
+            f = await filter(ctx.message)
+            rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
+            if rows:
+                admin = miya.get_user(int(rows[0][2]))
+                embed = discord.Embed(
+                    title=f"이런, {ctx.author}님은 차단되셨어요.",
+                    description=f"""
+차단에 관해서는 지원 서버를 방문해주세요.
+사유 : {rows[0][1]}
+관리자 : {admin}
+차단 시각 : {rows[0][3]}
+                    """,
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0xFF3333
+                )
+                await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+                await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
+            elif f[0] == True:
+                admin = miya.user
+                time = await kor_time(datetime.datetime.utcnow())
+                embed = discord.Embed(
+                    title=f"이런, {ctx.author}님은 차단되셨어요.",
+                    description=f"""
+차단에 관해서는 지원 서버를 방문해주세요.
+사유 : 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}
+관리자 : {admin}
+차단 시각 : {time}
+                    """,
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0xFF3333
+                )
+                await webhook.terminal(f"Cancelled (Auto) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+                await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             else:
-                await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
-                embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
-                embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
-                await ctx.send(ctx.author.mention, embed=embed)
+                response_msg = None
+                url = config.PPBRequest
+                headers = {
+                    "Authorization": config.PPBToken,
+                    "Content-Type": "application/json",
+                }
+                query = ""
+                for q in ctx.message.content.split(" ")[1:]:
+                    query += f"{q} "
+                async with aiohttp.ClientSession() as cs:
+                    async with cs.post(
+                        url,
+                        headers=headers,
+                        json={
+                            "request": {"query": query}
+                        },
+                    ) as r:
+                        response_msg = await r.json()  
+                msg = response_msg["response"]["replies"][0]["text"]
+                if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
+                    await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                    embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                    embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                    await ctx.send(ctx.author.mention, embed=embed)
+                else:
+                    await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                    embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                    embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                    await ctx.send(ctx.author.mention, embed=embed)
         else:
             await webhook.terminal(f"Error >\nContent - {ctx.message.content}\nException - {error}", "명령어 처리 기록", self.miya.user.avatar_url)
             await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
