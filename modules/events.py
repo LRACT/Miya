@@ -77,7 +77,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                await webhook.terminal(f"Cancelled (Blocked) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] == True:
                 admin = self.miya.user
@@ -171,7 +171,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             try:
                 admin = self.miya.get_user(int(rows[0][1]))
                 embed = discord.Embed(
-                    title=f"이런, {guild.name} 서버는 (혹은 소유자가) 차단되었어요.",
+                    title=f"이런, {guild.name} 서버는 (혹은 그 소유자가) 차단되었어요.",
                     description=f"""
 차단에 관해서는 지원 서버를 방문해주세요.
 사유 : {rows[0][2]}
