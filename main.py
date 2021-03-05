@@ -96,7 +96,7 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow()
             color=0xFF3333
         )
-        raise exc.Blacklisted("차단된 유저입니다.", embed)
+        raise exc.Forbidden(embed, ctx)
     elif f[0] == True:
         admin = miya.user
         time = await get.kor_time(datetime.datetime.utcnow())
@@ -111,7 +111,7 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow()
             color=0xFF3333
         )
-        raise exc.Forbidden("부적절한 언행입니다.", embed)
+        raise exc.Forbidden(embed, ctx)
     else:
         await webhook.terminal(f"Processed > {ctx.author} ({ctx.author.id}) - {ctx.message.content}\n{ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         return True
