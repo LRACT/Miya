@@ -14,18 +14,11 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         self.miya = miya
 
     @commands.Cog.listener()
-    async def on_ready(self):
-        print(self.miya.user)
-        print(self.miya.user.id)        
-        print("READY")
-        await webhook.terminal(f"{self.miya.user}\n{self.miya.user.id}\n봇이 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
-        uptime_set = await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
-        await webhook.terminal(f"Uptime Change :: {uptime_set}", "미야 Terminal", self.miya.user.avatar_url)
-        print(f"Uptime Change :: {uptime_set}")
-        while True:
-            for status in config.StatusMessages:
-                await self.miya.change_presence(status=discord.Status.online, activity=discord.Game(status.format(len(self.miya.users), len(self.miya.guilds))))
-                await asyncio.sleep(5)
+    async def on_shard_ready(self, shard_id):
+        print("Shard #{shard_id} :: READY")
+        await webhook.terminal(f"{shard_id}번 샤드가 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
+        await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
+        await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard_id} | 미야야 도움"))
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
