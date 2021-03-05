@@ -51,24 +51,23 @@ class General(commands.Cog, name="일반"):
 
         미야의 지연 시간을 표시합니다.
         """
-        channel = self.miya.get_channel(663806206376149073)
         first_time = datetime.datetime.utcnow()
-        m = await channel.send("핑1")
-        await m.edit(content="핑2")
+        m = await ctx.send("지연 시간을 계산합니다...")
         last_time = datetime.datetime.utcnow()
-        await m.delete()
         ocha = str(last_time - first_time)[6:]
         rows = await data.fetch(f"SELECT * FROM `miya` WHERE `botId` = '{self.miya.user.id}'")
         record = str(rows[0][1].split(".")[0])
         start_time = datetime.datetime.strptime(record, "%Y-%m-%d %H:%M:%S")
         uptime = datetime.datetime.utcnow() - start_time
+        shard = self.miya.get_shard(ctx.guild.shard_id)
+        latency = round(shard.latency * 1000, 2)
         embed = discord.Embed(color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
-        embed.add_field(name="API 지연 시간", value=f"{round(self.miya.latency * 1000)}ms", inline=False)
+        embed.add_field(name="API 지연 시간", value=f"{latency}ms", inline=False)
         embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000)}ms", inline=False)
         embed.add_field(name="구동 시간", value=str(uptime).split(".")[0])
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
-        embed.set_author(name="지연 시간", icon_url=self.miya.user.avatar_url)
-        await ctx.send(f":ping_pong: {ctx.author.mention} Pong!", embed=embed)
+        embed.set_author(name=f"#{ctx.guild.shard_id} 샤드의 지연 시간", icon_url=self.miya.user.avatar_url)
+        await m.edit(content=f":ping_pong: {ctx.author.mention} Pong!", embed=embed)
 
     @commands.command(name="초대")
     async def _invite(self, ctx):
@@ -89,18 +88,21 @@ class General(commands.Cog, name="일반"):
 
         미야의 정보를 표시합니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         heart = await self.miya.get_rank()
-        e = discord.Embed(title="미야 서버(봇) 정보",
+        e = discord.Embed(
+            title="미야 서버(봇) 정보",
             description=f"""
-                <:koreanbots:794450277792481290> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
-                <:GitHub_W:782076841141207071> 코드 저장소 : [보러 가기](https://github.com/LRACT/Miya)
-                <:cs_settings:659355468992610304> 호스트 : 개인 서버 - 한국
-                <:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
-                <:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
+<:koreanbots:794450277792481290> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
+<:GitHub_W:782076841141207071> 코드 저장소 : [보러 가기](https://github.com/LRACT/Miya)
+<:cs_settings:659355468992610304> 호스트 : 개인 서버 - 한국
+<:cs_on:659355468682231810> 리라이트 시작 : 2020년 8월 17일
+<:cs_leave:659355468803866624> 서버 수 : {len(self.miya.guilds)}개""",
+            color=0x5FE9FF,
+            timestamp=datetime.datetime.utcnow()
+        )
         e.set_thumbnail(url=self.miya.user.avatar_url_as(static_format='png', size=2048))
         e.set_author(name="정보", icon_url=self.miya.user.avatar_url)
-        await working.edit(content=ctx.author.mention, embed=e)
+        await ctx.send(ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
     async def _hangang(self, ctx):
@@ -110,7 +112,6 @@ class General(commands.Cog, name="일반"):
 
         현재 한강의 수온을 출력합니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         result = await get.hangang()
         embed = discord.Embed(description=f'현재 한강의 온도는 `{result[0]}`도에요!\n`측정: {result[1]}`', color=0x5FE9FF)
         embed.set_author(name="지금 한강은", icon_url=self.miya.user.avatar_url)
@@ -118,7 +119,7 @@ class General(commands.Cog, name="일반"):
             embed.set_footer(text="거 수온이 뜨듯하구먼!")
         else:
             embed.set_footer(text="거 이거 완전 얼음장이구먼!")
-        await working.edit(content=ctx.author.mention, embed=embed)
+        await ctx.send(ctx.author.mention, embed=embed)
 
     @commands.command(name="골라", aliases=["골라줘"])
     async def _select(self, ctx, *args):
@@ -129,7 +130,7 @@ class General(commands.Cog, name="일반"):
         미야가 단어 중 랜덤하게 하나를 선택해줍니다.
         """
         if not args or len(args) <= 1:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 골라 < 단어 1 > < 단어 2 > [ 단어 3 ] ...`이 올바른 명령어에요!")
+            raise commands.BadArgument
         else:
             select = random.choice(args)
             embed = discord.Embed(description=select, color=0x5FE9FF)
@@ -160,9 +161,6 @@ class General(commands.Cog, name="일반"):
 
         명령어를 실행한 서버의 정보와 미야 설정을 불러옵니다.
         """
-        working = await ctx.send(
-            f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!"
-        )
         embed = discord.Embed(title=f"{ctx.guild.name} 정보 및 미야 설정", color=0x5FE9FF)
         guilds = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
         memberNoti = await data.fetch(f"SELECT * FROM `membernoti` WHERE `guild` = '{ctx.guild.id}'")
@@ -227,7 +225,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="서버 보안 수준", value=verification[ctx.guild.verification_level])
         embed.set_author(name="정보", icon_url=self.miya.user.avatar_url)
         embed.set_thumbnail(url=ctx.guild.icon_url_as(static_format="png", size=2048))
-        await working.edit(content=ctx.author.mention, embed=embed)
+        await ctx.send(ctx.author.mention, embed=embed)
 
     @commands.command(name="말해", aliases=["말해줘"])
     @commands.bot_has_permissions(manage_messages=True)
@@ -255,7 +253,6 @@ class General(commands.Cog, name="일반"):
 
         대한민국의 코로나 현황을 불러옵니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         _corona = await get.corona()
         embed = discord.Embed(title="국내 코로나19 현황", description="질병관리청 집계 기준", color=0x5FE9FF)
         embed.add_field(name="확진자", value=f"{_corona[0].split(')')[1]}명", inline=True)
@@ -266,7 +263,7 @@ class General(commands.Cog, name="일반"):
         embed.set_author(name="COVID-19", icon_url=self.miya.user.avatar_url)
         embed.set_footer(text="코로나19 감염이 의심되면 즉시 보건소 및 콜센터(전화1339)로 신고바랍니다.")
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/746786600037384203/761404488023408640/unknown.png") 
-        await working.edit(content=f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
+        await ctx.send(f"{ctx.author.mention} 현재 코로나19 현황이에요!", embed=embed)
 
     @commands.command(name="하트")
     async def _vote(self, ctx, user: typing.Optional[discord.User] = None):
@@ -278,16 +275,15 @@ class General(commands.Cog, name="일반"):
         """
         if user is None:
             user = ctx.author
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         try:
             response = await self.miya.koreanbots.getVote(user.id)
         except koreanbots.NotFound:
-            await working.edit(content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
+            await ctx.send(content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
         else:
             if response.voted:
-                await working.edit(content=f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
+                await ctx.send(f":heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주셨어요!\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
             else:
-                await working.edit(content=f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
+                await ctx.send(f":broken_heart: {ctx.author.mention} **{user}**님은 미야에게 하트를 눌러주지 않으셨어요...\n하트 누르기 : https://koreanbots.dev/bots/720724942873821316")
 
     @commands.command(name="오리", aliases=['랜덤오리'])
     async def _duck(self, ctx):
@@ -297,7 +293,6 @@ class General(commands.Cog, name="일반"):
 
         랜덤으로 아무 오리 사진이나 가져옵니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         async with aiohttp.ClientSession() as session:
             async with session.get("https://random-d.uk/api/v2/quack") as response:
                 p = await response.json()
@@ -305,7 +300,7 @@ class General(commands.Cog, name="일반"):
                 duck.set_image(url=p['url'])
                 duck.set_author(name="어떠한 오리 사진에 대하여", icon_url=self.miya.user.avatar_url)
                 duck.set_footer(text=p['message'])
-                await working.edit(content=ctx.author.mention, embed=duck)
+                await ctx.send(ctx.author.mention, embed=duck)
 
 def setup(miya):
     miya.add_cog(General(miya))
