@@ -79,7 +79,7 @@ async def on_message(msg):
 
     await miya.process_commands()
 
-@miya.check()
+@miya.check
 async def processing(ctx):
     f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
