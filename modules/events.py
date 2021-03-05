@@ -22,8 +22,6 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, exc.Blacklisted) or isinstance(error, exc.Forbidden):
-            await ctx.send(str(error), embed=error.embed)
         perms = {
             "administrator": "관리자",
             "manage_guild": "서버 관리하기",
@@ -36,6 +34,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "manage_webhooks": "웹훅 관리하기",
             "manage_messages": "메시지 관리하기"
         }
+        if isinstance(error, exc.Forbidden):
+            await ctx.send(str(error), embed=error.embed)
         elif isinstance(error, discord.NotFound):
             return
         elif isinstance(error, discord.Forbidden):
@@ -95,7 +95,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         else:
             await webhook.terminal(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred while running command {ctx.command.name} : {error}")
-            await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
+            await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
