@@ -84,7 +84,7 @@ async def processing(ctx):
     mgr = await get.mgr(ctx)
     f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
-    if mgr == True:
+    if mgr is True:
         await webhook.terminal(f"Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         return True
     elif rows:
@@ -102,7 +102,7 @@ async def processing(ctx):
         )
         await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         raise exc.Forbidden(embed, ctx)
-    elif f[0] == True:
+    elif f[0] is True:
         admin = miya.user
         time = await get.kor_time(datetime.datetime.utcnow())
         await data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
