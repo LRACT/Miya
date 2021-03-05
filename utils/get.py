@@ -4,7 +4,7 @@ import locale
 from lib import config
 import datetime
 import aiomysql
-import exc
+from utils import exc
 from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
 
