@@ -77,7 +77,7 @@ async def on_message(msg):
     if msg.author.bot:
         return
 
-    await miya.process_commands()
+    await miya.process_commands(msg)
 
 @miya.check
 async def processing(ctx):
