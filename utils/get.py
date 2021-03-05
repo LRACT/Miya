@@ -4,7 +4,7 @@ import locale
 from lib import config
 import datetime
 import aiomysql
-from utils import exc
+from discord.ext import commands
 from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
 
@@ -21,10 +21,12 @@ async def mgr(ctx):
     await c.execute("SELECT `manager` FROM `miya`")
     rows = await c.fetchall()
     mgrs = rows[0][0].split(" ")
+    a = None
     for m in mgrs:
         if ctx.author.id == int(m):
             return True
-    raise exc.No_management
+    raise commands.NotOwner
+    
 
 async def kor_time(date):
     KST = timezone('Asia/Seoul')
