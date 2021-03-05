@@ -90,17 +90,17 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
                 await webhook.terminal(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
                 print(f"Sent {query} to Ping Pong builder and got {msg}")
-                embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
             else:
-                embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/mdgaSjB)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
         else:
             await webhook.terminal(f"An error occurred while running command {ctx.command.name} : {error}", "미야 Terminal", self.miya.user.avatar_url)
             print(f"An error occurred while running command {ctx.command.name} : {error}")
-            await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+            await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
@@ -123,7 +123,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         await webhook.terminal(f"Added to {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
         print(f"Added to {guild.name} ( {guild.id} )")
         rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
-        if not rows:
+        rows2 = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
+        if not rows and not rows2:
             try:
                 embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
                     description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
