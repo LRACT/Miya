@@ -63,7 +63,7 @@ class General(commands.Cog, name="일반"):
         latency = round(shard.latency * 1000, 2)
         embed = discord.Embed(color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.add_field(name="API 지연 시간", value=f"{latency}ms", inline=False)
-        embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000)}ms", inline=False)
+        embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000), 2}ms", inline=False)
         embed.add_field(name="구동 시간", value=str(uptime).split(".")[0])
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.set_author(name=f"#{ctx.guild.shard_id} 샤드의 지연 시간", icon_url=self.miya.user.avatar_url)
