@@ -4,6 +4,7 @@ import locale
 from lib import config
 import datetime
 import aiomysql
+import exc
 from pytz import timezone, utc
 locale.setlocale(locale.LC_ALL, '')
 
@@ -22,7 +23,8 @@ async def mgr(ctx):
     mgrs = rows[0][0].split(" ")
     for m in mgrs:
         if ctx.author.id == int(m):
-            return True 
+            return True
+    raise exc.No_management
 
 async def kor_time(date):
     KST = timezone('Asia/Seoul')
