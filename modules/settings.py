@@ -19,9 +19,8 @@ class Settings(commands.Cog, name="설정"):
 
         미야의 뮤트 명령어를 사용 시 적용할 역할을 설정합니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         if role >= ctx.guild.me.top_role:
-            await working.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높거나 같아요. 설정하려는 역할을 봇의 최상위 역할보다 낮춰주세요.")
+            await ctx.send(content=f"<:cs_console:659355468786958356> {ctx.author.mention} 지정하려는 역할이 봇보다 높거나 같아요. 설정하려는 역할을 봇의 최상위 역할보다 낮춰주세요.")
         else:
             result = await data.commit(f"UPDATE `guilds` SET `muteRole` = '{role.id}' WHERE `guild` = '{ctx.guild.id}'")
             if result == "SUCCESS":
@@ -44,11 +43,10 @@ class Settings(commands.Cog, name="설정"):
                     perms.speak = False
                     perms.stream = False
                     await category.set_permissions(role, overwrite=perms, reason="뮤트 역할 설정")
-                await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} `{role.name}` 역할로 뮤트를 설정했어요.\n \n*관리자 및 권한 설정을 통해 메시지 보내기 권한을 승인된 유저는 뮤트가 적용되지 않아요.*")
+                await ctx.send(f"<:cs_settings:659355468992610304> {ctx.author.mention} 뮤트 역할을 `{role.name}` 역할로 설정했어요.\n \n*관리자 권한을 가진 유저 및 권한 설정을 통해 메시지 보내기 권한을 승인받은 유저는 뮤트가 적용되지 않아요.*")
             else:
-                await webhook.terminal(f"Channel set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Mute role update failed. guilds Result :: {result}")
-                await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                await webhook.terminal(f"Mute Update Failed >\nSQL Result - {result}", "명령어 처리 기록", self.miya.user.avatar_url)
+                await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
 
     @commands.command(name="채널설정")
     @commands.has_permissions(manage_guild=True)
@@ -60,20 +58,19 @@ class Settings(commands.Cog, name="설정"):
 
         미야의 공지사항, 입퇴장 메세지를 전송할 채널, 각종 로그를 전송할 채널을 설정합니다.
         """
-        working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
         value = None
         table = None
         if what == "공지":
             if channel.type == discord.ChannelType.news:
-                await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 미야 공지 채널은 Discord 커뮤니티 공지 채널이 아닌 곳에만 설정할 수 있어요.")
+                await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 미야 공지 채널은 Discord 커뮤니티 공지 채널이 아닌 곳에만 설정할 수 있어요.")
             else:
                 follow = self.miya.get_channel(config.NotifyChannel)
                 try:
                     await follow.follow(destination=channel, reason="미야 봇 공지 채널 설정")
                 except discord.Forbidden:
-                    await working.edit(content=f"<:cs_no:659355468816187405> {ctx.author.mention} 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요.")
+                    await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요.")
                 else:
-                    await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면 서버의 연동 설정에서 팔로우를 취소해주세요!*")
+                    await ctx.send(f"<:cs_settings:659355468992610304> {ctx.author.mention} {channel.mention} 채널에 미야 지원 서버의 공지 채널을 팔로우했어요.\n \n*미야의 공지를 더 이상 받고 싶지 않다면 서버의 연동 설정에서 팔로우를 취소해주세요!*")
         else:
             if what == "로그":
                 table = "guilds"
@@ -84,14 +81,13 @@ class Settings(commands.Cog, name="설정"):
             if value is not None and table is not None:
                 result = await data.commit(f"UPDATE `{table}` SET `{value}` = '{channel.id}' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
-                    await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {what} 채널을 {channel.mention} 채널로 설정했어요.")
+                    await ctx.send(f"<:cs_settings:659355468992610304> {ctx.author.mention} {what} 채널을 {channel.mention} 채널로 설정했어요.")
                 else:
-                    await webhook.terminal(f"Channel set failed. {table} Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                    print(f"Channel set failed. {table} Result :: {result}")
-                    await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                    await webhook.terminal(f"Channel Update Failed >\nSQL Result - {result}", "명령어 처리 기록", self.miya.user.avatar_url)
+                    await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
             else:
-                await working.edit(content=f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 채널설정 < 공지 / 로그 / 입퇴장 > < #채널 >`(이)가 올바른 명령어에요!")
-    
+                raise commands.BadArgument
+
     @commands.command(name="링크차단")
     @commands.has_permissions(manage_guild=True)
     async def link_set(self, ctx, *args):
@@ -103,29 +99,24 @@ class Settings(commands.Cog, name="설정"):
         *채널 주제에 `=무시`라는 단어를 넣어 해당 채널만 무시할 수 있습니다.*
         """
         if not args:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
+            raise commands.BadArgument
         else:
             if args[0] == "켜기":
-                working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
                 result = await data.commit(f"UPDATE `guilds` SET `linkFiltering` = 'true' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
-                    await working.edit(content=f"<:cs_on:659355468682231810> {ctx.author.mention} 링크 차단 기능을 활성화했어요!\n특정 채널에서만 이 기능을 끄고 싶으시다면 채널 주제에 `=무시`라는 단어를 넣어주세요.")
+                    await ctx.send(f"<:cs_on:659355468682231810> {ctx.author.mention} 링크 차단 기능을 활성화했어요!\n특정 채널에서만 이 기능을 끄고 싶으시다면 채널 주제에 `=무시`라는 단어를 넣어주세요.")
                 else:
-                    await webhook.terminal(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                    print(f"Filtering set failed. guilds Result :: {result}")
-                    await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                    await webhook.terminal(f"Filter Update Failed >\nSQL Result - {result}", "명령어 처리 기록", self.miya.user.avatar_url)
+                    await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
             elif args[0] == "끄기":
-                working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
                 result = await data.commit(f"UPDATE `guilds` SET `linkFiltering` = 'false' WHERE `guild` = '{ctx.guild.id}'")
                 if result == "SUCCESS":
-                    await working.edit(content=f"<:cs_off:659355468887490560> {ctx.author.mention} 링크 차단 기능을 비활성화했어요!")
+                    await ctx.send(f"<:cs_off:659355468887490560> {ctx.author.mention} 링크 차단 기능을 비활성화했어요!")
                 else:
-                    await webhook.terminal(f"Filtering set failed. guilds Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                    print(f"Filtering set failed. guilds Result :: {result}")
-                    await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                    await webhook.terminal(f"Filter Update Failed >\nSQL Result - {result}", "명령어 처리 기록", self.miya.user.avatar_url)
+                    await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
             else:
-                await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 링크차단 < 켜기 / 끄기 >`(이)가 올바른 명령어에요!")
-            
+                raise commands.BadArgument
     
     @commands.command(name="메시지설정", aliases=["메세지설정"])
     @commands.has_permissions(manage_guild=True)
@@ -144,19 +135,17 @@ class Settings(commands.Cog, name="설정"):
         elif name == "퇴장":
             value = 'remove_msg'
         if value is not None:
-            working = await ctx.send(f"<a:cs_wait:659355470418411521> {ctx.author.mention} 잠시만 기다려주세요... API와 DB에서 당신의 요청을 처리하고 있어요!")
             result = await data.commit(f"UPDATE `membernoti` SET `{value}` = '{message}' WHERE `guild` = '{ctx.guild.id}'")
             if result == "SUCCESS":
                 a = message.replace("{member}", str(ctx.author.mention))
                 a = a.replace("{guild}", str(ctx.guild.name))
                 a = a.replace("{count}", str(ctx.guild.member_count))
-                await working.edit(content=f"<:cs_settings:659355468992610304> {ctx.author.mention} {name} 메시지를 성공적으로 변경했어요!\n이제 유저가 {name} 시 채널에 이렇게 표시될 거에요. : \n{a}")
+                await ctx.send(f"<:cs_settings:659355468992610304> {ctx.author.mention} {name} 메시지를 성공적으로 변경했어요!\n이제 유저가 {name} 시 채널에 이렇게 표시될 거에요. : \n{a}")
             else:
-                await webhook.terminal(f"Message set failed. Result :: {result}", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Message set failed. Result :: {result}")
-                await working.edit(content=f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n이 오류가 지속될 경우 Discord 지원 서버로 문의해주세요. https://discord.gg/mdgaSjB")
+                await webhook.terminal(f"Message Update Failed >\nSQL Result - {result}", "명령어 처리 기록", self.miya.user.avatar_url)
+                await ctx.send(f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
         else:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 메시지설정 < 입장 / 퇴장 > < 메시지 >`(이)가 올바른 명령어에요!")
+            raise commands.BadArgument
 
 def setup(miya):
     miya.add_cog(Settings(miya)) 
