@@ -65,7 +65,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             f = await get.filter(ctx.message)
             rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
             if rows:
-                admin = miya.get_user(int(rows[0][2]))
+                admin = self.miya.get_user(int(rows[0][2]))
                 embed = discord.Embed(
                     title=f"이런, {ctx.author}님은 차단되셨어요.",
                     description=f"""
@@ -77,13 +77,13 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+                await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] == True:
                 admin = miya.user
                 time = await get.kor_time(datetime.datetime.utcnow())
-                await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
-                await utils.webhook.blacklist(f"New Block >\nVictim - {ctx.author.id}\nAdmin - {admin} ({admin.id})\nReason - 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}", "제한 기록", self.miya.user.avatar_url)
+                await data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
+                await webhook.blacklist(f"New Block >\nVictim - {ctx.author.id}\nAdmin - {admin} ({admin.id})\nReason - 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}", "제한 기록", self.miya.user.avatar_url)
                 embed = discord.Embed(
                     title=f"이런, {ctx.author}님은 차단되셨어요.",
                     description=f"""
@@ -95,7 +95,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                await webhook.terminal(f"Cancelled (Auto Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+                await webhook.terminal(f"Cancelled (Auto Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             else:
                 response_msg = None
