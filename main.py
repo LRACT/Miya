@@ -96,6 +96,7 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
+        await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         raise exc.Forbidden(embed, ctx)
     elif f[0] == True:
         admin = miya.user
@@ -111,9 +112,10 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
+        await webhook.terminal(f"Cancelled (Auto) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         raise exc.Forbidden(embed, ctx)
     else:
-        await webhook.terminal(f"Processed > {ctx.author} ({ctx.author.id}) - {ctx.message.content}\n{ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+        await webhook.terminal(f"Processed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         return True
 
 load_modules(miya)
