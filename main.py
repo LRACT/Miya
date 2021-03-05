@@ -93,7 +93,7 @@ async def processing(ctx):
 관리자 : {admin}
 차단 시각 : {rows[0][3]}
             """,
-            timestamp=datetime.datetime.utcnow()
+            timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
         raise exc.Forbidden(embed, ctx)
@@ -108,7 +108,7 @@ async def processing(ctx):
 관리자 : {admin}
 차단 시각 : {time}
             """,
-            timestamp=datetime.datetime.utcnow()
+            timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
         raise exc.Forbidden(embed, ctx)
