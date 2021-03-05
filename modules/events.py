@@ -61,7 +61,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             else:
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
-        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
+        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.NotOwner):
             f = await get.filter(ctx.message)
             rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
             if rows:
