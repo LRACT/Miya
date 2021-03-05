@@ -81,7 +81,8 @@ async def on_message(msg):
 
 @miya.check
 async def _process(ctx):
-    await utils.get.process(ctx)
+    result = await utils.get.process(ctx)
+    return result
 
 load_modules(miya)
 miya.run(config.BotToken)
