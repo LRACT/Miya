@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 import aiohttp
 import asyncio
-from utils import data, webhook, exc
+from utils import get, data, webhook, exc
 from lib import config
 import datetime
 import locale
@@ -62,7 +62,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
         elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
-            f = await utils.get.filter(ctx.message)
+            f = await get.filter(ctx.message)
             rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
             if rows:
                 admin = miya.get_user(int(rows[0][2]))
@@ -81,7 +81,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] == True:
                 admin = miya.user
-                time = await utils.get.kor_time(datetime.datetime.utcnow())
+                time = await get.kor_time(datetime.datetime.utcnow())
+                await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
+                await utils.webhook.blacklist(f"New Block >\nVictim - {ctx.author.id}\nAdmin - {admin} ({admin.id})\nReason - 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}", "제한 기록", self.miya.user.avatar_url)
                 embed = discord.Embed(
                     title=f"이런, {ctx.author}님은 차단되셨어요.",
                     description=f"""
