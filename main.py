@@ -84,12 +84,12 @@ async def processing(ctx):
     f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
     if rows:
-        admin = miya.get_user(int(rows[0][1]))
+        admin = miya.get_user(int(rows[0][2]))
         embed = discord.Embed(
             title=f"이런, {ctx.author}님은 차단되셨어요.",
             description=f"""
 차단에 관해서는 지원 서버를 방문해주세요.
-사유 : {rows[0][2]}
+사유 : {rows[0][1]}
 관리자 : {admin}
 차단 시각 : {rows[0][3]}
             """,
