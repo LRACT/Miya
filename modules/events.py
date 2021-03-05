@@ -80,7 +80,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 await webhook.terminal(f"Cancelled (Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] == True:
-                admin = miya.user
+                admin = self.miya.user
                 time = await get.kor_time(datetime.datetime.utcnow())
                 await data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
                 await webhook.blacklist(f"New Block >\nVictim - {ctx.author.id}\nAdmin - {admin} ({admin.id})\nReason - 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}", "제한 기록", self.miya.user.avatar_url)
