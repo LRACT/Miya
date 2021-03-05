@@ -1,11 +1,10 @@
 import discord
 from discord.ext import commands
 
-class Blacklisted(commands.CheckFailure):
-    pass
+class Forbidden(Exception):
+    def __init__(self, embed, ctx):
+        self.embed = embed
+        super().__init__(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn')
 
-class Forbidden(commands.CheckFailure):
-    pass
-
-class No_management(commands.CheckFailure):
+class No_management(Exception):
     pass
