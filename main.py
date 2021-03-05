@@ -81,9 +81,13 @@ async def on_message(msg):
 
 @miya.check
 async def processing(ctx):
-    f = await filter(ctx.message)
+    mgr = await get.mgr(ctx)
+    f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
-    if rows:
+    if mgr == True:
+        await webhook.terminal(f"Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+        return True
+    elif rows:
         admin = miya.get_user(int(rows[0][2]))
         embed = discord.Embed(
             title=f"이런, {ctx.author}님은 차단되셨어요.",
@@ -100,7 +104,7 @@ async def processing(ctx):
         raise exc.Forbidden(embed, ctx)
     elif f[0] == True:
         admin = miya.user
-        time = await kor_time(datetime.datetime.utcnow())
+        time = await get.kor_time(datetime.datetime.utcnow())
         embed = discord.Embed(
             title=f"이런, {ctx.author}님은 차단되셨어요.",
             description=f"""
