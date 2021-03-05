@@ -61,7 +61,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             else:
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
-        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
+        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
             f = await get.filter(ctx.message)
             rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
             if rows:
@@ -77,7 +77,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                await webhook.terminal(f"Cancelled (Blocked) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                await webhook.terminal(f"Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] == True:
                 admin = self.miya.user
@@ -95,7 +95,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                await webhook.terminal(f"Cancelled (Auto Block) >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                await webhook.terminal(f"Auto Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             else:
                 response_msg = None
@@ -184,7 +184,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
-            await webhook.terminal(f"Block >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
+            await webhook.terminal(f"Blocked >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
             await guild.leave()
     
     @commands.Cog.listener()
