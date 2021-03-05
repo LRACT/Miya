@@ -15,8 +15,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_shard_ready(self, shard_id):
-        print("Shard #{shard_id} :: READY")
-        await webhook.terminal(f"{shard_id}번 샤드가 준비되었습니다.", "미야 Terminal", self.miya.user.avatar_url)
+        print(f"Shard #{shard_id} :: READY")
+        await webhook.terminal(f"{shard_id}번 샤드가 준비되었습니다.", "샤드 준비됨", self.miya.user.avatar_url)
         await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
         await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard_id} | 미야야 도움"))
 
@@ -83,8 +83,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     response_msg = await r.json()  
             msg = response_msg["response"]["replies"][0]["text"]
             if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
-                await webhook.terminal(f"Sent {query} to Ping Pong builder and got {msg}", "미야 Terminal", self.miya.user.avatar_url)
-                print(f"Sent {query} to Ping Pong builder and got {msg}")
+                await webhook.terminal(f"Sent - {query}\nReceived - {msg}", "PINGPONG Builder", self.miya.user.avatar_url)
                 embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
                 embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                 await ctx.send(ctx.author.mention, embed=embed)
