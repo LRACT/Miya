@@ -3,7 +3,7 @@ from discord.ext import commands
 import json
 import aiohttp
 import asyncio
-from utils import data, webhook
+from utils import data, webhook, exc
 from lib import config
 import datetime
 import locale
@@ -22,6 +22,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        if isinstance(error, exc.Blacklisted) or isinstance(error, exc.Forbidden):
+            await ctx.send(str(error), embed=error.embed)
         perms = {
             "administrator": "관리자",
             "manage_guild": "서버 관리하기",
@@ -34,7 +36,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "manage_webhooks": "웹훅 관리하기",
             "manage_messages": "메시지 관리하기"
         }
-        if isinstance(error, discord.NotFound):
+        elif isinstance(error, discord.NotFound):
             return
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
@@ -47,7 +49,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             p = perms[mp[0]]
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`")
         elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
+            await ctx.send(f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after), 2}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요.")
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
             if isinstance(error, commands.MemberNotFound) or isinstance(error, commands.UserNotFound):
                 await ctx.send(f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!")
@@ -60,7 +62,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             else:
                 usage = ctx.command.help.split("\n")[0]
                 await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!")
-        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, commands.CheckFailure):
+        elif isinstance(error, commands.CommandNotFound) or isinstance(error, commands.MissingRole) or isinstance(error, commands.NotOwner) or isinstance(error, exc.No_management):
             response_msg = None
             url = config.PPBRequest
             headers = {
