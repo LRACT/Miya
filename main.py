@@ -113,8 +113,8 @@ async def processing(ctx):
         )
         raise exc.Forbidden("부적절한 언행입니다.", embed)
     else:
-        return True
         await webhook.terminal(f"Processed > {ctx.author} ({ctx.author.id}) - {ctx.message.content}\n{ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+        return True
 
 load_modules(miya)
 miya.run(config.BotToken)
