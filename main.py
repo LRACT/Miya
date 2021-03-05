@@ -39,9 +39,9 @@ intents = discord.Intents(
     typing=True
 )
 miya = Miya(
-    shard_count=3,
+    shard_count=5,
     command_prefix="미야야 ",
-    description="미야 discord.py 리라이트 버전",
+    description="다재다능한 Discord 봇, 미야.",
     help_command=None,
     chunk_guilds_at_startup=True,
     intents=intents
