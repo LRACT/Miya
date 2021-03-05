@@ -60,19 +60,18 @@ class Development(commands.Cog, name="개발"):
             result = await utils.data.commit(f"INSERT INTO `forbidden`(`word`) VALUES('{word}')")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
-                await utils.webhook.blacklist(f"Forbidden Word Added By {ctx.author} - {word}", "Word Limit Notify", self.miya.user.avatar_url)
+                await utils.webhook.blacklist(f"New Forbidden >\nAdmin - {ctx.author} ({ctx.author.id})\nPhrase - {word}", "제한 기록", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         elif todo == "삭제":
             result = await utils.data.commit(f"DELETE FROM `forbidden` WHERE `word` = '{word}'")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
-                await utils.webhook.blacklist(f"Forbidden Word Removed By {ctx.author} - {word}", "Word Limit Notify", self.miya.user.avatar_url)
+                await utils.webhook.blacklist(f"Removed Forbidden >\nAdmin - {ctx.author} ({ctx.author.id})\nPhrase - {word}", "제한 기록", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         else:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 제한 < 추가 / 삭제 > < 단어 >`(이)가 올바른 명령어에요!")
-
+            raise commands.BadArgument
 
     @commands.command(name="블랙")
     @is_manager()
@@ -89,18 +88,19 @@ class Development(commands.Cog, name="개발"):
             result = await utils.data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{id}', '{reason}', '{ctx.author.id}', '{time}')")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
-                await utils.webhook.blacklist(f"Blacklisted ( Administrator ) : {id} - {reason}", "Blacklist Notify", self.miya.user.avatar_url)
+                await utils.webhook.blacklist(f"New Block >\nVictim - {id}\nAdmin - {ctx.author} ({ctx.author.id})\nReason - {reason}", "제한 기록", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         elif todo == "삭제":
             result = await utils.data.commit(f"DELETE FROM `blacklist` WHERE `id` = '{id}'")
             if result == "SUCCESS":
                 await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
+                await utils.webhook.blacklist(f"Removed Block >\nUnblocked - {id}\nAdmin - {ctx.author} ({ctx.author.id})", "제한 기록", self.miya.user.avatar_url)
             else:
                 await ctx.message.add_reaction("<:cs_no:659355468816187405>")
         else:
-            await ctx.send(f"<:cs_console:659355468786958356> {ctx.author.mention} `미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]`(이)가 올바른 명령어에요!")
-   
+            raise commands.BadArgument
+
     @commands.command(name="탈주")
     @commands.is_owner()
     async def _leave(self, ctx, guild_id: int):
