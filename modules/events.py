@@ -121,11 +121,16 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         rows2 = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
         if not rows and not rows2:
             try:
-                embed = discord.Embed(title="미야를 초대해주셔서 감사해요!", 
-                    description="""`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
-                        미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/mdgaSjB)에서 하실 수 있어요!
-                        미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
-                        """, color=0x5FE9FF)
+                embed = discord.Embed(
+                    title="미야를 초대해주셔서 감사해요!", 
+                    description="""
+`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
+미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/tu4NKbEEnn)에서 하실 수 있어요!
+미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
+                    """,
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0x5FE9FF
+                )
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
             except:
                 await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
@@ -133,8 +138,18 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         else:
             try:
                 admin = self.miya.get_user(int(rows[0][1]))
-                embed = discord.Embed(title="이런, 이 서버는 미야 초대가 제한되었어요!", description=f"제한에 관한 내용은 [지원 서버](https://discord.gg/mdgaSjB)로 문의해주세요.\n사유 : {rows[0][2]}\n처리한 관리자 : {admin}\n차단된 시각 : {rows[0][3]}", color=0xFF0000)
-                await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/mdgaSjB", embed=embed)
+                embed = discord.Embed(
+                    title=f"이런, {guild.name} 서버는 (혹은 소유자가) 차단되었어요.",
+                    description=f"""
+차단에 관해서는 지원 서버를 방문해주세요.
+사유 : {rows[0][2]}
+관리자 : {admin}
+차단 시각 : {rows[0][3]}
+                    """,
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0xFF3333
+                )
+                await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
                 await webhook.terminal(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )", "미야 Terminal", self.miya.user.avatar_url)
                 print(f"Couldn't send DM to server owner. : {guild.name} ( {guild.id} )")
