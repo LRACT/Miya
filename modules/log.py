@@ -57,7 +57,7 @@ class log(commands.Cog, name="로그"):
                 embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
                 embed.set_thumbnail(url=msg.author.avatar_url_as(static_format="png", size=2048))
                 embed.set_footer(text="메시지 삭제 이벤트")
-                embed.set_author(name="반가워요!", icon_url=self.miya.user.avatar_url)
+                embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
                 if msg.content == "":
                     embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False)
                     await channel.send(embed=embed)
