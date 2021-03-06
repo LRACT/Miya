@@ -115,9 +115,7 @@ class Administration(commands.Cog, name="관리"):
             await guild.leave()
             await ctx.message.add_reaction("<:cs_yes:659355468715786262>")
         else:
-            await ctx.send(
-                f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요."
-            )
+            await ctx.reply("<:cs_no:659355468816187405> 서버를 발견하지 못했어요.")
 
 
 def setup(miya):
