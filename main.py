@@ -69,63 +69,12 @@ def load_modules(miya):
 
     return failed
 
-@miya.event
-async def on_message(msg):
-    if msg.channel.type == discord.ChannelType.private:
-        return
-
-    if msg.author.bot:
-        return
-
-    await miya.process_commands(msg)
-
 @miya.check
-async def processing(ctx):
-    mgr = await get.mgr(ctx)
-    f = await get.filter(ctx.message)
-    rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
-    if mgr is True:
-        await webhook.terminal(f"Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
-        return True
-    elif rows:
-        admin = miya.get_user(int(rows[0][2]))
-        embed = discord.Embed(
-            title=f"이런, {ctx.author}님은 차단되셨어요.",
-            description=f"""
-차단에 관해서는 지원 서버를 방문해주세요.
-사유 : {rows[0][1]}
-관리자 : {admin}
-차단 시각 : {rows[0][3]}
-            """,
-            timestamp=datetime.datetime.utcnow(),
-            color=0xFF3333
-        )
-        embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
-        await webhook.terminal(f"Blocked User >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
-        raise exc.Forbidden(embed, ctx)
-    elif f[0] is True:
-        admin = miya.user
-        time = await get.kor_time(datetime.datetime.utcnow())
-        await data.commit(f"INSERT INTO `blacklist`(`id`, `reason`, `admin`, `datetime`) VALUES('{ctx.author.id}', '봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}', '{admin.id}', '{time}')")
-        await webhook.blacklist(f"New Block >\nVictim - {ctx.author.id}\nAdmin - {admin} ({admin.id})\nReason - 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}", "제한 기록", miya.user.avatar_url)
-        embed = discord.Embed(
-            title=f"이런, {ctx.author}님은 차단되셨어요.",
-            description=f"""
-차단에 관해서는 지원 서버를 방문해주세요.
-사유 : 봇 사용 도중 부적절한 언행 **[Auto]** - {f[1]}
-관리자 : {admin}
-차단 시각 : {time}
-            """,
-            timestamp=datetime.datetime.utcnow(),
-            color=0xFF3333
-        )
-        embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
-        await webhook.terminal(f"Forbidden >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
-        raise exc.Forbidden(embed, ctx)
-    else:
-        await webhook.terminal(f"Processed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
-        return True
-
+async def process(ctx):
+    p = await get.processing(ctx)
+    if p is not None:
+        raise Forbidden(p)
+    return True
 
 load_modules(miya)
 miya.run(config.BotToken)
