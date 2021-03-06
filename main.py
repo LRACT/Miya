@@ -1,4 +1,4 @@
-import discord 
+import discord
 from discord.ext import commands
 import koreanbots
 import datetime
@@ -7,6 +7,7 @@ from lib import config
 from utils import get, data, webhook, exc
 import locale
 locale.setlocale(locale.LC_ALL, '')
+
 
 class Miya(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs):
@@ -24,6 +25,7 @@ class Miya(commands.AutoShardedBot):
                 result = 9 * (num - 1) + (index + 1)
                 return result
 
+
 intents = discord.Intents(
     guilds=True,
     members=True,
@@ -35,7 +37,7 @@ intents = discord.Intents(
     voice_states=True,
     presences=False,
     messages=True,
-    reactions=True, 
+    reactions=True,
     typing=True
 )
 miya = Miya(
@@ -46,6 +48,7 @@ miya = Miya(
     chunk_guilds_at_startup=True,
     intents=intents
 )
+
 
 def load_modules(miya):
     failed = []
@@ -68,6 +71,7 @@ def load_modules(miya):
             failed.append(ext)
 
     return failed
+
 
 @miya.check
 async def process(ctx):
