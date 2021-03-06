@@ -5,10 +5,12 @@ import aiohttp
 import aiomysql
 from bs4 import BeautifulSoup
 from discord.ext import commands
-from pytz import timezone, utc
+from pytz import timezone
+from pytz import utc
 
 from lib import config
-from utils import data, exc
+from utils import data
+from utils import exc
 
 locale.setlocale(locale.LC_ALL, "")
 
