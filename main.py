@@ -53,7 +53,7 @@ def load_modules(miya):
         "modules.general",
         "modules.events",
         "modules.settings",
-        "modules.devs",
+        "modules.admin",
         "modules.mods",
         "modules.register",
         "modules.log",
@@ -81,9 +81,10 @@ async def on_message(msg):
 
 @miya.check
 async def processing(ctx):
+    mgr = await get.mgr(ctx)
     f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
-    if commands.is_owner() is True:
+    if mgr is True:
         await webhook.terminal(f"Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         return True
     elif rows:
