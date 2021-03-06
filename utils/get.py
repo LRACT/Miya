@@ -1,12 +1,14 @@
-import aiohttp
-from bs4 import BeautifulSoup
-import locale
-from lib import config
 import datetime
+import locale
+
+import aiohttp
 import aiomysql
+from bs4 import BeautifulSoup
 from discord.ext import commands
 from pytz import timezone, utc
-from utils import exc, data
+
+from lib import config
+from utils import data, exc
 
 locale.setlocale(locale.LC_ALL, "")
 

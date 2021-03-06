@@ -4,8 +4,7 @@ import locale
 import discord
 import koreanbots
 from discord.ext import commands
-from pytz import timezone
-from pytz import utc
+from pytz import timezone, utc
 
 from lib import config
 from utils import get
