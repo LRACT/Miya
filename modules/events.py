@@ -72,52 +72,51 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "manage_messages": "메시지 관리하기",
         }
         if isinstance(error, exc.Forbidden):
-            await ctx.send(str(error), embed=error.embed)
+            await ctx.reply(str(error), embed=error.embed)
         elif isinstance(error, discord.NotFound):
             return
         elif isinstance(error, discord.Forbidden):
-            await ctx.send(
-                f"<:cs_no:659355468816187405> {ctx.author.mention} 권한 부족 등의 이유로 명령어 실행에 실패했어요."
-            )
+            await ctx.reply(
+                f"<:cs_no:659355468816187405> 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
         elif isinstance(error, commands.MissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
-            await ctx.send(
-                f"<:cs_no:659355468816187405> {ctx.author.mention} 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`"
+            await ctx.reply(
+                f"<:cs_no:659355468816187405> 당신은 이 명령어를 실행할 권한이 없어요.\n해당 명령어를 실행하려면 이 권한을 가지고 계셔야 해요. `{p}`"
             )
         elif isinstance(error, commands.BotMissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
-            await ctx.send(
-                f"<:cs_no:659355468816187405> {ctx.author.mention} 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`"
+            await ctx.reply(
+                f"<:cs_no:659355468816187405> 미야에게 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`"
             )
         elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(
-                f"<:cs_stop:665173353874587678> {ctx.author.mention} 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after), 2}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요."
+            await ctx.reply(
+                f"<:cs_stop:665173353874587678> 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after), 2}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요."
             )
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(
                 error, commands.BadArgument):
             if isinstance(error, commands.MemberNotFound) or isinstance(
                     error, commands.UserNotFound):
-                await ctx.send(
-                    f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!"
+                await ctx.reply(
+                    f":mag_right: `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!"
                 )
             elif isinstance(error, commands.ChannelNotFound):
-                await ctx.send(
-                    f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!"
+                await ctx.reply(
+                    f":mag_right: `{error.argument}`(이)라는 채널을 찾을 수 없었어요. 정확한 채널을 지정해주세요!"
                 )
             elif isinstance(error, commands.ChannelNotReadable):
-                await ctx.send(
-                    f"<:cs_no:659355468816187405> {ctx.author.mention} `{error.argument}` 채널에 미야가 접근할 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!"
+                await ctx.reply(
+                    f"<:cs_no:659355468816187405> `{error.argument}` 채널에 미야가 접근할 수 없어요. 미야가 읽을 수 있는 채널로 지정해주세요!"
                 )
             elif isinstance(error, commands.RoleNotFound):
-                await ctx.send(
-                    f":mag_right: {ctx.author.mention} `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!"
+                await ctx.reply(
+                    f":mag_right: `{error.argument}`(이)라는 역할을 찾을 수 없었어요. 정확한 역할을 지정해주세요!"
                 )
             else:
                 usage = ctx.command.help.split("\n")[0]
-                await ctx.send(
-                    f"<:cs_console:659355468786958356> {ctx.author.mention} `{usage}`(이)가 올바른 명령어에요!"
+                await ctx.reply(
+                    f"<:cs_console:659355468786958356> `{usage}`(이)가 올바른 명령어에요!"
                 )
         elif isinstance(error, commands.CommandNotFound) or isinstance(
                 error, commands.NotOwner):
@@ -156,7 +155,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     )
                     embed.set_footer(
                         text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
-                    await ctx.send(ctx.author.mention, embed=embed)
+                    await ctx.reply(embed=embed)
                 else:
                     await webhook.terminal(
                         f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})",
@@ -171,15 +170,15 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     )
                     embed.set_footer(
                         text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
-                    await ctx.send(ctx.author.mention, embed=embed)
+                    await ctx.reply(embed=embed)
         else:
             await webhook.terminal(
                 f"Error >\nContent - {ctx.message.content}\nException - {error}",
                 "명령어 처리 기록",
                 self.miya.user.avatar_url,
             )
-            await ctx.send(
-                f":warning: {ctx.author.mention} 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn"
+            await ctx.reply(
+                f":warning: 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn"
             )
 
     @commands.Cog.listener()
