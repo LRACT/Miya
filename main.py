@@ -83,7 +83,7 @@ async def on_message(msg):
 async def processing(ctx):
     f = await get.filter(ctx.message)
     rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
-    if commands.is_owner is True:
+    if commands.is_owner() is True:
         await webhook.terminal(f"Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         return True
     elif rows:
@@ -99,7 +99,8 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
-        await webhook.terminal(f"Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
+        embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
+        await webhook.terminal(f"Blocked User >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         raise exc.Forbidden(embed, ctx)
     elif f[0] is True:
         admin = miya.user
@@ -117,6 +118,7 @@ async def processing(ctx):
             timestamp=datetime.datetime.utcnow(),
             color=0xFF3333
         )
+        embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
         await webhook.terminal(f"Forbidden >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", miya.user.avatar_url)
         raise exc.Forbidden(embed, ctx)
     else:
