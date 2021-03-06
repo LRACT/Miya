@@ -6,7 +6,8 @@ from pytz import utc, timezone
 from lib import config
 from utils import get, data, webhook, exc
 import locale
-locale.setlocale(locale.LC_ALL, '')
+
+locale.setlocale(locale.LC_ALL, "")
 
 
 class Miya(commands.AutoShardedBot):
@@ -38,7 +39,7 @@ intents = discord.Intents(
     presences=False,
     messages=True,
     reactions=True,
-    typing=True
+    typing=True,
 )
 miya = Miya(
     shard_count=3,
@@ -46,7 +47,7 @@ miya = Miya(
     description="다재다능한 Discord 봇, 미야.",
     help_command=None,
     chunk_guilds_at_startup=True,
-    intents=intents
+    intents=intents,
 )
 
 
@@ -79,6 +80,7 @@ async def process(ctx):
     if p is not None:
         raise Forbidden(p)
     return True
+
 
 load_modules(miya)
 miya.run(config.BotToken)
