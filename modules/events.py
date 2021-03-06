@@ -78,7 +78,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     color=0xFF3333
                 )
                 embed.set_author(name="이용 제한", icon_url=self.miya.user.avatar_url)
-                await webhook.terminal(f"Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
+                await webhook.terminal(f"Blocked User >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] is True:
                 admin = self.miya.user
@@ -188,7 +188,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
-            await webhook.terminal(f"Blocked >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
+            await webhook.terminal(f"Blocked Guild >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
             await guild.leave()
     
     @commands.Cog.listener()
