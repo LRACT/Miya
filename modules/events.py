@@ -154,7 +154,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         await webhook.terminal(f"Join >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
         rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         rows2 = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
-        if not rows and not rows2:
+        if len(rows) == 0 and len(rows2) == 0:
             try:
                 embed = discord.Embed(
                     title="미야를 초대해주셔서 감사해요!", 
