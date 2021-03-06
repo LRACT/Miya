@@ -3,6 +3,7 @@ import locale
 
 import aiohttp
 import aiomysql
+import discord
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from pytz import timezone
@@ -61,7 +62,7 @@ async def corona():
 
 
 async def check(ctx, miya):
-    mgr = await mgr(ctx)
+    manage = await mgr(ctx)
 
     reason, admin, time, banned, forbidden = None, None, None, None, None
     words = await data.fetch("SELECT * FROM `forbidden`")
@@ -72,7 +73,7 @@ async def check(ctx, miya):
     rows = await data.fetch(
         f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
     if rows:
-        if mgr is not True:
+        if manage is not True:
             reason = rows[0][1]
             admin = miya.get_user(int(rows[0][2]))
             time = rows[0][3]
@@ -90,7 +91,7 @@ async def check(ctx, miya):
             )
             return True
     elif forbidden is True:
-        if mgr is not True:
+        if manage is not True:
             reason = f"부적절한 언행 **[Auto]** - {banned}"
             admin = miya.user
             time = await kor_time(datetime.datetime.utcnow())
