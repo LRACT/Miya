@@ -26,7 +26,8 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
         미야 DB에 서버를 등록합니다. *이용 약관에 동의해야 합니다.*
         """
         rows = await data.fetch(
-            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'"
+        )
         if not rows:
             embed = discord.Embed(
                 title="미야 이용 약관에 동의하시겠어요?",
@@ -36,18 +37,20 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
             embed.set_author(name="서버 등록", icon_url=self.miya.user.avatar_url)
             register_msg = await ctx.reply(embed=embed)
             async with ctx.channel.typing():
+
                 def check(msg):
-                    return (msg.channel == ctx.channel and msg.author == ctx.author
-                            and msg.content == "동의합니다")
+                    return (
+                        msg.channel == ctx.channel
+                        and msg.author == ctx.author
+                        and msg.content == "동의합니다"
+                    )
 
                 try:
-                    msg = await self.miya.wait_for("message",
-                                                   timeout=180,
-                                                   check=check)
+                    msg = await self.miya.wait_for("message", timeout=180, check=check)
                 except asyncio.TimeoutError:
                     fail_embed = discord.Embed(
-                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었습니다.",
-                        color=0xFF0000)
+                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었습니다.", color=0xFF0000
+                    )
                     await register_msg.edit(embed=fail_embed, delete_after=5)
                 else:
                     await msg.delete()
@@ -55,7 +58,9 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
                     g_result = await data.commit(
                         f"INSERT INTO `guilds`(`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`) VALUES('{ctx.guild.id}', '1234', '1234', 'false', '0')"
                     )
-                    default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
+                    default_join_msg = (
+                        "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
+                    )
                     default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
                     m_result = await data.commit(
                         f"INSERT INTO `membernoti`(`guild`, `channel`, `join_msg`, `remove_msg`) VALUES('{ctx.guild.id}', '1234', '{default_join_msg}', '{default_quit_msg}')"
