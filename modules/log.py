@@ -14,7 +14,8 @@ class log(commands.Cog, name="로그"):
         self.miya = miya
 
     async def get_channel(self, guild_id):
-        rows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{guild_id}'")
+        rows = await data.fetch(
+            f"SELECT * FROM `guilds` WHERE `guild` = '{guild_id}'")
         if rows:
             channel = self.miya.get_channel(int(rows[0][1]))
             if channel is not None:
@@ -36,8 +37,7 @@ class log(commands.Cog, name="로그"):
                     color=0x15FF0E,
                 )
                 embed.set_thumbnail(
-                    url=member.avatar_url_as(static_format="png", size=2048)
-                )
+                    url=member.avatar_url_as(static_format="png", size=2048))
                 embed.set_footer(text="멤버 입장 이벤트")
                 embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
                 await channel.send(embed=embed)
@@ -54,13 +54,13 @@ class log(commands.Cog, name="로그"):
                     roles += f"{role.mention} "
                 embed = discord.Embed(
                     title="유저가 서버에서 나갔습니다.",
-                    description=f"< 퇴장한 유저 : {member.mention}\n< 가지고 있던 역할 {roles}",
+                    description=
+                    f"< 퇴장한 유저 : {member.mention}\n< 가지고 있던 역할 {roles}",
                     timestamp=member.joined_at,
                     color=0xFF0000,
                 )
                 embed.set_thumbnail(
-                    url=member.avatar_url_as(static_format="png", size=2048)
-                )
+                    url=member.avatar_url_as(static_format="png", size=2048))
                 embed.set_footer(text="멤버 퇴장 이벤트")
                 embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
                 await channel.send(embed=embed)
@@ -92,18 +92,20 @@ class log(commands.Cog, name="로그"):
                         value=f"{msg.channel.mention} ( {msg.channel.id} )",
                         inline=False,
                     )
-                    embed.set_thumbnail(
-                        url=msg.author.avatar_url_as(static_format="png", size=2048)
-                    )
+                    embed.set_thumbnail(url=msg.author.avatar_url_as(
+                        static_format="png", size=2048))
                     embed.set_footer(text="메시지 삭제 이벤트")
-                    embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
+                    embed.set_author(name="기록",
+                                     icon_url=self.miya.user.avatar_url)
                     if msg.content == "":
-                        embed.add_field(
-                            name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False
-                        )
+                        embed.add_field(name="메시지 내용",
+                                        value="*내용이 없습니다. (싸늘한 바람)*",
+                                        inline=False)
                         await channel.send(embed=embed)
                     elif msg.content != "":
-                        embed.add_field(name="메시지 내용", value=msg.content, inline=False)
+                        embed.add_field(name="메시지 내용",
+                                        value=msg.content,
+                                        inline=False)
                         await channel.send(embed=embed)
                 else:
                     embed = discord.Embed(
@@ -113,10 +115,12 @@ class log(commands.Cog, name="로그"):
                     )
                     embed.add_field(
                         name="메시지가 삭제된 채널",
-                        value=f"<#{payload.channel_id}> ( {payload.channel_id} )",
+                        value=
+                        f"<#{payload.channel_id}> ( {payload.channel_id} )",
                         inline=False,
                     )
-                    embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
+                    embed.set_author(name="기록",
+                                     icon_url=self.miya.user.avatar_url)
                     await channel.send(embed=embed)
             except:
                 return
@@ -146,18 +150,18 @@ class log(commands.Cog, name="로그"):
                 )
                 embed.add_field(
                     name="메시지로 이동하기",
-                    value=f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id})",
+                    value=
+                    f"[메시지 바로가기](https://discord.com/channels/{after.guild.id}/{after.channel.id}/{after.id})",
                     inline=False,
                 )
-                embed.add_field(
-                    name="메시지 수정 전 내용", value=f"내용 : {before.content}", inline=False
-                )
-                embed.add_field(
-                    name="메시지 수정 후 내용", value=f"내용 : {after.content}", inline=False
-                )
-                embed.set_thumbnail(
-                    url=after.author.avatar_url_as(static_format="png", size=2048)
-                )
+                embed.add_field(name="메시지 수정 전 내용",
+                                value=f"내용 : {before.content}",
+                                inline=False)
+                embed.add_field(name="메시지 수정 후 내용",
+                                value=f"내용 : {after.content}",
+                                inline=False)
+                embed.set_thumbnail(url=after.author.avatar_url_as(
+                    static_format="png", size=2048))
                 embed.set_footer(text="메시지 수정 이벤트")
                 if before.pinned == True and after.pinned == False:
                     embed.add_field(name="변경된 사항", value="메시지 고정이 해제됨")
