@@ -9,6 +9,7 @@ import datetime
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+
 class Listeners(commands.Cog, name="이벤트 리스너"):
     def __init__(self, miya):
         self.miya = miya
@@ -16,12 +17,12 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     @commands.Cog.listener()
     async def on_shard_disconnect(self, shard):
         await webhook.terminal(f"Shard Disconnected >\nShard ID - #{shard}", "샤드 기록", self.miya.user.avatar_url)
-        
+
     @commands.Cog.listener()
     async def on_shard_resumed(self, shard):
         await webhook.terminal(f"Shard Resumed >\nShard ID - #{shard}", "샤드 기록", self.miya.user.avatar_url)
         await self.miya.change_presence(status=discord.Status.idle, activity=discord.Game(f"#{shard} | 미야야 도움말"), shard_id=shard)
-    
+
     @commands.Cog.listener()
     async def on_shard_connect(self, shard):
         await webhook.terminal(f"Shard Connected >\nShard ID - #{shard}", "샤드 기록", self.miya.user.avatar_url)
@@ -30,7 +31,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
     @commands.Cog.listener()
     async def on_shard_ready(self, shard):
         await data.commit(f"UPDATE `miya` SET `uptime` = '{datetime.datetime.utcnow()}' WHERE `botId` = '{self.miya.user.id}'")
-        
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         perms = {
@@ -93,17 +94,21 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                             "request": {"query": query}
                         },
                     ) as r:
-                        response_msg = await r.json()  
+                        response_msg = await r.json()
                 msg = response_msg["response"]["replies"][0]["text"]
                 if msg != "앗, 저 이번 달에 할 수 있는 말을 다 해버렸어요 🤐 다음 달까지 기다려주실거죠? ☹️":
                     await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
-                    embed = discord.Embed(title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
-                    embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                    embed = discord.Embed(
+                        title=msg, description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                    embed.set_footer(
+                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                     await ctx.send(ctx.author.mention, embed=embed)
                 else:
                     await webhook.terminal(f"PINGPONG Builder >\nUser - {ctx.author} ({ctx.author.id})\nSent - {query}\nReceived - {msg}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
-                    embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.", description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
-                    embed.set_footer(text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                    embed = discord.Embed(title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.",
+                                          description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)", color=0x5FE9FF)
+                    embed.set_footer(
+                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
                     await ctx.send(ctx.author.mention, embed=embed)
         else:
             await webhook.terminal(f"Error >\nContent - {ctx.message.content}\nException - {error}", "명령어 처리 기록", self.miya.user.avatar_url)
@@ -133,7 +138,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         if not rows and not rows2:
             try:
                 embed = discord.Embed(
-                    title="미야를 초대해주셔서 감사해요!", 
+                    title="미야를 초대해주셔서 감사해요!",
                     description="""
 `미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
 미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/tu4NKbEEnn)에서 하실 수 있어요!
@@ -142,7 +147,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0x5FE9FF
                 )
-                embed.set_author(name="반가워요!", icon_url=self.miya.user.avatar_url)
+                embed.set_author(
+                    name="반가워요!", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
@@ -168,17 +174,18 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                embed.set_author(name="초대 제한", icon_url=self.miya.user.avatar_url)
+                embed.set_author(
+                    name="초대 제한", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
             await webhook.terminal(f"Blocked Guild >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
             await guild.leave()
-    
+
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         await webhook.terminal(f"Quit >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
-        
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot == False:
@@ -192,7 +199,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     try:
                         msg = value[2].replace("{member}", str(member.mention))
                         msg = msg.replace("{guild}", str(member.guild.name))
-                        msg = msg.replace("{count}", str(member.guild.member_count))
+                        msg = msg.replace("{count}", str(
+                            member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
                         await webhook.terminal(f"MemberNoti Failed >\nGuild - {member.guild.name} ({member.guild.id})\nException - {e}", "유저 입퇴장 알림 기록", self.miya.user.avatar_url)
@@ -210,10 +218,12 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     try:
                         msg = value[3].replace("{member}", str(member))
                         msg = msg.replace("{guild}", str(member.guild.name))
-                        msg = msg.replace("{count}", str(member.guild.member_count))
+                        msg = msg.replace("{count}", str(
+                            member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
                         await webhook.terminal(f"MemberNoti Failed >\nGuild - {member.guild.name} ({member.guild.id})\nException - {e}", "유저 입퇴장 알림 기록", self.miya.user.avatar_url)
-                    
+
+
 def setup(miya):
     miya.add_cog(Listeners(miya))
