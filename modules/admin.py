@@ -6,12 +6,15 @@ import locale
 import datetime
 locale.setlocale(locale.LC_ALL, '')
 
-class Development(commands.Cog, name="개발"):
+class Administration(commands.Cog, name="개발"):
     def __init__(self, miya):
         self.miya = miya
 
     def is_manager():
-        return commands.check(utils.get.mgr)
+        mgr = commands.check(utils.get.mgr)
+        if mgr == False:
+            raise commands.NotOwner
+        return mgr
 
     @commands.command(name="모듈")
     @commands.is_owner()
