@@ -77,7 +77,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
+                embed.set_author(name="이용 제한", icon_url=self.miya.user.avatar_url)
                 await webhook.terminal(f"Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             elif f[0] is True:
@@ -96,7 +96,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
-                embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
+                embed.set_author(name="이용 제한", icon_url=self.miya.user.avatar_url)
                 await webhook.terminal(f"Auto Blocked >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})", "명령어 처리 기록", self.miya.user.avatar_url)
                 await ctx.send(f'<a:ban_guy:761149578216603668> {ctx.author.mention} https://discord.gg/tu4NKbEEnn', embed=embed)
             else:
@@ -166,6 +166,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0x5FE9FF
                 )
+                embed.set_author(name="반가워요!", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention}", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
@@ -183,6 +184,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333
                 )
+                embed.set_author(name="초대 제한", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn", embed=embed)
             except:
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
