@@ -1,17 +1,18 @@
 import aiomysql
 from lib import config
 import locale
-locale.setlocale(locale.LC_ALL, '')
+
+locale.setlocale(locale.LC_ALL, "")
 
 
 async def fetch(sql):
     o = await aiomysql.connect(
-        host=config.MySQL['host'],
-        port=config.MySQL['port'],
-        user=config.MySQL['username'],
-        password=config.MySQL['password'],
-        db=config.MySQL['database'],
-        autocommit=True
+        host=config.MySQL["host"],
+        port=config.MySQL["port"],
+        user=config.MySQL["username"],
+        password=config.MySQL["password"],
+        db=config.MySQL["database"],
+        autocommit=True,
     )
     c = await o.cursor()
     try:
@@ -25,12 +26,12 @@ async def fetch(sql):
 
 async def commit(sql):
     o = await aiomysql.connect(
-        host=config.MySQL['host'],
-        port=config.MySQL['port'],
-        user=config.MySQL['username'],
-        password=config.MySQL['password'],
-        db=config.MySQL['database'],
-        autocommit=True
+        host=config.MySQL["host"],
+        port=config.MySQL["port"],
+        user=config.MySQL["username"],
+        password=config.MySQL["password"],
+        db=config.MySQL["database"],
+        autocommit=True,
     )
     c = await o.cursor()
     try:
