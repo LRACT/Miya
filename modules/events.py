@@ -30,8 +30,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
 
     @commands.Cog.listener()
     async def on_shard_resumed(self, shard):
-        await webhook.terminal(f"Shard Resumed >\nShard ID - #{shard}",
-                               "샤드 기록", self.miya.user.avatar_url)
+        await webhook.terminal(
+            f"Shard Resumed >\nShard ID - #{shard}", "샤드 기록", self.miya.user.avatar_url
+        )
         await self.miya.change_presence(
             status=discord.Status.idle,
             activity=discord.Game(f"#{shard} | 미야야 도움말"),
@@ -76,9 +77,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, discord.NotFound):
             return
         elif isinstance(error, discord.Forbidden):
-            await ctx.reply(
-                f"<:cs_no:659355468816187405> 권한 부족 등의 이유로 명령어 실행에 실패했어요."
-            )
+            await ctx.reply(f"<:cs_no:659355468816187405> 권한 부족 등의 이유로 명령어 실행에 실패했어요.")
         elif isinstance(error, commands.MissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
@@ -96,9 +95,11 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 f"<:cs_stop:665173353874587678> 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after), 2}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요."
             )
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(
-                error, commands.BadArgument):
+            error, commands.BadArgument
+        ):
             if isinstance(error, commands.MemberNotFound) or isinstance(
-                    error, commands.UserNotFound):
+                error, commands.UserNotFound
+            ):
                 await ctx.reply(
                     f":mag_right: `{error.argument}`(이)라는 유저를 찾을 수 없었어요. 정확한 유저를 지정해주세요!"
                 )
@@ -120,7 +121,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     f"<:cs_console:659355468786958356> `{usage}`(이)가 올바른 명령어에요!"
                 )
         elif isinstance(error, commands.CommandNotFound) or isinstance(
-                error, commands.NotOwner):
+            error, commands.NotOwner
+        ):
             p = await get.check(ctx, self.miya)
             if p is True:
                 response_msg = None
@@ -134,11 +136,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     query += f"{q} "
                 async with aiohttp.ClientSession() as cs:
                     async with cs.post(
-                            url,
-                            headers=headers,
-                            json={"request": {
-                                "query": query
-                            }},
+                        url,
+                        headers=headers,
+                        json={"request": {"query": query}},
                     ) as r:
                         response_msg = await r.json()
                 msg = response_msg["response"]["replies"][0]["text"]
@@ -154,7 +154,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         color=0x5FE9FF,
                     )
                     embed.set_footer(
-                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다."
+                    )
                     await ctx.reply(embed=embed)
                 else:
                     await webhook.terminal(
@@ -168,7 +169,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         color=0x5FE9FF,
                     )
                     embed.set_footer(
-                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                        text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다."
+                    )
                     await ctx.reply(embed=embed)
         else:
             await webhook.terminal(
@@ -188,10 +190,14 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         if msg.channel.type == discord.ChannelType.private:
             return
 
-        if ("discord.gg" in msg.content or "discord.com/invite" in msg.content
-                or "discordapp.com/invite" in msg.content):
+        if (
+            "discord.gg" in msg.content
+            or "discord.com/invite" in msg.content
+            or "discordapp.com/invite" in msg.content
+        ):
             rows = await data.fetch(
-                f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'")
+                f"SELECT * FROM `guilds` WHERE `guild` = '{msg.guild.id}'"
+            )
             if rows:
                 if rows[0][3] == "true":
                     if msg.channel.topic is None or "=무시" not in msg.channel.topic:
@@ -207,10 +213,10 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "서버 입퇴장 기록",
             self.miya.user.avatar_url,
         )
-        rows = await data.fetch(
-            f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
+        rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         rows2 = await data.fetch(
-            f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
+            f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'"
+        )
         if not rows and not rows2:
             try:
                 embed = discord.Embed(
@@ -223,8 +229,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0x5FE9FF,
                 )
-                embed.set_author(name="반가워요!",
-                                 icon_url=self.miya.user.avatar_url)
+                embed.set_author(name="반가워요!", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(
                     f"<:cs_notify:659355468904529920> {guild.owner.mention}",
                     embed=embed,
@@ -257,8 +262,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     timestamp=datetime.datetime.utcnow(),
                     color=0xFF3333,
                 )
-                embed.set_author(name="초대 제한",
-                                 icon_url=self.miya.user.avatar_url)
+                embed.set_author(name="초대 제한", icon_url=self.miya.user.avatar_url)
                 await guild.owner.send(
                     f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn",
                     embed=embed,
@@ -299,8 +303,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     try:
                         msg = value[2].replace("{member}", str(member.mention))
                         msg = msg.replace("{guild}", str(member.guild.name))
-                        msg = msg.replace("{count}",
-                                          str(member.guild.member_count))
+                        msg = msg.replace("{count}", str(member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
                         await webhook.terminal(
@@ -324,8 +327,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     try:
                         msg = value[3].replace("{member}", str(member))
                         msg = msg.replace("{guild}", str(member.guild.name))
-                        msg = msg.replace("{count}",
-                                          str(member.guild.member_count))
+                        msg = msg.replace("{count}", str(member.guild.member_count))
                         await channel.send(msg)
                     except Exception as e:
                         await webhook.terminal(

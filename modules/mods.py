@@ -17,11 +17,9 @@ class Moderation(commands.Cog, name="모드"):
     @commands.command(name="뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _mute(self,
-                    ctx,
-                    member: discord.Member,
-                    *,
-                    reason: typing.Optional[str] = "사유 없음."):
+    async def _mute(
+        self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."
+    ):
         """
         미야야 뮤트 < @유저 > [ 사유 ]
 
@@ -29,7 +27,8 @@ class Moderation(commands.Cog, name="모드"):
         지정된 뮤트 역할을 유저에게 적용합니다. 뮤트 역할의 설정이 필요합니다.
         """
         rows = await data.fetch(
-            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'"
+        )
         role = ctx.guild.get_role(int(rows[0][2]))
         if role is not None and role < ctx.guild.me.top_role:
             if role not in member.roles:
@@ -43,8 +42,7 @@ class Moderation(commands.Cog, name="모드"):
                         f"<:mute:761151751583301682> **{member}**님을 뮤트했어요.\n사유 : {reason}"
                     )
             else:
-                await ctx.reply(
-                    f"<:mute:761151751583301682> 그 유저는 이미 뮤트되어 있어요!")
+                await ctx.reply(f"<:mute:761151751583301682> 그 유저는 이미 뮤트되어 있어요!")
         else:
             await ctx.reply(
                 f"<:cs_no:659355468816187405> 이 명령어를 실행하려면 뮤트에 사용할 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해 설정을 완료해주세요."
@@ -53,11 +51,9 @@ class Moderation(commands.Cog, name="모드"):
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def _unmute(self,
-                      ctx,
-                      member: discord.Member,
-                      *,
-                      reason: typing.Optional[str] = "사유 없음."):
+    async def _unmute(
+        self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."
+    ):
         """
         미야야 언뮤트 < @유저 > [ 사유 ]
 
@@ -65,7 +61,8 @@ class Moderation(commands.Cog, name="모드"):
         유저의 뮤트 상태를 해제합니다. 뮤트 역할의 설정이 필요합니다.
         """
         rows = await data.fetch(
-            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'")
+            f"SELECT * FROM `guilds` WHERE `guild` = '{ctx.guild.id}'"
+        )
         role = ctx.guild.get_role(int(rows[0][2]))
         if role is not None and role < ctx.guild.me.top_role:
             if role in member.roles:
@@ -108,11 +105,9 @@ class Moderation(commands.Cog, name="모드"):
     @commands.command(name="추방", aliases=["킥"])
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def _kick(self,
-                    ctx,
-                    member: discord.Member,
-                    *,
-                    reason: typing.Optional[str] = "사유 없음."):
+    async def _kick(
+        self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."
+    ):
         """
         미야야 추방 < 유저 > [ 사유 ]
 
@@ -159,9 +154,7 @@ class Moderation(commands.Cog, name="모드"):
                 )
             except:
                 print("Ban DM Failed.")
-            await ctx.guild.ban(user,
-                                delete_message_days=delete,
-                                reason=reason)
+            await ctx.guild.ban(user, delete_message_days=delete, reason=reason)
             await ctx.reply(
                 f"<a:ban_guy:761149578216603668> **{user}**님을 서버에서 차단했어요!\n메시지 삭제 일 수 : {delete}일\n사유 : {reason}"
             )
