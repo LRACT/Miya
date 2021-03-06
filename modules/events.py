@@ -87,7 +87,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
         elif isinstance(error, commands.BotMissingPermissions):
             mp = error.missing_perms
             p = perms[mp[0]]
-            await ctx.send(
+            await ctx.reply(
                 f"<:cs_no:659355468816187405> 미야에게 명령어를 실행할 권한이 부족해 취소되었어요.\n해당 명령어를 실행하려면 미야에게 이 권한이 필요해요. `{p}`"
             )
         elif isinstance(error, commands.CommandOnCooldown):
