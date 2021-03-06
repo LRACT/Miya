@@ -27,7 +27,7 @@ class General(commands.Cog, name="일반"):
         embed = discord.Embed(title="미야 사용법", description="< > 필드는 필수, [ ] 필드는 선택입니다. / 로 구분되어 있는 경우 하나만 선택하세요.", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
         embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
-            private = ["미야 유지보수", "서버 데이터 관리", "Jishaku"]
+            private = ["관리", "서버 데이터 관리", "Jishaku"]
             if command.cog.qualified_name in private:
                 pass
             else:

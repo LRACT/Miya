@@ -6,7 +6,7 @@ from utils import data
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
-class Moderation(commands.Cog, name="관리"):
+class Moderation(commands.Cog, name="모드"):
     def __init__(self, bot):
         self.bot = bot
 
