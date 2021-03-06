@@ -37,8 +37,10 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
             embed.set_author(name="서버 등록", icon_url=self.miya.user.avatar_url)
             register_msg = await ctx.reply(embed=embed)
             async with ctx.channel.typing():
+
                 def check(msg):
-                    return (msg.channel == ctx.channel and msg.author == ctx.author
+                    return (msg.channel == ctx.channel
+                            and msg.author == ctx.author
                             and msg.content == "동의합니다")
 
                 try:
@@ -56,7 +58,8 @@ class DataManagement(commands.Cog, name="서버 데이터 관리"):
                     g_result = await data.commit(
                         f"INSERT INTO `guilds`(`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`) VALUES('{ctx.guild.id}', '1234', '1234', 'false', '0')"
                     )
-                    default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
+                    default_join_msg = (
+                        "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명")
                     default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
                     m_result = await data.commit(
                         f"INSERT INTO `membernoti`(`guild`, `channel`, `join_msg`, `remove_msg`) VALUES('{ctx.guild.id}', '1234', '{default_join_msg}', '{default_quit_msg}')"
