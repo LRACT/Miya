@@ -1,9 +1,11 @@
+import asyncio
+import locale
+import typing
+
 import discord
 from discord.ext import commands
-import asyncio
-import typing
+
 from utils import data
-import locale
 
 locale.setlocale(locale.LC_ALL, "")
 
