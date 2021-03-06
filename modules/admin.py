@@ -6,6 +6,7 @@ import locale
 import datetime
 locale.setlocale(locale.LC_ALL, '')
 
+
 class Administration(commands.Cog, name="관리"):
     def __init__(self, miya):
         self.miya = miya
@@ -21,8 +22,8 @@ class Administration(commands.Cog, name="관리"):
     async def _black_word(self, ctx, todo, *, word):
         """
         미야야 제한 < 추가 / 삭제 > < 단어 >
-        
-        
+
+
         자동 차단 단어를 관리합니다.
         """
         if todo == "추가":
@@ -48,7 +49,7 @@ class Administration(commands.Cog, name="관리"):
         """
         미야야 블랙 < 추가 / 삭제 > < ID > [ 사유 ]
 
-        
+
         ID를 통해 유저나 서버의 블랙리스트를 관리합니다.
         """
         date = datetime.datetime.utcnow()
@@ -75,8 +76,8 @@ class Administration(commands.Cog, name="관리"):
     async def _leave(self, ctx, guild_id: int):
         """
         미야야 탈주 < ID >
-        
-        
+
+
         지정한 서버에서 미야가 나갑니다.
         """
         guild = self.miya.get_guild(int(guild_id))
@@ -86,5 +87,6 @@ class Administration(commands.Cog, name="관리"):
         else:
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요.")
 
+
 def setup(miya):
-    miya.add_cog(Administration(miya)) 
+    miya.add_cog(Administration(miya))
