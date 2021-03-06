@@ -66,7 +66,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="메시지 수정 오차", value=f"{round(float(ocha) * 1000, 2)}ms", inline=False)
         embed.add_field(name="구동 시간", value=str(uptime).split(".")[0])
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
-        embed.set_author(name=f"#{ctx.guild.shard_id} 샤드의 지연 시간", icon_url=self.miya.user.avatar_url)
+        embed.set_author(name=f"#{ctx.guild.shard_id} | 지연 시간", icon_url=self.miya.user.avatar_url)
         await m.edit(content=f":ping_pong: {ctx.author.mention} Pong!", embed=embed)
 
     @commands.command(name="초대")
@@ -77,7 +77,8 @@ class General(commands.Cog, name="일반"):
 
         미야의 초대 링크를 표시합니다.
         """
-        embed = discord.Embed(title="미야 초대링크", description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=https%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
+        embed = discord.Embed(description="[여기](https://discord.com/api/oauth2/authorize?client_id=720724942873821316&permissions=2147483647&redirect_uri=https%3A%2F%2Fmiya.kro.kr&response_type=code&scope=bot%20identify%20email)를 클릭하면 초대하실 수 있어요!", color=0x5FE9FF, timestamp=datetime.datetime.utcnow())
+        embed.set_author(name="미야를 초대하시겠어요?", icon_url=self.miya.user.avatar_url)
         await ctx.send(ctx.author.mention, embed=embed)
 
     @commands.command(name="봇정보", aliases=["미야정보", "미야"])
@@ -90,7 +91,6 @@ class General(commands.Cog, name="일반"):
         """
         heart = await self.miya.get_rank()
         e = discord.Embed(
-            title="미야 서버(봇) 정보",
             description=f"""
 <:koreanbots:794450277792481290> 봇 순위 : {heart}위 [하트 누르기](https://koreanbots.dev/bots/720724942873821316)
 <:GitHub_W:782076841141207071> 코드 저장소 : [보러 가기](https://github.com/LRACT/Miya)
@@ -101,7 +101,7 @@ class General(commands.Cog, name="일반"):
             timestamp=datetime.datetime.utcnow()
         )
         e.set_thumbnail(url=self.miya.user.avatar_url_as(static_format='png', size=2048))
-        e.set_author(name="정보", icon_url=self.miya.user.avatar_url)
+        e.set_author(name="미야 TMI", icon_url=self.miya.user.avatar_url)
         await ctx.send(ctx.author.mention, embed=e)
 
     @commands.command(name="한강")
@@ -223,7 +223,7 @@ class General(commands.Cog, name="일반"):
         embed.add_field(name="서버 위치", value=location[str(ctx.guild.region)])
         embed.add_field(name="서버 개설 날짜", value=time)
         embed.add_field(name="서버 보안 수준", value=verification[ctx.guild.verification_level])
-        embed.set_author(name="정보", icon_url=self.miya.user.avatar_url)
+        embed.set_author(name="이 서버의 정보", icon_url=self.miya.user.avatar_url)
         embed.set_thumbnail(url=ctx.guild.icon_url_as(static_format="png", size=2048))
         await ctx.send(ctx.author.mention, embed=embed)
 
