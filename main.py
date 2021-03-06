@@ -8,10 +8,7 @@ from pytz import timezone
 from pytz import utc
 
 from lib import config
-from utils import data
-from utils import exc
 from utils import get
-from utils import webhook
 
 locale.setlocale(locale.LC_ALL, "")
 
@@ -82,10 +79,8 @@ def load_modules(miya):
 
 @miya.check
 async def process(ctx):
-    p = await get.processing(ctx)
-    if p is not None:
-        raise Forbidden(p)
-    return True
+    p = await get.check(ctx)
+    return p
 
 
 load_modules(miya)
