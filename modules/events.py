@@ -172,12 +172,12 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 await webhook.terminal(f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})", "서버 입퇴장 기록", self.miya.user.avatar_url)
         else:
             try:
-                admin = self.miya.get_user(int(rows[0][1]))
+                admin = self.miya.get_user(int(rows[0][2]))
                 embed = discord.Embed(
                     title=f"이런, {guild.name} 서버는 (혹은 그 소유자가) 차단되었어요.",
                     description=f"""
 차단에 관해서는 지원 서버를 방문해주세요.
-사유 : {rows[0][2]}
+사유 : {rows[0][1]}
 관리자 : {admin}
 차단 시각 : {rows[0][3]}
                     """,
