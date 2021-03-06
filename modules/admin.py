@@ -6,7 +6,7 @@ import locale
 import datetime
 locale.setlocale(locale.LC_ALL, '')
 
-class Administration(commands.Cog, name="개발"):
+class Administration(commands.Cog, name="미야 유지보수"):
     def __init__(self, miya):
         self.miya = miya
 
@@ -121,4 +121,4 @@ class Administration(commands.Cog, name="개발"):
             await ctx.send(f"<:cs_no:659355468816187405> {ctx.author.mention} 서버를 발견하지 못했어요.")
 
 def setup(miya):
-    miya.add_cog(Development(miya)) 
+    miya.add_cog(Administration(miya)) 
