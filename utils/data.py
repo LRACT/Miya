@@ -1,6 +1,8 @@
-import aiomysql
-from lib import config
 import locale
+
+import aiomysql
+
+from lib import config
 
 locale.setlocale(locale.LC_ALL, "")
 
