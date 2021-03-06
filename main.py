@@ -1,12 +1,20 @@
-import discord 
-from discord.ext import commands
-import koreanbots
 import datetime
-from pytz import utc, timezone
-from lib import config
-from utils import get, data, webhook, exc
 import locale
-locale.setlocale(locale.LC_ALL, '')
+
+import discord
+import koreanbots
+from discord.ext import commands
+from pytz import timezone
+from pytz import utc
+
+from lib import config
+from utils import data
+from utils import exc
+from utils import get
+from utils import webhook
+
+locale.setlocale(locale.LC_ALL, "")
+
 
 class Miya(commands.AutoShardedBot):
     def __init__(self, *args, **kwargs):
@@ -24,6 +32,7 @@ class Miya(commands.AutoShardedBot):
                 result = 9 * (num - 1) + (index + 1)
                 return result
 
+
 intents = discord.Intents(
     guilds=True,
     members=True,
@@ -35,8 +44,8 @@ intents = discord.Intents(
     voice_states=True,
     presences=False,
     messages=True,
-    reactions=True, 
-    typing=True
+    reactions=True,
+    typing=True,
 )
 miya = Miya(
     shard_count=3,
@@ -44,8 +53,9 @@ miya = Miya(
     description="다재다능한 Discord 봇, 미야.",
     help_command=None,
     chunk_guilds_at_startup=True,
-    intents=intents
+    intents=intents,
 )
+
 
 def load_modules(miya):
     failed = []
@@ -69,12 +79,14 @@ def load_modules(miya):
 
     return failed
 
+
 @miya.check
 async def process(ctx):
     p = await get.processing(ctx)
     if p is not None:
         raise Forbidden(p)
     return True
+
 
 load_modules(miya)
 miya.run(config.BotToken)
