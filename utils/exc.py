@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+
 class Forbidden(commands.CheckFailure):
     def __init__(self, embed, ctx):
         self.embed = embed
