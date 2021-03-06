@@ -9,6 +9,7 @@ from pytz import timezone, utc
 from utils import exc, data
 locale.setlocale(locale.LC_ALL, '')
 
+
 async def mgr(ctx):
     rows = await data.fetch("SELECT `manager` FROM `miya`")
     mgrs = rows[0][0].split(" ")
@@ -16,7 +17,8 @@ async def mgr(ctx):
     for m in mgrs:
         if ctx.author.id == int(m):
             return True
-    return False 
+    return False
+
 
 async def kor_time(date):
     KST = timezone('Asia/Seoul')
@@ -24,6 +26,7 @@ async def kor_time(date):
     abc = utc.localize(now).astimezone(KST)
     time = abc.strftime("%Y년 %m월 %d일 %H시 %M분 %S초")
     return time
+
 
 async def hangang():
     async with aiohttp.ClientSession() as cs:
@@ -35,8 +38,9 @@ async def hangang():
                 temp = int(response["temp"].split(".")[0])
             else:
                 temp = int(response["temp"])
-    
+
     return [temp, time]
+
 
 async def corona():
     async with aiohttp.ClientSession() as cs:
@@ -48,7 +52,8 @@ async def corona():
             num = data.findAll('span', class_='num')
             corona_info = [corona_num.text for corona_num in num]
 
-            return corona_info # 순서대로 확진자, 완치, 치료, 사망
+            return corona_info  # 순서대로 확진자, 완치, 치료, 사망
+
 
 async def check(ctx, miya):
     mgr = await mgr(ctx)
@@ -96,5 +101,5 @@ async def check(ctx, miya):
         timestamp=datetime.datetime.utcnow(),
         color=0xFF3333
     )
-    embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)   
+    embed.set_author(name="이용 제한", icon_url=miya.user.avatar_url)
     raise exc.Forbidden(embed, ctx)
