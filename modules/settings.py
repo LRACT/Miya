@@ -16,9 +16,9 @@ class Settings(commands.Cog, name="설정"):
 
     @commands.command(name="뮤트설정")
     @commands.has_permissions(administrator=True)
-    @commands.bot_has_permissions(
-        manage_channels=True, manage_roles=True, manage_permissions=True
-    )
+    @commands.bot_has_permissions(manage_channels=True,
+                                  manage_roles=True,
+                                  manage_permissions=True)
     async def role_set(self, ctx, role: discord.Role):
         """
         미야야 뮤트설정 < @역할 >
@@ -41,16 +41,16 @@ class Settings(commands.Cog, name="설정"):
                         perms.send_messages = False
                         perms.send_tts_messages = False
                         perms.add_reactions = False
-                        await channel.set_permissions(
-                            role, overwrite=perms, reason="뮤트 역할 설정"
-                        )
+                        await channel.set_permissions(role,
+                                                      overwrite=perms,
+                                                      reason="뮤트 역할 설정")
                     for channel in ctx.guild.voice_channels:
                         perms = channel.overwrites_for(role)
                         perms.speak = False
                         perms.stream = False
-                        await channel.set_permissions(
-                            role, overwrite=perms, reason="뮤트 역할 설정"
-                        )
+                        await channel.set_permissions(role,
+                                                      overwrite=perms,
+                                                      reason="뮤트 역할 설정")
                     for category in ctx.guild.categories:
                         perms = category.overwrites_for(role)
                         perms.send_messages = False
@@ -58,9 +58,9 @@ class Settings(commands.Cog, name="설정"):
                         perms.add_reactions = False
                         perms.speak = False
                         perms.stream = False
-                        await category.set_permissions(
-                            role, overwrite=perms, reason="뮤트 역할 설정"
-                        )
+                        await category.set_permissions(role,
+                                                       overwrite=perms,
+                                                       reason="뮤트 역할 설정")
                     await ctx.reply(
                         f"<:cs_settings:659355468992610304> 뮤트 역할을 `{role.name}` 역할로 설정했어요.\n \n*관리자 권한을 가진 유저 및 권한 설정을 통해 메시지 보내기 권한을 승인받은 유저는 뮤트가 적용되지 않아요.*"
                     )
@@ -95,7 +95,8 @@ class Settings(commands.Cog, name="설정"):
                 else:
                     follow = self.miya.get_channel(config.NotifyChannel)
                     try:
-                        await follow.follow(destination=channel, reason="미야 봇 공지 채널 설정")
+                        await follow.follow(destination=channel,
+                                            reason="미야 봇 공지 채널 설정")
                     except discord.Forbidden:
                         await ctx.reply(
                             f"<:cs_no:659355468816187405> 공지 채널 설정은 해당 채널에 웹훅 관리 권한이 필요해요."
@@ -168,8 +169,7 @@ class Settings(commands.Cog, name="설정"):
                     )
                     if result == "SUCCESS":
                         await ctx.reply(
-                            f"<:cs_off:659355468887490560> 링크 차단 기능을 비활성화했어요!"
-                        )
+                            f"<:cs_off:659355468887490560> 링크 차단 기능을 비활성화했어요!")
                     else:
                         await webhook.terminal(
                             f"Filter Update Failed >\nSQL Result - {result}",
