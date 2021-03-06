@@ -6,6 +6,7 @@ from utils import data
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+
 class Moderation(commands.Cog, name="모드"):
     def __init__(self, bot):
         self.bot = bot
@@ -33,7 +34,7 @@ class Moderation(commands.Cog, name="모드"):
                 await ctx.reply(f"<:mute:761151751583301682> 그 유저는 이미 뮤트되어 있어요!")
         else:
             await ctx.reply(f"<:cs_no:659355468816187405> 이 명령어를 실행하려면 뮤트에 사용할 역할이 지정되어 있어야 해요. `미야야 뮤트설정` 명령어를 사용해 설정을 완료해주세요.")
-    
+
     @commands.command(name="언뮤트")
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -84,8 +85,8 @@ class Moderation(commands.Cog, name="모드"):
     async def _kick(self, ctx, member: discord.Member, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 추방 < 유저 > [ 사유 ]
-        
-        
+
+
         서버에서 유저를 추방합니다.
         """
         if member.top_role < ctx.guild.me.top_role:
@@ -97,15 +98,15 @@ class Moderation(commands.Cog, name="모드"):
             await ctx.reply(f"<a:ban_cat:761149577444720640> **{member}**님을 서버에서 추방했어요!\n사유 : {reason}")
         else:
             await ctx.reply(f"<:cs_no:659355468816187405> 미야가 추방하려는 유저보다 권한이 낮거나 같아 추방하지 못했어요.")
-        
+
     @commands.command(name="차단", aliases=["밴", "벤"])
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def _ban(self, ctx, user: discord.Member, delete: typing.Optional[int] = 0, *, reason: typing.Optional[str] = "사유 없음."):
         """
         미야야 차단 < 유저 > [ 메시지 삭제 일 수 ( ~7일까지 ) ] [ 사유 ]
-        
-        
+
+
         서버에서 유저를 차단합니다.
         """
         if user.top_role < ctx.guild.me.top_role:
@@ -116,8 +117,8 @@ class Moderation(commands.Cog, name="모드"):
             await ctx.guild.ban(user, delete_message_days=delete, reason=reason)
             await ctx.reply(f"<a:ban_guy:761149578216603668> **{user}**님을 서버에서 차단했어요!\n메시지 삭제 일 수 : {delete}일\n사유 : {reason}")
         else:
-            await ctx.reply(f"<:cs_no:659355468816187405> 미야가 차단하려는 유저보다 권한이 낮거나 같아 차단하지 못했어요.") 
-            
+            await ctx.reply(f"<:cs_no:659355468816187405> 미야가 차단하려는 유저보다 권한이 낮거나 같아 차단하지 못했어요.")
+
     @commands.command(name="청소", aliases=["삭제"])
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
@@ -126,15 +127,16 @@ class Moderation(commands.Cog, name="모드"):
         """
         미야야 청소 < 1 ~ 100 사이의 정수 >
 
-        
+
         설정한 갯수 만큼의 메세지를 채널에서 삭제합니다.
-        """ 
+        """
         if num <= 100 and num > 0:
             await ctx.message.delete()
             deleted = await ctx.channel.purge(limit=num)
             await ctx.send(f"<:cs_trash:659355468631769101> {ctx.author.mention} {len(deleted)}개의 메세지를 삭제했어요!", delete_after=3)
         else:
             raise commands.BadArgument
+
 
 def setup(miya):
     miya.add_cog(Moderation(miya))
