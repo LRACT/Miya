@@ -25,7 +25,7 @@ async def mgr(ctx):
     for m in mgrs:
         if ctx.author.id == int(m):
             return True
-    raise commands.NotOwner
+    return False
     
 
 async def kor_time(date):
