@@ -3,6 +3,7 @@ from lib import config
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+
 async def fetch(sql):
     o = await aiomysql.connect(
         host=config.MySQL['host'],
@@ -20,6 +21,7 @@ async def fetch(sql):
     except Exception as e:
         return e
     o.close()
+
 
 async def commit(sql):
     o = await aiomysql.connect(
