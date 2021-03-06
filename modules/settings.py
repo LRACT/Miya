@@ -5,6 +5,7 @@ from lib import config
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+
 class Settings(commands.Cog, name="설정"):
     def __init__(self, miya):
         self.miya = miya
@@ -120,7 +121,7 @@ class Settings(commands.Cog, name="설정"):
                         await ctx.reply(f":warning: 명령어 실행 도중 오류가 발생했어요.\n오류 해결을 위해 Discord 지원 서버로 문의해주세요. https://discord.gg/tu4NKbEEnn")
                 else:
                     raise commands.BadArgument
-    
+
     @commands.command(name="메시지설정", aliases=["메세지설정"])
     @commands.has_permissions(manage_guild=True)
     async def msg_set(self, ctx, name, *, message):
@@ -151,5 +152,6 @@ class Settings(commands.Cog, name="설정"):
             else:
                 raise commands.BadArgument
 
+
 def setup(miya):
-    miya.add_cog(Settings(miya)) 
+    miya.add_cog(Settings(miya))
