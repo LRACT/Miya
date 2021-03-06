@@ -109,7 +109,7 @@ async def check(ctx, miya):
                 miya.user.avatar_url,
             )
         else:
-            await ctx.send("당신은 차단되었지만, 관리 권한으로 명령어를 실행했습니다.")
+            await ctx.send("해당 단어는 차단 대상이나, 관리 권한으로 넘겼습니다.")
             await webhook.terminal(
                 f"Manager Bypassed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})",
                 "명령어 처리 기록",
