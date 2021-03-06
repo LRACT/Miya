@@ -23,7 +23,7 @@ class Administration(commands.Cog, name="관리"):
         미야야 제한 < 추가 / 삭제 > < 단어 >
         
         
-        특정 단어 사용 시 미야 사용이 제한되게 합니다.
+        자동 차단 단어를 관리합니다.
         """
         if todo == "추가":
             result = await utils.data.commit(f"INSERT INTO `forbidden`(`word`) VALUES('{word}')")
