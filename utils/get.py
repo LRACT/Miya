@@ -12,6 +12,7 @@ from pytz import utc
 from lib import config
 from utils import data
 from utils import exc
+from utils import webhook
 
 locale.setlocale(locale.LC_ALL, "")
 
@@ -63,11 +64,10 @@ async def corona():
 
 async def check(ctx, miya):
     manage = await mgr(ctx)
-
     reason, admin, time, banned, forbidden = None, None, None, None, None
     words = await data.fetch("SELECT * FROM `forbidden`")
     for word in words:
-        if word[0] in msg.content:
+        if word[0] in ctx.message.content:
             forbidden = True
             banned = word[0]
     rows = await data.fetch(
