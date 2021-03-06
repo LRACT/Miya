@@ -27,6 +27,7 @@ class log(commands.Cog, name="로그"):
             embed = discord.Embed(title="유저가 서버에 입장했습니다.", description=f"< 입장한 유저 : {member.mention}\n", timestamp=member.joined_at, color=0x15ff0e)
             embed.set_thumbnail(url=member.avatar_url_as(static_format="png", size=2048))
             embed.set_footer(text="멤버 입장 이벤트")
+            embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
             await channel.send(embed=embed)
     
     @commands.Cog.listener()
@@ -39,6 +40,7 @@ class log(commands.Cog, name="로그"):
             embed = discord.Embed(title="유저가 서버에서 나갔습니다.", description=f"< 퇴장한 유저 : {member.mention}\n< 가지고 있던 역할 {roles}", timestamp=member.joined_at, color=0xff0000)
             embed.set_thumbnail(url=member.avatar_url_as(static_format="png", size=2048))
             embed.set_footer(text="멤버 퇴장 이벤트")
+            embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
             await channel.send(embed=embed)
                 
     @commands.Cog.listener()
@@ -55,6 +57,7 @@ class log(commands.Cog, name="로그"):
                 embed.add_field(name="메시지가 삭제된 채널", value=f"{msg.channel.mention} ( {msg.channel.id} )", inline=False)
                 embed.set_thumbnail(url=msg.author.avatar_url_as(static_format="png", size=2048))
                 embed.set_footer(text="메시지 삭제 이벤트")
+                embed.set_author(name="반가워요!", icon_url=self.miya.user.avatar_url)
                 if msg.content == "":
                     embed.add_field(name="메시지 내용", value="*내용이 없습니다. (싸늘한 바람)*", inline=False)
                     await channel.send(embed=embed)
@@ -64,6 +67,7 @@ class log(commands.Cog, name="로그"):
             else:
                 embed = discord.Embed(title="메시지가 삭제되었습니다.", description="메시지가 캐싱되지 않아 내용 및 파일을 불러오지 못했습니다.", timestamp=datetime.datetime.utcnow())
                 embed.add_field(name="메시지가 삭제된 채널", value=f"<#{payload.channel_id}> ( {payload.channel_id} )", inline=False)
+                embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
                 await channel.send(embed=embed)
     
     @commands.Cog.listener()
@@ -87,6 +91,7 @@ class log(commands.Cog, name="로그"):
                 embed.add_field(name="변경된 사항", value="메시지가 고정됨")
             elif len(before.embeds) != len(after.embeds):
                 embed.add_field(name="변경된 사항", value="임베드가 변경됨")
+            embed.set_author(name="기록", icon_url=self.miya.user.avatar_url)
             await channel.send(embed=embed)
 
 def setup(miya):
