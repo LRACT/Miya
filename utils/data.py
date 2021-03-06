@@ -13,9 +13,12 @@ async def fetch(sql):
         autocommit=True
     )
     c = await o.cursor()
-    await c.execute(sql)
-    rows = await c.fetchall()
-    return rows
+    try:
+        await c.execute(sql)
+        rows = await c.fetchall()
+        return rows
+    except Exception as e:
+        return e
     o.close()
 
 async def commit(sql):
