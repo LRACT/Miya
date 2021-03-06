@@ -79,7 +79,7 @@ def load_modules(miya):
 
 @miya.check
 async def process(ctx):
-    p = await get.check(ctx)
+    p = await get.check(ctx, miya)
     return p
 
 
