@@ -149,8 +149,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     )
                     embed = discord.Embed(
                         title=msg,
-                        description=
-                        f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)",
+                        description=f"[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)",
                         color=0x5FE9FF,
                     )
                     embed.set_footer(
@@ -164,8 +163,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     )
                     embed = discord.Embed(
                         title="💭 이런, 미야가 말풍선을 모두 사용한 모양이네요.",
-                        description=
-                        f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)",
+                        description=f"매월 1일에 말풍선이 다시 생기니 그 때까지만 기다려주세요!\n \n[Discord 지원 서버 접속하기](https://discord.gg/tu4NKbEEnn)\n[한국 디스코드 봇 리스트 하트 누르기](https://koreanbots.dev/bots/720724942873821316)",
                         color=0x5FE9FF,
                     )
                     embed.set_footer(
@@ -237,7 +235,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         color=0x5FE9FF,
                     )
                     embed.set_author(name="반가워요!",
-                                 icon_url=self.miya.user.avatar_url)
+                                     icon_url=self.miya.user.avatar_url)
                     await guild.owner.send(
                         f"<:cs_notify:659355468904529920> {guild.owner.mention}",
                         embed=embed,

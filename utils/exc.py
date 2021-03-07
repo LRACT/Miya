@@ -8,6 +8,7 @@ class Forbidden(commands.CheckFailure):
         super().__init__(
             "<a:ban_guy:761149578216603668> https://discord.gg/tu4NKbEEnn")
 
+
 class Forbidden(commands.CheckFailure):
     def __init__(self, ctx):
         super().__init__(
