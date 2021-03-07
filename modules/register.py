@@ -18,7 +18,8 @@ class DataManagement(commands.Cog, name="데이터 관리"):
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
     async def _register(self, ctx):
         rows = await data.fetch(
-            f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
+            f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'"
+        )
         if not rows:
             embed = discord.Embed(
                 title="미야 이용 약관에 동의하시겠어요?",
@@ -30,23 +31,25 @@ class DataManagement(commands.Cog, name="데이터 관리"):
             async with ctx.channel.typing():
 
                 def check(msg):
-                    return (msg.channel == ctx.channel
-                            and msg.author == ctx.author
-                            and msg.content == "동의합니다")
+                    return (
+                        msg.channel == ctx.channel
+                        and msg.author == ctx.author
+                        and msg.content == "동의합니다"
+                    )
 
                 try:
-                    msg = await self.miya.wait_for("message",
-                                                   timeout=180,
-                                                   check=check)
+                    msg = await self.miya.wait_for("message", timeout=180, check=check)
                 except asyncio.TimeoutError:
                     fail_embed = discord.Embed(
-                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었어요.",
-                        color=0xFF0000)
+                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었어요.", color=0xFF0000
+                    )
                     await register_msg.edit(embed=fail_embed, delete_after=5)
                 else:
                     await msg.delete()
                     await register_msg.delete()
-                    result = await data.commit(f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')")
+                    result = await data.commit(
+                        f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')"
+                    )
                     if result == "SUCCESS":
                         await ctx.reply(
                             f"<:cs_yes:659355468715786262> 가입 절차가 모두 완료되었어요! 이제 미야의 기능을 사용하실 수 있어요."
