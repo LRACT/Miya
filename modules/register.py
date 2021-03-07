@@ -15,6 +15,7 @@ class DataManagement(commands.Cog, name="데이터 관리"):
         self.miya = miya
 
     @commands.command(name="가입", aliases=["등록"])
+    @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
     async def _register(self, ctx):
         rows = await data.fetch(
             f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
@@ -40,20 +41,20 @@ class DataManagement(commands.Cog, name="데이터 관리"):
                                                    check=check)
                 except asyncio.TimeoutError:
                     fail_embed = discord.Embed(
-                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었습니다.",
+                        description="미야 이용약관 동의에 시간이 너무 오래 걸려 취소되었어요.",
                         color=0xFF0000)
                     await register_msg.edit(embed=fail_embed, delete_after=5)
                 else:
                     await msg.delete()
                     await register_msg.delete()
-                    result = await data.commit(f"")
+                    result = await data.commit(f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')")
                     if result == "SUCCESS":
                         await ctx.reply(
-                            f"<:cs_yes:659355468715786262> 서버 등록이 완료되었어요! 이제 미야의 기능을 사용하실 수 있어요."
+                            f"<:cs_yes:659355468715786262> 가입 절차가 모두 완료되었어요! 이제 미야의 기능을 사용하실 수 있어요."
                         )
                     else:
                         await ctx.reply(
-                            f"<:cs_no:659355468816187405> 서버 등록 도중에 오류가 발생했어요. 등록을 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/tu4NKbEEnn 로 문의해주세요."
+                            f"<:cs_no:659355468816187405> 유저 등록에 실패했어요. 잠시 후 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/tu4NKbEEnn 로 문의해주세요."
                         )
         else:
             await ctx.reply(
