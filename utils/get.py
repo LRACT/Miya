@@ -118,7 +118,7 @@ async def check(ctx, miya):
                 miya.user.avatar_url,
             )
             return True
-    elif not users:
+    elif not users and ctx.command.name != "가입":
         await webhook.terminal(
             f"Cancelled >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})",
             "명령어 처리 기록",
