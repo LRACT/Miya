@@ -52,11 +52,11 @@ class DataManagement(commands.Cog, name="데이터 관리"):
                     )
                     if result == "SUCCESS":
                         await ctx.reply(
-                            f"<:cs_yes:659355468715786262> 가입 절차가 모두 완료되었어요! 이제 미야의 기능을 사용하실 수 있어요."
+                            f"<:cs_yes:659355468715786262> 가입 절차가 모두 완료되었어요! 이제 미야와 대화하실 수 있어요."
                         )
                     else:
                         await ctx.reply(
-                            f"<:cs_no:659355468816187405> 유저 등록에 실패했어요. 잠시 후 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/tu4NKbEEnn 로 문의해주세요."
+                            f"<:cs_no:659355468816187405> 가입에 실패했어요. 잠시 후 다시 시도해주세요.\n계속해서 이런 현상이 발생한다면 https://discord.gg/tu4NKbEEnn 로 문의해주세요."
                         )
         else:
             await ctx.reply(
