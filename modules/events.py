@@ -208,35 +208,58 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "서버 입퇴장 기록",
             self.miya.user.avatar_url,
         )
+        grows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{guild.id}'")
+        if not grows:
+            g_result = await data.commit(
+                f"INSERT INTO `guilds`(`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`) VALUES('{guild.id}', '1234', '1234', 'false', '0')"
+            )
+            default_join_msg = (
+                "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명")
+            default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
+            m_result = await data.commit(
+                f"INSERT INTO `membernoti`(`guild`, `channel`, `join_msg`, `remove_msg`) VALUES('{guild.id}', '1234', '{default_join_msg}', '{default_quit_msg}')"
+            )
+            if g_result == "SUCCESS" and m_result == "SUCCESS":
+                await webhook.terminal(
+                    f"Registered >\nGuild - {guild.name} ({guild.id})",
+                    "서버 등록 기록",
+                    self.miya.user.avatar_url,
+                )
+                try:
+                    embed = discord.Embed(
+                        title="미야를 초대해주셔서 감사해요!",
+                        description="""
+`미야야 채널설정 공지 #채널` 명령어를 사용해 공지 채널을 설정해주세요.
+미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/tu4NKbEEnn)에서 하실 수 있어요!
+미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
+                        """,
+                        timestamp=datetime.datetime.utcnow(),
+                        color=0x5FE9FF,
+                    )
+                    embed.set_author(name="반가워요!",
+                                 icon_url=self.miya.user.avatar_url)
+                    await guild.owner.send(
+                        f"<:cs_notify:659355468904529920> {guild.owner.mention}",
+                        embed=embed,
+                    )
+                except:
+                    await webhook.terminal(
+                        f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})",
+                        "서버 입퇴장 기록",
+                        self.miya.user.avatar_url,
+                    )
+            else:
+                await webhook.terminal(
+                    f"Register Failed >\nGuild - {guild.name} ({guild.id})\nguilds Table - {g_result}\nmemberNoti Table - {m_result}",
+                    "서버 등록 기록",
+                    self.miya.user.avatar_url,
+                )
+                await guild.text_channels[0].send(f"<:cs_stop:665173353874587678> {guild.owner.mention} 미야 설정이 정상적으로 완료되지 않았습니다.\n자세한 내용은 https://discord.gg/tu4NKbEEnn 으로 문의해주세요.")
         rows = await data.fetch(
             f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         rows2 = await data.fetch(
             f"SELECT * FROM `blacklist` WHERE `id` = '{guild.owner.id}'")
-        if not rows and not rows2:
-            try:
-                embed = discord.Embed(
-                    title="미야를 초대해주셔서 감사해요!",
-                    description="""
-`미야야 채널설정 공지 < #채널 >` 명령어를 사용해 공지 채널을 설정해주세요.
-미야에 관련된 문의 사항은 [지원 서버](https://discord.gg/tu4NKbEEnn)에서 하실 수 있어요!
-미야의 더욱 다양한 명령어는 `미야야 도움말` 명령어로 살펴보세요!
-                    """,
-                    timestamp=datetime.datetime.utcnow(),
-                    color=0x5FE9FF,
-                )
-                embed.set_author(name="반가워요!",
-                                 icon_url=self.miya.user.avatar_url)
-                await guild.owner.send(
-                    f"<:cs_notify:659355468904529920> {guild.owner.mention}",
-                    embed=embed,
-                )
-            except:
-                await webhook.terminal(
-                    f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})",
-                    "서버 입퇴장 기록",
-                    self.miya.user.avatar_url,
-                )
-        else:
+        if rows or rows2:
             try:
                 temp = None
                 if rows:
@@ -269,6 +292,24 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     f"Owner DM Failed >\nGuild - {guild.name} ({guild.id})",
                     "서버 입퇴장 기록",
                     self.miya.user.avatar_url,
+                )
+                admin = self.miya.get_user(int(temp[0][2]))
+                embed = discord.Embed(
+                    title=f"이런, {guild.name} 서버는 (혹은 그 소유자가) 차단되었어요.",
+                    description=f"""
+차단에 관해서는 지원 서버를 방문해주세요.
+사유 : {temp[0][1]}
+관리자 : {admin}
+차단 시각 : {temp[0][3]}
+                    """,
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0xFF3333,
+                )
+                embed.set_author(name="초대 제한",
+                                 icon_url=self.miya.user.avatar_url)
+                await guild.text_channels[0].send(
+                    f"<:cs_notify:659355468904529920> {guild.owner.mention} https://discord.gg/tu4NKbEEnn",
+                    embed=embed,
                 )
             await webhook.terminal(
                 f"Blocked Guild >\nGuild - {guild.name} ({guild.id})\nOwner - {guild.owner} ({guild.owner.id})",
