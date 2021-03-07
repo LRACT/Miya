@@ -208,13 +208,13 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             "서버 입퇴장 기록",
             self.miya.user.avatar_url,
         )
-        grows = await data.fetch(f"SELECT * FROM `guilds` WHERE `guild` = '{guild.id}'")
+        grows = await data.fetch(
+            f"SELECT * FROM `guilds` WHERE `guild` = '{guild.id}'")
         if not grows:
             g_result = await data.commit(
                 f"INSERT INTO `guilds`(`guild`, `eventLog`, `muteRole`, `linkFiltering`, `warn_kick`) VALUES('{guild.id}', '1234', '1234', 'false', '0')"
             )
-            default_join_msg = (
-                "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명")
+            default_join_msg = "{member}님 **{guild}**에 오신 것을 환영해요! 현재 인원 : {count}명"
             default_quit_msg = "{member}님 안녕히 가세요.. 현재 인원 : {count}명"
             m_result = await data.commit(
                 f"INSERT INTO `membernoti`(`guild`, `channel`, `join_msg`, `remove_msg`) VALUES('{guild.id}', '1234', '{default_join_msg}', '{default_quit_msg}')"
@@ -237,7 +237,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                         color=0x5FE9FF,
                     )
                     embed.set_author(name="반가워요!",
-                                 icon_url=self.miya.user.avatar_url)
+                                     icon_url=self.miya.user.avatar_url)
                     await guild.owner.send(
                         f"<:cs_notify:659355468904529920> {guild.owner.mention}",
                         embed=embed,
@@ -254,7 +254,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     "서버 등록 기록",
                     self.miya.user.avatar_url,
                 )
-                await guild.text_channels[0].send(f"<:cs_stop:665173353874587678> {guild.owner.mention} 미야 설정이 정상적으로 완료되지 않았습니다.\n자세한 내용은 https://discord.gg/tu4NKbEEnn 으로 문의해주세요.")
+                await guild.text_channels[0].send(
+                    f"<:cs_stop:665173353874587678> {guild.owner.mention} 미야 설정이 정상적으로 완료되지 않았습니다.\n자세한 내용은 https://discord.gg/tu4NKbEEnn 으로 문의해주세요."
+                )
         rows = await data.fetch(
             f"SELECT * FROM `blacklist` WHERE `id` = '{guild.id}'")
         rows2 = await data.fetch(
