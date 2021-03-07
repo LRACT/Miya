@@ -70,6 +70,8 @@ async def check(ctx, miya):
         if word[0] in ctx.message.content:
             forbidden = True
             banned = word[0]
+    users = await data.fetch(
+        f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
     rows = await data.fetch(
         f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
     if rows:
@@ -116,6 +118,13 @@ async def check(ctx, miya):
                 miya.user.avatar_url,
             )
             return True
+    elif not users:
+        await webhook.terminal(
+            f"Cancelled >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})",
+            "명령어 처리 기록",
+            miya.user.avatar_url,
+        )
+        raise exc.NoReg(ctx)
     else:
         await webhook.terminal(
             f"Processed >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}\nGuild - {ctx.guild.name} ({ctx.guild.id})",
