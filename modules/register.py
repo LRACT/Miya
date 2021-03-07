@@ -47,7 +47,9 @@ class DataManagement(commands.Cog, name="데이터 관리"):
                 else:
                     await msg.delete()
                     await register_msg.delete()
-                    result = await data.commit(f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')")
+                    result = await data.commit(
+                        f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')"
+                    )
                     if result == "SUCCESS":
                         await ctx.reply(
                             f"<:cs_yes:659355468715786262> 가입 절차가 모두 완료되었어요! 이제 미야의 기능을 사용하실 수 있어요."
