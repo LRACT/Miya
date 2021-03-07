@@ -6,10 +6,13 @@ import aiomysql
 import discord
 from bs4 import BeautifulSoup
 from discord.ext import commands
-from pytz import timezone, utc
+from pytz import timezone
+from pytz import utc
 
 from lib import config
-from utils import data, exc, webhook
+from utils import data
+from utils import exc
+from utils import webhook
 
 locale.setlocale(locale.LC_ALL, "")
 

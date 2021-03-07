@@ -8,7 +8,10 @@ import discord
 from discord.ext import commands
 
 from lib import config
-from utils import data, exc, get, webhook
+from utils import data
+from utils import exc
+from utils import get
+from utils import webhook
 
 locale.setlocale(locale.LC_ALL, "")
 
