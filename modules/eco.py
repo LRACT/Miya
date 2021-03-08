@@ -13,6 +13,12 @@ class Economy(commands.Cog, name="경제"):
 
     @commands.command(name="지갑")
     async def _wallet(self, ctx, user: typing.Optional[discord.User] = None):
+        """
+        미야야 지갑 [ @유저 ]
+
+
+        지정한 유저( 혹은 본인 )의 지갑 정보를 확인합니다.
+        """
         if user is None:
             user = ctx.author
         rows = await data.fetch(
