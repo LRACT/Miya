@@ -12,7 +12,7 @@ class Economy(commands.Cog, name="경제"):
         self.miya = miya
 
     @commands.command(name="지갑")
-    @commands.is_owner((
+    @commands.is_owner()
     async def _wallet(self, ctx, user: typing.Optional[discord.User] = None):
         """
         미야야 지갑 [ @유저 ]
