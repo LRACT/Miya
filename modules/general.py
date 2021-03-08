@@ -39,7 +39,7 @@ class General(commands.Cog, name="일반"):
         )
         embed.set_author(name="도움말", icon_url=self.miya.user.avatar_url)
         for command in self.miya.commands:
-            private = ["관리", "서버 데이터 관리", "Jishaku"]
+            private = ["관리", "데이터 관리", "Jishaku"]
             if command.cog.qualified_name in private:
                 pass
             else:
