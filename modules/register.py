@@ -54,7 +54,7 @@ class DataManagement(commands.Cog, name="데이터 관리"):
                     await msg.delete()
                     await register_msg.delete()
                     result = await data.commit(
-                        f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '5000')"
+                        f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '500')"
                     )
                     if result == "SUCCESS":
                         await ctx.reply(
