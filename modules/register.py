@@ -17,6 +17,12 @@ class DataManagement(commands.Cog, name="데이터 관리"):
     @commands.command(name="가입", aliases=["등록"])
     @commands.cooldown(rate=1, per=20, type=commands.BucketType.user)
     async def _register(self, ctx):
+        """
+        미야야 가입
+
+
+        미야의 서비스에 이용 약관을 동의하고 등록합니다.
+        """
         rows = await data.fetch(
             f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
         if not rows:
