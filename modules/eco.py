@@ -64,7 +64,7 @@ class Economy(commands.Cog, name="경제"):
         embed, rest = None, None
         if user < bot:
             embed = discord.Embed(
-                title="🎲 {user}님의 주사위 도박 결과",
+                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
                 timestamp=datetime.datetime.utcnow(),
                 color=0xFF9999,
             )
@@ -72,7 +72,7 @@ class Economy(commands.Cog, name="경제"):
             rest = int(rows[0][1]) - int(money)
         elif user == bot:
             embed = discord.Embed(
-                title="🎲 {user}님의 주사위 도박 결과",
+                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
                 timestamp=datetime.datetime.utcnow(),
                 color=0x333333,
             )
@@ -80,7 +80,7 @@ class Economy(commands.Cog, name="경제"):
             rest = int(rows[0][1])
         elif user > bot:
             embed = discord.Embed(
-                title="🎲 {user}님의 주사위 도박 결과",
+                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
                 timestamp=datetime.datetime.utcnow(),
                 color=0x99FF99,
             )
@@ -90,7 +90,7 @@ class Economy(commands.Cog, name="경제"):
         embed.set_thumbnail(
             url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.add_field(name="미야의 주사위", value=f"`🎲 {bot}`", inline=True)
-        embed.add_field(name="당신의 주사위", value=f"`🎲 {user}`", inline=True)
+        embed.add_field(name=f"{ctx.author.name}님의 주사위", value=f"`🎲 {user}`", inline=True)
         await data.commit(
             f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'"
         )
