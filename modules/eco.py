@@ -33,7 +33,7 @@ class Economy(commands.Cog, name="경제"):
             f"SELECT * FROM `users` WHERE `user` = '{user.id}'")
         if not rows:
             await ctx.reply(
-                f"<:cs_no:659355468816187405> {user}님의 지갑 데이터가 등록되지 않았어요.")
+                f"<:cs_no:659355468816187405> **{user}**님의 지갑 데이터가 등록되지 않았어요.")
         else:
             embed = discord.Embed(
                 title=f"💳 {user}님의 지갑 정보",
