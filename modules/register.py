@@ -4,8 +4,7 @@ import locale
 import discord
 from discord.ext import commands
 
-from utils import data
-from utils import webhook
+from utils import data, webhook
 
 locale.setlocale(locale.LC_ALL, "")
 
