@@ -86,7 +86,7 @@ class Economy(commands.Cog, name="경제"):
         elif money.isdecimal() is not True:
             raise commands.BadArgument
 
-        if int(rows[0][1]) == 0 or int(rows[0][1]) < money:
+        if int(rows[0][1]) == 0 or int(rows[0][1]) < int(money):
             await ctx.reply(f"🍋 코인이 부족해요! 현재 코인 : {rows[0][1]}개")
         else:
             user = random.randint(1, 6)
