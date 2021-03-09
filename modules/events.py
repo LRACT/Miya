@@ -121,7 +121,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     f"<:cs_console:659355468786958356> `{usage}`(이)가 올바른 명령어에요!"
                 )
         elif isinstance(error, commands.CommandNotFound) or isinstance(
-                error, commands.NotOwner):
+                error, commands.NotOwner) or isinstance(error, commands.CheckFailure):
             p = await get.check(ctx, self.miya)
             if p is True:
                 response_msg = None
