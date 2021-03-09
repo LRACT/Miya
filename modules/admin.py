@@ -45,7 +45,6 @@ class Administration(commands.Cog, name="관리"):
         else:
             raise commands.BadArgument
 
-
     @commands.command(name="제한")
     @is_manager()
     async def _black_word(self, ctx, todo, *, word):
