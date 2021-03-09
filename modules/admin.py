@@ -41,7 +41,7 @@ class Administration(commands.Cog, name="관리"):
                 await ctx.reply(a)
         elif work == "commit":
             result = await utils.data.commit(sql)
-            await ctx.reply(a)
+            await ctx.reply(result)
         else:
             raise commands.BadArgument
 
