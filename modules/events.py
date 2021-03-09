@@ -94,7 +94,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             )
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.reply(
-                f"<:cs_stop:665173353874587678> 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after), 2}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요."
+                f"<:cs_stop:665173353874587678> 잠시 기다려주세요. 해당 명령어를 사용하려면 {round(error.retry_after, 2)}초를 더 기다리셔야 해요.\n해당 명령어는 `{error.cooldown.per}`초에 `{error.cooldown.rate}`번만 사용할 수 있어요."
             )
         elif isinstance(error, commands.MissingRequiredArgument) or isinstance(
                 error, commands.BadArgument):
