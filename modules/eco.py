@@ -16,11 +16,7 @@ class Economy(commands.Cog, name="경제"):
         def predicate(ctx):
             return ctx.guild.id == 564418977627897887
 
-        a = commands.check(predicate)
-        if a is True:
-            return True
-        else:
-            raise commands.CommandNotFound
+        return commands.check(predicate)
 
     @commands.command(name="지갑")
     @in_guild()
