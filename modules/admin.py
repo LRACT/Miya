@@ -20,6 +20,32 @@ class Administration(commands.Cog, name="관리"):
             raise commands.NotOwner
         return mgr
 
+    @commands.command(name="SQL")
+    @commands.is_owner()
+    async def _sql(self, ctx, work, *, sql):
+        """
+        미야야 SQL < fetch / commit > < SQL 명령 >
+
+
+        SQL 구문을 실행하고, 리턴값을 반환합니다.
+        """
+        if work == "fetch":
+            a = ""
+            rows = await utils.data.fetch(sql)
+            for row in rows:
+                a += f"{row}\n"
+            if len(a) > 1900:
+                await ctx.reply(f"{a[:1900]}\n메시지 길이 제한으로 1900자까지만 출력되었습니다.")
+                print(a)
+            else:
+                await ctx.reply(a)
+        elif work == "commit":
+            result = await utils.data.commit(sql)
+            await ctx.reply(a)
+        else:
+            raise commands.BadArgument
+
+
     @commands.command(name="제한")
     @is_manager()
     async def _black_word(self, ctx, todo, *, word):
