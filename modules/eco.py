@@ -18,7 +18,7 @@ class Economy(commands.Cog, name="경제"):
 
         return commands.check(predicate)
 
-    @commands.command(name="지갑")
+    @commands.command(name="지갑", aliases=["돈", "잔고"])
     @in_guild()
     async def _wallet(self, ctx, user: typing.Optional[discord.User] = None):
         """
@@ -40,7 +40,7 @@ class Economy(commands.Cog, name="경제"):
                 timestamp=datetime.datetime.utcnow(),
                 color=0x5FE9FF,
             )
-            embed.add_field(name="잔여 코인", value=f"{rows[0][1]}개", inline=False)
+            embed.add_field(name="가지고 있는 코인", value=f"{rows[0][1]}개", inline=False)
             embed.add_field(name="곧 더 많은 기능이 찾아옵니다...",
                             value="새로운 기능도 많이 기대해주세요!",
                             inline=False)
@@ -48,6 +48,24 @@ class Economy(commands.Cog, name="경제"):
                 url=user.avatar_url_as(static_format="png", size=2048))
             embed.set_author(name="지갑", icon_url=self.miya.user.avatar_url)
             await ctx.reply(embed=embed)
+
+    @commands.command(name="돈받기")
+    @commands.cooldown(rate=1, per=43200, type=commands.BucketType.user)
+    @in_guild()
+    async def _money(self, ctx):
+        """
+        미야야 돈받기
+
+
+        500원을 지급합니다. 12시간에 1회만 사용 가능합니다.
+        """
+        rows = await data.fetch(
+            f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
+        plus = int(rows[0][1]) + 500
+        await data.commit(
+            f"UPDATE `users` SET `money` = '{plus}' WHERE `user` = '{ctx.author.id}'"
+        )
+        await ctx.reply("🎋 당신의 잔고에 `500` 코인을 추가했어요! 12시간 후에 다시 시도해주세요.")
 
     @commands.command(name="도박")
     @in_guild()
