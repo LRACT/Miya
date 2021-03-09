@@ -74,7 +74,7 @@ class Economy(commands.Cog, name="경제"):
         embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.add_field(name="미야의 주사위", value=f"`🎲 {bot}`", inline=True)
         embed.add_field(name="당신의 주사위", value=f"`🎲 {user}`", inline=True)
-        # await data.commit(f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'")
+        await data.commit(f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'")
         await ctx.reply(embed=embed)
 
 
