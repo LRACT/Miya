@@ -33,7 +33,7 @@ class Economy(commands.Cog, name="경제"):
             f"SELECT * FROM `users` WHERE `user` = '{user.id}'")
         if not rows:
             await ctx.reply(
-                f"<:cs_no:659355468816187405> **{user}**님의 지갑 데이터가 등록되지 않았어요.")
+                f"<:cs_no:659355468816187405> **{user}**님은 미야 서비스에 가입하지 않으셨어요.")
         else:
             embed = discord.Embed(
                 title=f"💳 {user}님의 지갑 정보",
@@ -59,7 +59,7 @@ class Economy(commands.Cog, name="경제"):
         미야야 돈받기
 
 
-        300 코인을 지급합니다. 12시간에 1회만 사용 가능합니다.
+        300 코인을 지급합니다. 12시간에 한 번만 사용 가능합니다.
         """
         rows = await data.fetch(
             f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
@@ -85,44 +85,47 @@ class Economy(commands.Cog, name="경제"):
         elif money.isdecimal() is not True:
             raise commands.BadArgument
 
-        user = random.randint(1, 6)
-        bot = random.randint(1, 6)
-        embed, rest = None, None
-        if user < bot:
-            embed = discord.Embed(
-                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
-                timestamp=datetime.datetime.utcnow(),
-                color=0xFF9999,
+        if int(rows[0][1]) == 0 or int(rows[0][1]) < money:
+            await ctx.reply(f"🍋 코인이 부족해요! 현재 코인 : {rows[0][1]}개")
+        else:
+            user = random.randint(1, 6)
+            bot = random.randint(1, 6)
+            embed, rest = None, None
+            if user < bot:
+                embed = discord.Embed(
+                    title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0xFF9999,
+                )
+                embed.set_footer(text="모두 잃어버린 나")
+                rest = int(rows[0][1]) - int(money)
+            elif user == bot:
+                embed = discord.Embed(
+                    title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0x333333,
+                )
+                embed.set_footer(text="그래도 잃지는 않은 나")
+                rest = int(rows[0][1])
+            elif user > bot:
+                embed = discord.Embed(
+                    title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
+                    timestamp=datetime.datetime.utcnow(),
+                    color=0x99FF99,
+                )
+                embed.set_footer(text="봇을 상대로 모든 것을 가져간 나")
+                rest = int(rows[0][1]) + int(money)
+            embed.set_author(name="카케구루이", icon_url=self.miya.user.avatar_url)
+            embed.set_thumbnail(
+                url=ctx.author.avatar_url_as(static_format="png", size=2048))
+            embed.add_field(name="미야의 주사위", value=f"`🎲 {bot}`", inline=True)
+            embed.add_field(name=f"{ctx.author.name}님의 주사위",
+                            value=f"`🎲 {user}`",
+                            inline=True)
+            await data.commit(
+                f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'"
             )
-            embed.set_footer(text="모두 잃어버린 나")
-            rest = int(rows[0][1]) - int(money)
-        elif user == bot:
-            embed = discord.Embed(
-                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
-                timestamp=datetime.datetime.utcnow(),
-                color=0x333333,
-            )
-            embed.set_footer(text="그래도 잃지는 않은 나")
-            rest = int(rows[0][1])
-        elif user > bot:
-            embed = discord.Embed(
-                title=f"🎲 {ctx.author.name}님의 주사위 도박 결과",
-                timestamp=datetime.datetime.utcnow(),
-                color=0x99FF99,
-            )
-            embed.set_footer(text="봇을 상대로 모든 것을 가져간 나")
-            rest = int(rows[0][1]) + int(money)
-        embed.set_author(name="카케구루이", icon_url=self.miya.user.avatar_url)
-        embed.set_thumbnail(
-            url=ctx.author.avatar_url_as(static_format="png", size=2048))
-        embed.add_field(name="미야의 주사위", value=f"`🎲 {bot}`", inline=True)
-        embed.add_field(name=f"{ctx.author.name}님의 주사위",
-                        value=f"`🎲 {user}`",
-                        inline=True)
-        await data.commit(
-            f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'"
-        )
-        await ctx.reply(embed=embed)
+            await ctx.reply(embed=embed)
 
     @commands.command(name="매수")
     @in_guild()
