@@ -12,8 +12,10 @@ class Economy(commands.Cog, name="경제"):
     def __init__(self, miya):
         self.miya = miya
 
-    def in_guild(ctx):
-        return ctx.guild.id == 564418977627897887
+    def in_guild():
+        def predicate(ctx):
+            return ctx.guild.id == 564418977627897887
+        return commands.check(predicate)
 
     @commands.command(name="지갑")
     @in_guild()
