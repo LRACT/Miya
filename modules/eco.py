@@ -40,7 +40,8 @@ class Economy(commands.Cog, name="경제"):
                 timestamp=datetime.datetime.utcnow(),
                 color=0x5FE9FF,
             )
-            embed.add_field(name="가지고 있는 코인", value=f"{rows[0][1]}개", inline=False)
+            embed.add_field(name="가지고 있는 코인",
+                            value=f"{rows[0][1]}개", inline=False)
             embed.add_field(name="곧 더 많은 기능이 찾아옵니다...",
                             value="새로운 기능도 많이 기대해주세요!",
                             inline=False)
@@ -128,15 +129,13 @@ class Economy(commands.Cog, name="경제"):
         if stock not in ["Simplified", "Qualified", "Sharklified"]:
             raise commands.BadArgument
         else:
-           user = (await data.fetch(f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'"))[0]
-           stat = (await data.fetch(f"SELECT * FROM `stocks` WHERE `name` = '{stock}'"))[0]
-           if value in ["모두", "전체", "올인"]:
-               value = round(int(user[1]) / int(stat[1]))
-           elif value.isdecimal() is not True:
-               raise commands.BadArgument
-           # todo 사는 것과 관련한 기능
-               
-
+            user = (await data.fetch(f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'"))[0]
+            stat = (await data.fetch(f"SELECT * FROM `stocks` WHERE `name` = '{stock}'"))[0]
+            if value in ["모두", "전체", "올인"]:
+                value = round(int(user[1]) / int(stat[1]))
+            elif value.isdecimal() is not True:
+                raise commands.BadArgument
+            # todo 사는 것과 관련한 기능
 
 
 def setup(miya):
