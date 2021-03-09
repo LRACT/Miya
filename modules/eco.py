@@ -1,6 +1,6 @@
 import datetime
-import typing
 import random
+import typing
 
 import discord
 from discord.ext import commands
@@ -49,7 +49,8 @@ class Economy(commands.Cog, name="경제"):
     @commands.command(name="도박")
     @in_guild()
     async def _gamble(self, ctx, money):
-        rows = await data.fetch(f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
+        rows = await data.fetch(
+            f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
         if money in ["모두", "전체", "올인"]:
             money = rows[0][1]
         elif money.isdecimal() is not True:
@@ -59,22 +60,37 @@ class Economy(commands.Cog, name="경제"):
         bot = random.randint(1, 6)
         embed, rest = None, None
         if user < bot:
-            embed = discord.Embed(title="🎲 {user}님의 주사위 도박 결과", timestamp=datetime.datetime.utcnow(), color=0xFF9999)
+            embed = discord.Embed(
+                title="🎲 {user}님의 주사위 도박 결과",
+                timestamp=datetime.datetime.utcnow(),
+                color=0xFF9999,
+            )
             embed.set_footer(text="모두 잃어버린 나")
             rest = int(rows[0][1]) - int(money)
         elif user == bot:
-            embed = discord.Embed(title="🎲 {user}님의 주사위 도박 결과", timestamp=datetime.datetime.utcnow(), color=0x333333)
+            embed = discord.Embed(
+                title="🎲 {user}님의 주사위 도박 결과",
+                timestamp=datetime.datetime.utcnow(),
+                color=0x333333,
+            )
             embed.set_footer(text="그래도 잃지는 않은 나")
             rest = int(rows[0][1])
         elif user > bot:
-            embed = discord.Embed(title="🎲 {user}님의 주사위 도박 결과", timestamp=datetime.datetime.utcnow(), color=0x99FF99)
+            embed = discord.Embed(
+                title="🎲 {user}님의 주사위 도박 결과",
+                timestamp=datetime.datetime.utcnow(),
+                color=0x99FF99,
+            )
             embed.set_footer(text="봇을 상대로 모든 것을 가져간 나")
             rest = int(rows[0][1]) + int(money)
         embed.set_author(name="카케구루이", icon_url=self.miya.user.avatar_url)
-        embed.set_thumbnail(url=ctx.author.avatar_url_as(static_format="png", size=2048))
+        embed.set_thumbnail(
+            url=ctx.author.avatar_url_as(static_format="png", size=2048))
         embed.add_field(name="미야의 주사위", value=f"`🎲 {bot}`", inline=True)
         embed.add_field(name="당신의 주사위", value=f"`🎲 {user}`", inline=True)
-        await data.commit(f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'")
+        await data.commit(
+            f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'"
+        )
         await ctx.reply(embed=embed)
 
 
