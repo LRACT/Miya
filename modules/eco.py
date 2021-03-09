@@ -67,8 +67,7 @@ class Economy(commands.Cog, name="경제"):
         await data.commit(
             f"UPDATE `users` SET `money` = '{plus}' WHERE `user` = '{ctx.author.id}'"
         )
-        await ctx.reply("🎋 당신의 잔고에 `300` 코인을 추가했어요!\n매 12시간마다 다시 지급받으실 수 있어요."
-                        )
+        await ctx.reply("🎋 당신의 잔고에 `300` 코인을 추가했어요!\n매 12시간마다 다시 지급받으실 수 있어요.")
 
     @commands.command(name="도박")
     @in_guild()
