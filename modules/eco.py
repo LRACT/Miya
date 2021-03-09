@@ -59,15 +59,15 @@ class Economy(commands.Cog, name="경제"):
         미야야 돈받기
 
 
-        500원을 지급합니다. 12시간에 1회만 사용 가능합니다.
+        300 코인을 지급합니다. 12시간에 1회만 사용 가능합니다.
         """
         rows = await data.fetch(
             f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
-        plus = int(rows[0][1]) + 500
+        plus = int(rows[0][1]) + 300
         await data.commit(
             f"UPDATE `users` SET `money` = '{plus}' WHERE `user` = '{ctx.author.id}'"
         )
-        await ctx.reply("🎋 당신의 잔고에 `500` 코인을 추가했어요! 12시간 후에 다시 시도해주세요.")
+        await ctx.reply("🎋 당신의 잔고에 `300` 코인을 추가했어요!\n매 12시간마다 다시 지급받으실 수 있어요..")
 
     @commands.command(name="도박")
     @in_guild()
