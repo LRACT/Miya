@@ -8,10 +8,13 @@ import aiohttp
 import discord
 import koreanbots
 from discord.ext import commands
-from pytz import timezone, utc
+from pytz import timezone
+from pytz import utc
 
 from lib import config
-from utils import data, get, webhook
+from utils import data
+from utils import get
+from utils import webhook
 
 locale.setlocale(locale.LC_ALL, "")
 
