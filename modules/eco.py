@@ -1,6 +1,6 @@
 import datetime
-import typing
 import random
+import typing
 
 import discord
 from discord.ext import commands
