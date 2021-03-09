@@ -52,6 +52,12 @@ class Economy(commands.Cog, name="경제"):
     @commands.command(name="도박")
     @in_guild()
     async def _gamble(self, ctx, money):
+        """
+        미야야 도박 < 금액 >
+
+
+        금액을 걸고 주사위 도박을 진행합니다.
+        """
         rows = await data.fetch(
             f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
         if money in ["모두", "전체", "올인"]:
@@ -97,6 +103,22 @@ class Economy(commands.Cog, name="경제"):
             f"UPDATE `users` SET `money` = '{rest}' WHERE `user` = '{ctx.author.id}'"
         )
         await ctx.reply(embed=embed)
+
+    @commands.command(name="매수")
+    @in_guild()
+    async def _buy(self, ctx, stock, value):
+        if stock not in ["Simplified", "Qualified", "Sharklified"]:
+            raise commands.BadArgument
+        else:
+           user = (await data.fetch(f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'"))[0]
+           stat = (await data.fetch(f"SELECT * FROM `stocks` WHERE `name` = '{stock}'"))[0]
+           if value in ["모두", "전체", "올인"]:
+               value = round(int(user[1]) / int(stat[1]))
+           elif value.isdecimal() is not True:
+               raise commands.BadArgument
+           # todo 사는 것과 관련한 기능
+               
+
 
 
 def setup(miya):
