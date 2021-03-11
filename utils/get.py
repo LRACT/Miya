@@ -78,8 +78,10 @@ async def check(ctx, miya):
         if word[0] in ctx.message.content:
             forbidden = True
             banned = word[0]
-    users = await data.fetch(f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
-    rows = await data.fetch(f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
+    users = await data.fetch(
+        f"SELECT * FROM `users` WHERE `user` = '{ctx.author.id}'")
+    rows = await data.fetch(
+        f"SELECT * FROM `blacklist` WHERE `id` = '{ctx.author.id}'")
     if rows:
         if manage is not True:
             reason = rows[0][1]
