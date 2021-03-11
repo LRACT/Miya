@@ -63,6 +63,9 @@ async def corona():
 
 
 async def check(ctx, miya):
+    if ctx.channel.type == discord.ChannelType.private:
+        raise commands.NoPrivateMessage
+
     manage = await mgr(ctx)
     reason, admin, time, banned, forbidden = None, None, None, None, None
     words = await data.fetch("SELECT * FROM `forbidden`")
