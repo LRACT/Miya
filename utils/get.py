@@ -63,6 +63,14 @@ async def corona():
 
 
 async def check(ctx, miya):
+    if ctx.channel.type == discord.ChannelType.private:
+        await webhook.terminal(
+            f"On Directs >\nUser - {ctx.author} ({ctx.author.id})\nContent - {ctx.message.content}",
+            "명령어 처리 기록",
+            miya.user.avatar_url,
+        )
+        raise commands.NoPrivateMessage
+
     manage = await mgr(ctx)
     reason, admin, time, banned, forbidden = None, None, None, None, None
     words = await data.fetch("SELECT * FROM `forbidden`")

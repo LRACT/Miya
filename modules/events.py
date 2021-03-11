@@ -75,7 +75,7 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
             await ctx.reply(str(error), embed=error.embed)
         elif isinstance(error, exc.NoReg):
             await ctx.reply(str(error))
-        elif isinstance(error, discord.NotFound):
+        elif isinstance(error, discord.NotFound) or isinstance(error, commands.NoPrivateMessage):
             return
         elif isinstance(error, discord.Forbidden):
             await ctx.reply(
