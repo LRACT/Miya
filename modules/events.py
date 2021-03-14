@@ -165,7 +165,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                             color=0x5FE9FF,
                         )
                         embed.set_footer(
-                            text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                            text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다."
+                        )
                         await ctx.reply(embed=embed)
                     else:
                         embed = discord.Embed(
@@ -175,7 +176,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                             color=0x5FE9FF,
                         )
                         embed.set_footer(
-                            text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다.")
+                            text="미야의 대화 기능은 https://pingpong.us/ 를 통해 제작되었습니다."
+                        )
                         await ctx.reply(embed=embed)
         else:
             await webhook.terminal(
