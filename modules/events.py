@@ -131,6 +131,8 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                     await ctx.reply(str(error), embed=error.embed)
                 elif isinstance(e, exc.NoReg):
                     await ctx.reply(str(error))
+                elif isinstance(e, commands.NoPrivateMessage):
+                    return
             else:
                 if p is True:
                     response_msg = None
