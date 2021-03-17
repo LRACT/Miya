@@ -128,9 +128,9 @@ class Listeners(commands.Cog, name="이벤트 리스너"):
                 p = await get.check(ctx, self.miya)
             except Exception as e:
                 if isinstance(e, exc.Forbidden):
-                    await ctx.reply(str(error), embed=error.embed)
+                    await ctx.reply(str(e), embed=e.embed)
                 elif isinstance(e, exc.NoReg):
-                    await ctx.reply(str(error))
+                    await ctx.reply(str(e))
                 elif isinstance(e, commands.NoPrivateMessage):
                     return
             else:
