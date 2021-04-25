@@ -51,7 +51,10 @@ class DataManagement(commands.Cog, name="데이터 관리"):
                         color=0xFF0000)
                     await register_msg.edit(embed=fail_embed, delete_after=5)
                 else:
-                    await msg.delete()
+                    try:
+                        await msg.delete()
+                    except:
+                        pass
                     await register_msg.delete()
                     result = await data.commit(
                         f"INSERT INTO `users`(`user`, `money`) VALUES('{ctx.author.id}', '500')"
